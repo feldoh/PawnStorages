@@ -92,7 +92,6 @@ public static class Utility
                 break;
             }
         
-        store.GetDirectlyHeldThings().Remove(pawn);
         GenSpawn.Spawn(pawn, cell, map);
 
         //Spawn the release effecter
@@ -107,6 +106,7 @@ public static class Utility
         store.ApplyNeedsForStoredPeriodFor(pawn);
         pawn.guest?.WaitInsteadOfEscapingFor(1250);
         store.Notify_ReleasedFromStorage(pawn);
+        store.GetDirectlyHeldThings().Remove(pawn);
     }
 
     public static bool CanRelease(CompPawnStorage store, Pawn releaser)

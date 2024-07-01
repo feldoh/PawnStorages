@@ -6,6 +6,9 @@
         <label>Peculiar Stand</label>
         <description>A seemingly generic base for a statue, there's an odd energy about it.\n\nIt is possible to seal someone away into a statue by putting them on this stand, voluntarily or otherwise.</description>
         <thingClass>PawnStorages.Building_PawnStorage</thingClass>
+        <descriptionHyperlinks>
+            <ThingDef>TableSculpting</ThingDef>
+        </descriptionHyperlinks>
         <graphicData>
             <graphicClass>Graphic_Multi</graphicClass>
             <texPath>Things/Building/Art/PeculiarStatue</texPath>
