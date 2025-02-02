@@ -36,20 +36,13 @@ public class CompPipedPawnStorageNutrition: CompPawnStorageNutrition
         return pipeNet.connectors.Count > 1;
     }
 
-    public override bool AbsorbToFeedIfNeeded(Need_Food foodNeeds, float desiredFeed, out float amountFed)
+    public override bool AbsorbFromAlternateSource(Need_Food foodNeeds, float desiredFeed, out float amountFed)
     {
-        if (!IsAttachedToNet(out PipeNet pipeNet, out CompResource resource)) return base.AbsorbToFeedIfNeeded(foodNeeds, desiredFeed, out amountFed);
+        amountFed = 0f;
+        if (!IsAttachedToNet(out PipeNet pipeNet, out CompResource resource) || pipeNet.Stored <= 0) return false;
 
         amountFed = Mathf.Min(pipeNet.Stored, desiredFeed);
         pipeNet.DrawAmongStorage(amountFed, pipeNet.storages);
         return true;
     }
-
-    public override bool TryAbsorbNutritionFromHopper(float nutrition)
-    {
-        if (!IsAttachedToNet(out PipeNet pipeNet, out CompResource resource)) return base.TryAbsorbNutritionFromHopper(nutrition);
-
-        return !(pipeNet.Stored < nutrition);
-    }
-
 }
