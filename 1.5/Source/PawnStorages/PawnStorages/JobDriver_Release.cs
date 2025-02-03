@@ -12,6 +12,8 @@ public class JobDriver_Release : JobDriver
 
     private IntVec3 ReleaseCell => HasStation ? TargetB.Thing.InteractionCell : TargetA.Cell;
 
+    private HashSet<int> BeingReleasedByJob => [];
+
     public override string GetReport()
     {
         if (HasStation && ReleasingSpecific) return "PS_ReleaseReportA".Translate(TargetC.Pawn, TargetA.Thing, TargetB.Thing);
@@ -51,20 +53,29 @@ public class JobDriver_Release : JobDriver
             if (comp == null) return;
             if (ReleasingSpecific)
             {
+                BeingReleasedByJob.Add(TargetC.Pawn.thingIDNumber);
+                CompPawnStorage.BeingReleased.Add(TargetC.Pawn.thingIDNumber);
                 comp.ReleasePawn(TargetC.Pawn, ReleaseCell, actor.Map);
             }
             else
                 for (int num = comp.GetDirectlyHeldThings().Count - 1; num >= 0; num--)
                 {
-                    comp.ReleasePawn((Pawn)comp.GetDirectlyHeldThings().GetAt(num), ReleaseCell, actor.Map);
+                    Pawn pawn = comp.GetDirectlyHeldThings().GetAt(num) as Pawn;
+                    if (pawn == null) continue;
+                    BeingReleasedByJob.Add(pawn.thingIDNumber);
+                    CompPawnStorage.BeingReleased.Add(pawn.thingIDNumber);
+                    comp.ReleasePawn(pawn, ReleaseCell, actor.Map);
                 }
         };
         release.defaultCompleteMode = ToilCompleteMode.Instant;
         release.AddFinishAction(() =>
         {
+            CompPawnStorage.BeingReleased.RemoveWhere(BeingReleasedByJob.Contains);
+            BeingReleasedByJob.Clear();
             if (pawn.carryTracker.CarriedThing == TargetA.Thing)
                 pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
         });
         yield return release;
     }
+
 }
