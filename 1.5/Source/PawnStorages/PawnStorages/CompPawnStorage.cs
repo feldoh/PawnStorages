@@ -516,12 +516,21 @@ public class CompPawnStorage : ThingComp, IThingHolder
                 defaultLabel = "PS_Release".Translate("..."),
                 action = delegate
                 {
-                    Find.WindowStack.Add(new FloatMenu(GetDirectlyHeldPawnsDefensiveCopy().Select(p => new FloatMenuOption("PS_Release".Translate(p.LabelCap),
-                        delegate { ReleaseSingle(parent.Map, p, false); })).ToList()));
+                    Find.WindowStack.Add(new FloatMenu(GetDirectlyHeldPawnsDefensiveCopy()
+                        .Where(p => !BeingReleased.Contains(p.thingIDNumber))
+                        .Select(p => new FloatMenuOption("PS_Release".Translate(p.LabelCap),
+                        delegate
+                        {
+                            BeingReleased.Add(p.thingIDNumber);
+                            ReleaseSingle(parent.Map, p, false);
+                            BeingReleased.Remove(p.thingIDNumber);
+                        })).ToList()));
                 },
                 icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll")
             };
     }
+
+    public static HashSet<int> BeingReleased = [];
 
     public void ReleaseContents(Map map)
     {
@@ -604,11 +613,13 @@ public class CompPawnStorage : ThingComp, IThingHolder
         if (Props.useCharges && chargesRemaining > 0) chargesRemaining--;
         if (chargesRemaining <= 0 && Props.destroyOnZeroCharges) parent.Destroy();
         ParentAsPawnListParent?.Notify_PawnRemoved(pawn);
+        BeingReleased.Remove(pawn.thingIDNumber);
     }
 
     public void Notify_AddedToStorage(Pawn pawn)
     {
         ParentAsPawnListParent?.Notify_PawnAdded(pawn);
+        BeingReleased.Remove(pawn.thingIDNumber);
     }
 
     public Thing GetAt(int idx)
