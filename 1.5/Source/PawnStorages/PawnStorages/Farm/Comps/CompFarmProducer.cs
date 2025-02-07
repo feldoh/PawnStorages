@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using HarmonyLib;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -28,6 +30,11 @@ namespace PawnStorages.Farm.Comps
                         (pawn.gender == Gender.Female || compGatherable is not CompMilkable milkable || !milkable.Props.milkFemaleOnly))
                     {
                         GatherableTick(compGatherable, ParentAsProductionParent.TickInterval);
+                    }
+
+                    if (pawn.TryGetComp<CompSpawner>(out CompSpawner compSpawner))
+                    {
+                        SpawnerTick(compSpawner, ParentAsProductionParent.TickInterval);
                     }
                 }
             }
@@ -97,6 +104,26 @@ namespace PawnStorages.Farm.Comps
             }
 
             gatherable.fullness = 0f;
+        }
+
+        public static Lazy<FieldInfo> CompSpawner_ticksUntilSpawn = new Lazy<FieldInfo>(()=>AccessTools.Field(typeof(CompSpawner), "ticksUntilSpawn"));
+
+        public void SpawnerTick(CompSpawner spawner, int tickInterval = 1)
+        {
+            int ticksUntilSpawn = (int)CompSpawner_ticksUntilSpawn.Value.GetValue(spawner);
+            ticksUntilSpawn -= tickInterval;
+            CompSpawner_ticksUntilSpawn.Value.SetValue(spawner, ticksUntilSpawn);
+
+            if(ticksUntilSpawn > 0) return;
+
+            Thing thing = ThingMaker.MakeThing(spawner.PropsSpawner.thingToSpawn);
+            thing.stackCount = spawner.PropsSpawner.spawnCount;
+
+            if (spawner.PropsSpawner.inheritFaction && thing.Faction != parent.Faction)
+                thing.SetFaction(parent.Faction);
+
+            DaysProduce.Add(thing);
+            CompSpawner_ticksUntilSpawn.Value.SetValue(spawner, spawner.PropsSpawner.spawnIntervalRange.RandomInRange);
         }
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()

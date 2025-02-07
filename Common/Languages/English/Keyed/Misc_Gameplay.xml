@@ -98,6 +98,7 @@
     <PS_FarmTab_NameStarving>{0} (Starving!)</PS_FarmTab_NameStarving>
     <PS_FarmTab_Nutrition>Nutrition: {0}</PS_FarmTab_Nutrition>
     <PS_FarmTab_Fullness>Progress: {0} - {1}</PS_FarmTab_Fullness>
+    <PS_FarmTab_FullnessTime>Time to produce: {0}</PS_FarmTab_FullnessTime>
 
     <PS_NutritionLevel>Target nutrition: {0}</PS_NutritionLevel>
     <PS_CommandSetNutritionLevel>Set Target nutrition</PS_CommandSetNutritionLevel>

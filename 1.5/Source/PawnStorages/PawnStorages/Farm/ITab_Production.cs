@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
+using HarmonyLib;
 using PawnStorages.Farm.Comps;
 using RimWorld;
 using UnityEngine;
@@ -26,6 +29,9 @@ namespace PawnStorages.Farm
             labelKey = "PS_ProductionTab";
         }
 
+        public static Lazy<FieldInfo> CompSpawner_ticksUntilSpawn = new Lazy<FieldInfo>(()=>AccessTools.Field(typeof(CompSpawner), "ticksUntilSpawn"));
+
+
         public float PawnFullness(Pawn pawn)
         {
             if (pawn.TryGetComp(out CompEggLayer compLayer))
@@ -38,7 +44,7 @@ namespace PawnStorages.Farm
                 return compGatherable.Fullness;
             }
 
-            return 0;
+            return -1;
         }
 
         public bool DrawLine(float position, float width, Pawn pawn)
@@ -65,8 +71,21 @@ namespace PawnStorages.Farm
                 {
                     Widgets.Label(new Rect(55f, position + 20f, width - 90f, 20f),
                         "PS_FarmTab_Nutrition".Translate((pawn.needs?.food?.CurLevelPercentage ?? 0f).ToStringPercent()));
-                    Widgets.Label(new Rect(55f, position + 40f, width - 90f, 20f),
-                        "PS_FarmTab_Fullness".Translate(PawnFullness(pawn).ToStringPercent(), pawn.gender.GetLabel(animal: true)));
+                    float fullness = PawnFullness(pawn);
+                    if (fullness >= 0)
+                    {
+                        Widgets.Label(new Rect(55f, position + 40f, width - 90f, 20f),
+                            "PS_FarmTab_Fullness".Translate(fullness.ToStringPercent(), pawn.gender.GetLabel(animal: true)));
+                    }
+                    else
+                    {
+                        if (pawn.TryGetComp(out CompSpawner compSpawner))
+                        {
+                            int ticksLeft = (int)CompSpawner_ticksUntilSpawn.Value.GetValue(compSpawner);
+                            Widgets.Label(new Rect(55f, position + 40f, width - 90f, 20f),
+                                "PS_FarmTab_FullnessTime".Translate(ticksLeft.ToStringTicksToPeriod(true, true)));
+                        }
+                    }
                 }
             }
 
