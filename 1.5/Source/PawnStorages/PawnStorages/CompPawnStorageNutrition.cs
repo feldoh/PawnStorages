@@ -65,10 +65,21 @@ public class CompPawnStorageNutrition : ThingComp
     public virtual float ResolveStarvationIfPossibleAndNecessary(Need_Food foodNeeds, Pawn pawn) =>
         !foodNeeds.Starving ? 0f : FeedAndRecordWantedAmount(foodNeeds, foodNeeds.NutritionWanted, pawn);
 
+    public virtual bool AbsorbFromAlternateSource(Need_Food foodNeeds, float neededFood, out float amountFed)
+    {
+        amountFed = 0f;
+        return false;
+    }
+
     public virtual float FeedAndRecordWantedAmount(Need_Food foodNeeds, float neededFood, Pawn pawn, bool record = true)
     {
         float totalFeed = 0f;
         while (neededFood > 0 && AbsorbToFeedIfNeeded(foodNeeds, neededFood, out float amountFed))
+        {
+            totalFeed += amountFed;
+            neededFood -= amountFed;
+        }
+        while (neededFood > 0 && AbsorbFromAlternateSource(foodNeeds, neededFood, out float amountFed))
         {
             totalFeed += amountFed;
             neededFood -= amountFed;
