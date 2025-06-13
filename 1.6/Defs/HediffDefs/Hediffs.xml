@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+    <HediffDef>
+        <defName>PS_CapturedPawn</defName>
+        <label>captured pawn</label>
+        <labelNoun>captured pawn</labelNoun>
+        <description>The pawn has been captured by a sphere</description>
+        <hediffClass>HediffWithComps</hediffClass>
+        <initialSeverity>1</initialSeverity>
+        <tendable>false</tendable>
+        <spawnThingOnRemoved>PS_CaptureSphere</spawnThingOnRemoved>
+        <chanceToCauseNoPain>1</chanceToCauseNoPain>
+        <makesSickThought>false</makesSickThought>
+        <makesAlert>false</makesAlert>
+        <everCurableByItem>false</everCurableByItem>
+        <comps>
+            <li Class="PawnStorages.HediffCompProperties_GiveAbilitySafe">
+                <abilityDefs>
+                    <li>PS_ReturnToSphere</li>
+                </abilityDefs>
+            </li>
+        </comps>
+    </HediffDef>
+</Defs>

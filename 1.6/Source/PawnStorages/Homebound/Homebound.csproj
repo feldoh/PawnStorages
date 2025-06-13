@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <ProjectGuid>{6409E825-46DD-4565-9D4C-CCCD9578D6DE}</ProjectGuid>
+        <ZipFilePath>../../../../Homebound.zip</ZipFilePath>
+        <ReleasePath>../../../../Release</ReleasePath>
+        <TargetFramework>net48</TargetFramework>
+        <OutputType>Library</OutputType>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <IncludeCopyLocalFilesOutputGroup>false</IncludeCopyLocalFilesOutputGroup>
+        <OutputPath>.vs/unused/</OutputPath>
+        <ModName>Homebound</ModName>
+        <SteamModsPath>$(RIMWORLD_STEAM_MODS_PATH)</SteamModsPath>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' " />
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' " />
+
+    <ItemGroup>
+        <ProjectReference Include="../PawnStorages/PawnStorages.csproj" />
+        <ProjectReference Include="../PawnStoragesModule-VEF/PawnStoragesModule-VanillaExpandedFramework.csproj" />
+        <ProjectReference Include="..\PawnStoragesModule-SimpleWarrants\PawnStoragesModule-SimpleWarrants.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ReleaseFiles Include="../../../../*.xml;../../../../*.md;../../../../LICENSE;../../../../1.*/**"
+                      Exclude="../../../../1.*/Source/**;../../../../1.*/Assemblies/**;../../../../Compatibility/**">
+            <Link>Files/%(RecursiveDir)%(Filename)%(Extension)</Link>
+        </ReleaseFiles>
+        <AboutFiles Include="../../../../About/**;">
+            <Link>Files/About/%(RecursiveDir)%(Filename)%(Extension)</Link>
+        </AboutFiles>
+        <CommonFiles Include="../../../../Common/**">
+            <Link>Files/Common/%(RecursiveDir)%(Filename)%(Extension)</Link>
+        </CommonFiles>
+        <ReleaseAssemblies Include="../../../../1.*/Assemblies/*.dll" Exclude="../../../../1.*/Assemblies/0Harmony.dll">
+            <Link>Files/Assemblies/%(RecursiveDir)%(Filename)%(Extension)</Link>
+        </ReleaseAssemblies>
+        <GitMeta Include="../../../../.git*">
+            <Link>Files/%(RecursiveDir)%(Filename)%(Extension)</Link>
+        </GitMeta>
+        <CompatibilityFiles Include="../../../../Compatibility/**">
+          <Link>Files/Compatibility/%(RecursiveDir)%(Filename)%(Extension)</Link>
+        </CompatibilityFiles>
+        <None Include="../../../../.editorconfig" />
+    </ItemGroup>
+
+    <!-- Add A step to the build to run csharpier on build -->
+    <Target Name="CheckCsharpier" BeforeTargets="Build">
+        <Exec Command="dotnet csharpier --version" IgnoreExitCode="true">
+            <Output TaskParameter="ExitCode" PropertyName="ExitCode"/>
+        </Exec>
+    </Target>
+
+    <Target Name="FormatCode" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Release' And '$(ExitCode)' == '0' " DependsOnTargets="CheckCsharpier">
+        <Exec Command="dotnet csharpier ." />
+    </Target>
+
+    <Target Name="CleanRelease" AfterTargets="Clean">
+        <RemoveDir Directories="$(ReleasePath)" Condition="Exists('$(ReleasePath)')" />
+        <Delete Files="$(ZipFilePath)" Condition="Exists('$(ZipFilePath)')" />
+    </Target>
+
+    <Target Name="PostBuild" AfterTargets="Build" DependsOnTargets="CleanRelease">
+        <MakeDir Directories="$(ReleasePath)" />
+        <Copy SourceFiles="@(ReleaseFiles)" DestinationFiles="@(ReleaseFiles->'$(ReleasePath)/%(RecursiveDir)%(Filename)%(Extension)')" />
+        <Copy SourceFiles="@(ReleaseAssemblies)" DestinationFiles="@(ReleaseAssemblies->'$(ReleasePath)/%(RecursiveDir)%(Filename)%(Extension)')" />
+        <Copy SourceFiles="@(AboutFiles)" DestinationFolder="$(ReleasePath)/About" />
+        <Copy SourceFiles="@(CommonFiles)" DestinationFiles="@(CommonFiles->'$(ReleasePath)/Common/%(RecursiveDir)%(Filename)%(Extension)')" />
+        <Copy SourceFiles="@(CompatibilityFiles)" DestinationFiles="@(CompatibilityFiles->'$(ReleasePath)/Compatibility/%(RecursiveDir)%(Filename)%(Extension)')" />
+        <ZipDirectory Condition=" '$(Configuration)' == 'Release' " DestinationFile="$(ZipFilePath)" SourceDirectory="$(ReleasePath)" Overwrite="true" />
+
+        <ItemGroup>
+            <ReleaseFolder Include="../../../../Release/**" />
+            <ReleaseFolder Condition=" '$(Configuration)' == 'Debug' " Include="../../../../1.*/Assemblies/*.pdb;../../../../Compatibility/**/*.pdb" />
+        </ItemGroup>
+        <RemoveDir Condition="Exists('$(SteamModsPath)') And !Exists('$(SteamModsPath)/PawnStorages')" Directories="$(SteamModsPath)/$(ModName)" ContinueOnError="true"/>
+        <Copy Condition="Exists('$(SteamModsPath)') And !Exists('$(SteamModsPath)/PawnStorages')" SourceFiles="@(ReleaseFolder)" DestinationFiles="@(ReleaseFolder->'$(SteamModsPath)/$(ModName)/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    </Target>
+</Project>

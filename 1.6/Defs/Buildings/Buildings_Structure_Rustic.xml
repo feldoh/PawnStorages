@@ -1,0 +1,286 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <ThingDef ParentName="BuildingBase">
+        <minifiedDef>MinifiedThing</minifiedDef>
+        <defName>PS_RusticFarm</defName>
+        <label>Rustic Farm</label>
+        <description>A rustic farm. \n\n Squeeze in up to 16 animals that give produce, keep them supplied with nutrition, and reap the rewards without the filth!</description>
+        <thingClass>PawnStorages.Farm.Building_PSFarm</thingClass>
+        <graphicData>
+            <texPath>Things/Building/Production/PS_RusticFarm</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <drawSize>(3.9,3.9)</drawSize>
+        </graphicData>
+        <size>(3,3)</size>
+        <thingCategories>
+            <li>BuildingsProduction</li>
+        </thingCategories>
+        <tickerType>Normal</tickerType>
+        <altitudeLayer>Building</altitudeLayer>
+        <passability>PassThroughOnly</passability>
+        <pathCost>100</pathCost>
+        <blockWind>true</blockWind>
+        <rotatable>true</rotatable>
+        <clearBuildingArea>false</clearBuildingArea>
+        <fillPercent>0.50</fillPercent>
+        <holdsRoof>false</holdsRoof>
+        <inspectorTabs>
+            <li>PawnStorages.Farm.ITab_Production</li>
+            <li>PawnStorages.Farm.ITab_Farm</li>
+            <li>PawnStorages.Farm.ITab_Assignments</li>
+            <li>ITab_BiosculpterNutritionStorage</li>
+        </inspectorTabs>
+        <designationCategory>Production</designationCategory>
+        <comps>
+            <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
+                <drawAssignmentOverlay>false</drawAssignmentOverlay>
+                <maxAssignedPawnsCount>16</maxAssignedPawnsCount>
+                <colonyAnimalsOnly>true</colonyAnimalsOnly>
+                <showGizmo>true</showGizmo>
+            </li>
+            <li Class="PawnStorages.Farm.Comps.CompProperties_FarmStorage">
+                <needsDrop>true</needsDrop>
+                <releaseOption>true</releaseOption>
+                <convertOption>false</convertOption>
+                <appendOfName>true</appendOfName>
+                <lightEffect>true</lightEffect>
+                <storageStation>PS_BatteryFarm</storageStation>
+            </li>
+            <li Class="PawnStorages.CompProperties_PawnStorageNutrition">
+                <HasTip>false</HasTip>
+            </li>
+            <li Class="PawnStorages.Farm.Comps.CompProperties_FarmProducer">
+            </li>
+            <li MayRequire="VanillaExpanded.VNutrientE" Class="PipeSystem.CompProperties_Resource">
+                <pipeNet>VNPE_NutrientPasteNet</pipeNet>
+            </li>
+            <li Class="PawnStorages.CompProperties_Renamable" />
+        </comps>
+        <building>
+            <wantsHopperAdjacent>true</wantsHopperAdjacent>
+            <destroySound>BuildingDestroyed_Metal_Big</destroySound>
+            <fixedStorageSettings>
+                <priority>Important</priority>
+                <filter>
+                    <categories>
+                        <li>Foods</li>
+                    </categories>
+                    <specialFiltersToDisallow>
+                        <li>AllowPlantFood</li>
+                    </specialFiltersToDisallow>
+                </filter>
+            </fixedStorageSettings>
+            <defaultStorageSettings>
+                <priority>Important</priority>
+                <filter>
+                    <categories>
+                        <li>Foods</li>
+                    </categories>
+                </filter>
+            </defaultStorageSettings>
+        </building>
+        <statBases>
+            <WorkToBuild>1500</WorkToBuild>
+            <MaxHitPoints>100</MaxHitPoints>
+            <Flammability>0.5</Flammability>
+            <Mass>30</Mass>
+        </statBases>
+        <costList>
+            <Steel>150</Steel>
+            <WoodLog>150</WoodLog>
+            <Hay>150</Hay>
+        </costList>
+        <constructEffect>ConstructMetal</constructEffect>
+        <placeWorkers>
+            <li>PawnStorages.PlaceWorker_DrawRotationArrow</li>
+        </placeWorkers>
+        <uiIconPath>Things/Building/Production/PS_RusticFarm</uiIconPath>
+        <uiIconScale>0.85</uiIconScale>
+        <modExtensions>
+            <li Class="PawnStorages.PSExtension" />
+        </modExtensions>
+    </ThingDef>
+    <ThingDef ParentName="BuildingBase">
+        <minifiedDef>MinifiedThing</minifiedDef>
+        <defName>PS_BreedingFarmRustic</defName>
+        <label>Rustic Breeding Domes</label>
+        <description>A rustic breeding farm. \n\n Squeeze in up to 16 animals that mate, keep them supplied with nutrition, and reap the rewards without the filth!</description>
+        <drawerType>MapMeshAndRealTime</drawerType>
+        <!-- <drawerType>MapMeshOnly</drawerType> -->
+        <thingClass>PawnStorages.Farm.Building_PSFarm</thingClass>
+        <graphicData>
+            <texPath>Things/Building/Production/PS_BreedingDomesRustic</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <drawSize>(5,5)</drawSize>
+        </graphicData>
+        <size>(3,3)</size>
+        <thingCategories>
+            <li>BuildingsProduction</li>
+        </thingCategories>
+        <tickerType>Normal</tickerType>
+        <altitudeLayer>Building</altitudeLayer>
+        <passability>PassThroughOnly</passability>
+        <pathCost>100</pathCost>
+        <blockWind>true</blockWind>
+        <rotatable>true</rotatable>
+        <clearBuildingArea>false</clearBuildingArea>
+        <fillPercent>0.50</fillPercent>
+        <holdsRoof>false</holdsRoof>
+        <inspectorTabs>
+            <li>PawnStorages.Farm.ITab_Farm</li>
+            <li>ITab_BiosculpterNutritionStorage</li>
+            <li>PawnStorages.Farm.ITab_Assignments</li>
+            <li>PawnStorages.Farm.ITab_Breeding</li>
+            <li>PawnStorages.Farm.ITab_Slaughter</li>
+        </inspectorTabs>
+        <designationCategory>Production</designationCategory>
+        <comps>
+            <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
+                <drawAssignmentOverlay>false</drawAssignmentOverlay>
+                <maxAssignedPawnsCount>16</maxAssignedPawnsCount>
+                <colonyAnimalsOnly>true</colonyAnimalsOnly>
+                <showGizmo>true</showGizmo>
+            </li>
+            <li Class="PawnStorages.Farm.Comps.CompProperties_FarmStorage">
+                <needsDrop>true</needsDrop>
+                <releaseOption>true</releaseOption>
+                <convertOption>false</convertOption>
+                <appendOfName>true</appendOfName>
+                <lightEffect>true</lightEffect>
+                <storageStation>PS_BatteryFarm</storageStation>
+            </li>
+            <li Class="PawnStorages.CompProperties_PawnStorageNutrition">
+                <HasTip>true</HasTip>
+                <TipScale>5</TipScale>
+                <MainTex>Things/Building/Production/PS_BreedingDomesRustic</MainTex>
+                <Tip>Things/Building/Production/PS_BreedingDomesJustTheTipRustic</Tip>
+                <SansTip>Things/Building/Production/PS_BreedingDomesNoTipRustic</SansTip>
+            </li>
+            <li Class="PawnStorages.Farm.Comps.CompProperties_FarmBreeder">
+            </li>
+            <li MayRequire="VanillaExpanded.VNutrientE" Class="PipeSystem.CompProperties_Resource">
+                <pipeNet>VNPE_NutrientPasteNet</pipeNet>
+            </li>
+            <li Class="PawnStorages.CompProperties_Renamable" />
+        </comps>
+        <building>
+            <wantsHopperAdjacent>true</wantsHopperAdjacent>
+            <destroySound>BuildingDestroyed_Metal_Big</destroySound>
+            <fixedStorageSettings>
+                <priority>Important</priority>
+                <filter>
+                    <categories>
+                        <li>Foods</li>
+                    </categories>
+                    <specialFiltersToDisallow>
+                        <li>AllowPlantFood</li>
+                    </specialFiltersToDisallow>
+                </filter>
+            </fixedStorageSettings>
+            <defaultStorageSettings>
+                <priority>Important</priority>
+                <filter>
+                    <categories>
+                        <li>Foods</li>
+                    </categories>
+                </filter>
+            </defaultStorageSettings>
+        </building>
+        <statBases>
+            <WorkToBuild>1500</WorkToBuild>
+            <MaxHitPoints>100</MaxHitPoints>
+            <Flammability>0.5</Flammability>
+            <Mass>30</Mass>
+        </statBases>
+        <costList>
+            <Steel>150</Steel>
+            <WoodLog>150</WoodLog>
+            <Hay>150</Hay>
+        </costList>
+        <constructEffect>ConstructMetal</constructEffect>
+        <placeWorkers>
+            <li>PawnStorages.PlaceWorker_DrawRotationArrow</li>
+        </placeWorkers>
+        <uiIconPath>Things/Building/Production/PS_BreedingDomesRustic</uiIconPath>
+        <uiIconScale>0.85</uiIconScale>
+        <modExtensions>
+            <li Class="PawnStorages.PSExtension" />
+        </modExtensions>
+    </ThingDef>
+
+
+    <ThingDef ParentName="BuildingBase">
+        <defName>PS_FarmHopper</defName>
+        <label>farm hopper</label>
+        <description>Holds feed stock for farms.</description>
+        <thingClass>Building_Storage</thingClass>
+        <graphicData>
+            <texPath>Things/Building/Production/Hopper</texPath>
+            <graphicClass>Graphic_Multi</graphicClass>
+            <damageData>
+                <rect>(0.05,0.1,0.9,0.9)</rect>
+                <cornerTL>Damage/Corner</cornerTL>
+                <cornerTR>Damage/Corner</cornerTR>
+            </damageData>
+            <color>(139, 69, 19)</color>
+        </graphicData>
+        <altitudeLayer>Building</altitudeLayer>
+        <passability>PassThroughOnly</passability>
+        <fillPercent>0.5</fillPercent>
+        <pathCost>42</pathCost>
+        <canOverlapZones>false</canOverlapZones>
+        <building>
+            <isHopper>true</isHopper>
+            <storageGroupTag>Hopper</storageGroupTag>
+            <blueprintClass>Blueprint_Storage</blueprintClass>
+            <fixedStorageSettings>
+                <priority>Important</priority>
+                <filter>
+                    <categories>
+                        <li>Foods</li>
+                    </categories>
+                </filter>
+            </fixedStorageSettings>
+            <defaultStorageSettings>
+                <priority>Important</priority>
+                <filter>
+                    <categories>
+                        <li>FoodRaw</li>
+                    </categories>
+                </filter>
+            </defaultStorageSettings>
+            <buildingTags>
+                <li>Production</li>
+            </buildingTags>
+        </building>
+        <inspectorTabs>
+            <li>ITab_Storage</li>
+        </inspectorTabs>
+        <castEdgeShadows>true</castEdgeShadows>
+        <statBases>
+            <WorkToBuild>300</WorkToBuild>
+            <MaxHitPoints>100</MaxHitPoints>
+            <Flammability>0.5</Flammability>
+        </statBases>
+        <costList>
+            <WoodLog>15</WoodLog>
+        </costList>
+        <tickerType>Never</tickerType>
+        <rotatable>true</rotatable>
+        <neverMultiSelect>true</neverMultiSelect>
+        <designationCategory>Production</designationCategory>
+        <uiOrder>2140</uiOrder>
+        <surfaceType>Item</surfaceType>
+        <placeWorkers>
+            <li>PlaceWorker_NextToHopperAccepter</li>
+        </placeWorkers>
+        <constructEffect>ConstructMetal</constructEffect>
+        <researchPrerequisites />
+        <uiIconPath>Things/Building/Production/Hopper_MenuIcon</uiIconPath>
+        <uiIconScale>0.85</uiIconScale>
+        <uiIconColor>(139, 69, 19</uiIconColor>
+    </ThingDef>
+
+</Defs>

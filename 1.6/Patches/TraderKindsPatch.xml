@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Patch>
+    <Operation Class="PatchOperationAdd">
+        <xpath>Defs/FactionDef/caravanTraderKinds[./li/text() = "Caravan_Outlander_PirateMerchant" or ./li/text() = "Orbital_PirateMerchant"]</xpath>
+        <value>
+            <li>PS_Caravan_Outlander_PSMerchant</li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAdd">
+        <xpath>Defs/TraderKindDef/stockGenerators[./li[@Class="StockGenerator_Slaves"]]</xpath>
+        <value>
+            <li Class="PawnStorages.StockGenerator_StoredSlaves">
+                <countRange>0~1</countRange>
+                <storeInDef>PS_PawnStatue</storeInDef>
+            </li>
+            <li Class="PawnStorages.StockGenerator_StoredSlaves">
+                <countRange>0~1</countRange>
+                <storeInDef>PS_Plastinite</storeInDef>
+            </li>
+        </value>
+    </Operation>
+</Patch>

@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk" InitialTargets="PreCleanAssemblies">
+
+    <PropertyGroup>
+        <RootNamespace>PawnStorages.VEF</RootNamespace>
+        <AssemblyName>PawnStorages.VEF</AssemblyName>
+        <TargetFramework>net48</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <OutputPath>../../../../Compatibility/oskarpotocki.vanillafactionsexpanded.core/1.6/Assemblies/</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DefineConstants>TRACE</DefineConstants> <!-- All published builds have to be built as 'release' because of the debug flag! -->
+        <WarningLevel>4</WarningLevel>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks> <!-- Unsafe is required for publicising! -->
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <Optimize>true</Optimize>
+        <DebugType>none</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DefineConstants>TRACE;DEBUG</DefineConstants>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Optimize>false</Optimize>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>portable</DebugType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="KCSG">
+            <HintPath Condition="Exists('../../../../../VanillaExpandedFramework')">../../../../../VanillaExpandedFramework/1.6/Assemblies/KCSG.dll</HintPath>
+            <HintPath Condition="!Exists('../../../../../VanillaExpandedFramework')">../../../../../2023507013/1.6/Assemblies/KCSG.dll</HintPath>
+            <HintPath Condition="!Exists('../../../../../2023507013/1.6/Assemblies/PipeSystem.dll')">../../../../../../../../workshop/content/294100/2023507013/1.6/Assemblies/KCSG.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="PipeSystem">
+            <HintPath Condition="Exists('../../../../../VanillaExpandedFramework')">../../../../../VanillaExpandedFramework/1.6/Assemblies/PipeSystem.dll</HintPath>
+            <HintPath Condition="!Exists('../../../../../VanillaExpandedFramework')">../../../../../2023507013/1.6/Assemblies/PipeSystem.dll</HintPath>
+            <HintPath Condition="!Exists('../../../../../2023507013/1.6/Assemblies/PipeSystem.dll')">../../../../../../../../workshop/content/294100/2023507013/1.6/Assemblies/PipeSystem.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup Condition="'@(Reference->WithMetadataValue('Identity', 'Assembly-CSharp')->Metadata('HintPath')->Exists())' == ''">
+        <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6-*"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Krafs.Publicizer" Version="2.1.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Lib.Harmony" Version="*" ExcludeAssets="runtime"/>
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="../PawnStorages/PawnStorages.csproj" >
+        <Private>False</Private>
+      </ProjectReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="Properties\Settings.Designer.cs">
+            <DesignTimeSharedInput>True</DesignTimeSharedInput>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Settings.settings</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Properties\Settings.settings">
+            <Generator>SettingsSingleFileGenerator</Generator>
+            <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Publicize Include="KCSG" />
+    </ItemGroup>
+
+    <Target Name="CleanAssemblies" AfterTargets="Clean">
+        <RemoveDir Directories="$(OutputPath)" Condition="Exists('$(OutputPath)')" />
+    </Target>
+
+    <Target Name="PreCleanAssemblies" BeforeTargets="CoreCompile" >
+        <RemoveDir Directories="$(OutputPath)" Condition="Exists('$(OutputPath)')" />
+    </Target>
+
+</Project>
