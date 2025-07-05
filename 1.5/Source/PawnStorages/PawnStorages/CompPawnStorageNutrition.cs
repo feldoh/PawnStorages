@@ -18,10 +18,8 @@ public class CompPawnStorageNutrition : ThingComp
     private float _storedNutrition = 0f;
     private float _targetNutritionLevel = -1f;
 
-    public virtual bool IsPiped
-    {
-        get => false;
-    }
+    public virtual bool IsPiped => false;
+    public virtual bool ShowNutritionLevelGizmo => true;
 
     public virtual float storedNutrition
     {
@@ -273,7 +271,7 @@ public class CompPawnStorageNutrition : ThingComp
 
     public override IEnumerable<Gizmo> CompGetGizmosExtra()
     {
-        if (!IsPiped)
+        if (ShowNutritionLevelGizmo)
         {
             yield return new Command_SetTargetNutritionLevel
             {

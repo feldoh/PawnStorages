@@ -119,7 +119,9 @@
     <PS_ReleaseAllToDefensivePositions>Release all to defensive positions</PS_ReleaseAllToDefensivePositions>
     <PS_ReleaseAllToDefensivePositions_Tooltip>If the released pawn(s) have a defensive position, they are immediately sent there. Only works with basic mode.</PS_ReleaseAllToDefensivePositions_Tooltip>
 
-    <PS_AvailableNutrition>Nutrition Avalable {0}/{0}</PS_AvailableNutrition>
+    <PS_AvailableNutrition>Nutrition Available {0}/{1}</PS_AvailableNutrition>
+    <PS_DisallowPipedNutrition>Disable Pipe Feeding</PS_DisallowPipedNutrition>
+    <PS_DisallowPipedNutritionDesc>Disable </PS_DisallowPipedNutritionDesc>
 
     <PS_RenameDialog_Label>Rename (clear to reset):</PS_RenameDialog_Label>
     <PS_RenameDialog_Apply>Apply</PS_RenameDialog_Apply>

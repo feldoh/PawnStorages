@@ -29,6 +29,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Reference Include="VFECore">
+            <HintPath Condition="Exists('../../../../../VanillaExpandedFramework')">../../../../../VanillaExpandedFramework/1.5/Assemblies/VFECore.dll</HintPath>
+            <HintPath Condition="!Exists('../../../../../VanillaExpandedFramework')">../../../../../2023507013/1.5/Assemblies/VFECore.dll</HintPath>
+            <HintPath Condition="!Exists('../../../../../2023507013/1.5/Assemblies/PipeSystem.dll')">../../../../../../../../workshop/content/294100/2023507013/1.5/Assemblies/VFECore.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
         <Reference Include="KCSG">
             <HintPath Condition="Exists('../../../../../VanillaExpandedFramework')">../../../../../VanillaExpandedFramework/1.5/Assemblies/KCSG.dll</HintPath>
             <HintPath Condition="!Exists('../../../../../VanillaExpandedFramework')">../../../../../2023507013/1.5/Assemblies/KCSG.dll</HintPath>
