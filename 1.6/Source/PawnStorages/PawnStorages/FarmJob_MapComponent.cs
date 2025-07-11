@@ -37,8 +37,6 @@ public class FarmJob_MapComponent(Map map) : MapComponent(map)
         }
         if (!forced && !roper.CanReserve((LocalTargetInfo) (Thing) animal))
             return null;
-        if (animal.roping.IsRopedToHitchingPost || AnimalPenUtility.GetCurrentPenOf(animal, false) != null)
-            return null;
         if (!WorkGiver_InteractAnimal.CanInteractWithAnimal(roper, animal, out jobFailReason, forced, true, true, true))
             return null;
 
