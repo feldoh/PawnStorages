@@ -98,6 +98,7 @@
     <PS_FarmTab_NameStarving>{0} (Starving!)</PS_FarmTab_NameStarving>
     <PS_FarmTab_Nutrition>Nutrition: {0}</PS_FarmTab_Nutrition>
     <PS_FarmTab_Fullness>Progress: {0} - {1}</PS_FarmTab_Fullness>
+    <PS_FarmTab_FullnessTime>Time to produce: {0}</PS_FarmTab_FullnessTime>
 
     <PS_NutritionLevel>Target nutrition: {0}</PS_NutritionLevel>
     <PS_CommandSetNutritionLevel>Set Target nutrition</PS_CommandSetNutritionLevel>
@@ -118,7 +119,9 @@
     <PS_ReleaseAllToDefensivePositions>Release all to defensive positions</PS_ReleaseAllToDefensivePositions>
     <PS_ReleaseAllToDefensivePositions_Tooltip>If the released pawn(s) have a defensive position, they are immediately sent there. Only works with basic mode.</PS_ReleaseAllToDefensivePositions_Tooltip>
 
-    <PS_AvailableNutrition>Nutrition Avalable {0}/{0}</PS_AvailableNutrition>
+    <PS_AvailableNutrition>Nutrition Available {0}/{1}</PS_AvailableNutrition>
+    <PS_DisallowPipedNutrition>Disable Pipe Feeding</PS_DisallowPipedNutrition>
+    <PS_DisallowPipedNutritionDesc>Disable </PS_DisallowPipedNutritionDesc>
 
     <PS_RenameDialog_Label>Rename (clear to reset):</PS_RenameDialog_Label>
     <PS_RenameDialog_Apply>Apply</PS_RenameDialog_Apply>

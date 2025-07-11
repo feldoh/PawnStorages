@@ -114,7 +114,7 @@ public class Building_PSFactory : Building, IStoreSettingsParent, INutritionStor
         stringBuilder.AppendLine("PS_NutritionPerDay".Translate(pawnStorage.NutritionRequiredPerDay().ToStringDecimalIfSmall()));
         if (pawnStorageNutrition is { IsPiped: false })
         {
-            stringBuilder.AppendLine("PS_AvailableNutrition".Translate(pawnStorageNutrition.storedNutrition, pawnStorageNutrition.MaxNutrition));
+            stringBuilder.AppendLine("PS_AvailableNutrition".Translate(pawnStorageNutrition.storedNutrition, pawnStorageNutrition.TargetNutritionLevel));
         }
         return stringBuilder.ToString().Trim();
     }

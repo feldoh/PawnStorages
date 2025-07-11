@@ -18,10 +18,8 @@ public class CompPawnStorageNutrition : ThingComp
     private float _storedNutrition = 0f;
     private float _targetNutritionLevel = -1f;
 
-    public virtual bool IsPiped
-    {
-        get => false;
-    }
+    public virtual bool IsPiped => false;
+    public virtual bool ShowNutritionLevelGizmo => true;
 
     public virtual float storedNutrition
     {
@@ -65,10 +63,21 @@ public class CompPawnStorageNutrition : ThingComp
     public virtual float ResolveStarvationIfPossibleAndNecessary(Need_Food foodNeeds, Pawn pawn) =>
         !foodNeeds.Starving ? 0f : FeedAndRecordWantedAmount(foodNeeds, foodNeeds.NutritionWanted, pawn);
 
+    public virtual bool AbsorbFromAlternateSource(Need_Food foodNeeds, float neededFood, out float amountFed)
+    {
+        amountFed = 0f;
+        return false;
+    }
+
     public virtual float FeedAndRecordWantedAmount(Need_Food foodNeeds, float neededFood, Pawn pawn, bool record = true)
     {
         float totalFeed = 0f;
         while (neededFood > 0 && AbsorbToFeedIfNeeded(foodNeeds, neededFood, out float amountFed))
+        {
+            totalFeed += amountFed;
+            neededFood -= amountFed;
+        }
+        while (neededFood > 0 && AbsorbFromAlternateSource(foodNeeds, neededFood, out float amountFed))
         {
             totalFeed += amountFed;
             neededFood -= amountFed;
@@ -262,7 +271,7 @@ public class CompPawnStorageNutrition : ThingComp
 
     public override IEnumerable<Gizmo> CompGetGizmosExtra()
     {
-        if (!IsPiped)
+        if (ShowNutritionLevelGizmo)
         {
             yield return new Command_SetTargetNutritionLevel
             {
