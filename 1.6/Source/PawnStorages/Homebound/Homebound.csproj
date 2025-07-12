@@ -18,7 +18,7 @@
     <ItemGroup>
         <ProjectReference Include="../PawnStorages/PawnStorages.csproj" />
         <ProjectReference Include="../PawnStoragesModule-VEF/PawnStoragesModule-VanillaExpandedFramework.csproj" />
-        <ProjectReference Include="..\PawnStoragesModule-SimpleWarrants\PawnStoragesModule-SimpleWarrants.csproj" />
+        <!-- <ProjectReference Include="..\PawnStoragesModule-SimpleWarrants\PawnStoragesModule-SimpleWarrants.csproj" /> -->
     </ItemGroup>
 
     <ItemGroup>
