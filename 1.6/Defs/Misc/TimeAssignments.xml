@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <TimeAssignmentDef>
+        <defName>PS_Home</defName>
+        <label>home</label>
+        <color>(153,50,204)</color>
+    </TimeAssignmentDef>
+
+</Defs>

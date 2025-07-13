@@ -1,0 +1,751 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <!-- Wall Door-->
+    <ThingDef ParentName="DoorBase">
+        <defName>PS_PawnDoor</defName>
+        <label>pawn door</label>
+        <description>A door in the wall, where does it lead? We don't know!</description>
+        <thingClass>PawnStorages.Building_PawnStorage</thingClass>
+        <altitudeLayer>BuildingOnTop</altitudeLayer>
+        <passability>Standable</passability>
+        <pathCost>0</pathCost>
+        <rotatable>true</rotatable>
+        <clearBuildingArea>false</clearBuildingArea>
+        <fillPercent>0.50</fillPercent>
+        <holdsRoof>false</holdsRoof>
+        <building>
+            <isEdifice>false</isEdifice>
+        </building>
+        <statBases>
+            <WorkToBuild>850</WorkToBuild>
+        </statBases>
+        <graphicData>
+            <texPath>Things/Building/PawnHatch/PawnDoor_Open</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <damageData>
+                <enabled>false</enabled>
+            </damageData>
+        </graphicData>
+        <uiIconPath>Things/Building/Door/DoorSimple_MenuIcon</uiIconPath>
+        <costStuffCount>25</costStuffCount>
+        <comps>
+            <li Class="PawnStorages.CompProperties_PawnStorage">
+                <needsDrop>true</needsDrop>
+                <maxStoredPawns>9</maxStoredPawns>
+                <releaseOption>true</releaseOption>
+                <releaseAllOption>true</releaseAllOption>
+                <convertOption>true</convertOption>
+                <idleResearch>true</idleResearch>
+                <canBeScheduled>true</canBeScheduled>
+                <pawnRestIncreaseTick>0.00003</pawnRestIncreaseTick>
+            </li>
+            <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
+                <drawAssignmentOverlay>false</drawAssignmentOverlay>
+                <compClass>PawnStorages.CompAssignableToPawn_PawnStorage</compClass>
+            </li>
+        </comps>
+        <placeWorkers>
+            <li>PawnStorages.PlaceWorker_WallDoor</li>
+        </placeWorkers>
+        <modExtensions>
+            <li Class="PawnStorages.PSExtension">
+                <extraGraphicData>
+                    <texPath>Things/Building/PawnHatch/PawnDoor_Closed</texPath>
+                    <graphicClass>Graphic_Single</graphicClass>
+                    <damageData>
+                        <enabled>false</enabled>
+                    </damageData>
+                </extraGraphicData>
+            </li>
+        </modExtensions>
+    </ThingDef>
+    <ThingDef ParentName="DoorBase">
+        <defName>PS_PawnHatch</defName>
+        <label>pawn hatch</label>
+        <description>A hatch down the ground... where does it lead? We don't know!</description>
+        <thingClass>PawnStorages.Building_PawnStorage</thingClass>
+        <altitudeLayer>BuildingOnTop</altitudeLayer>
+        <passability>Standable</passability>
+        <pathCost>0</pathCost>
+        <rotatable>true</rotatable>
+        <clearBuildingArea>false</clearBuildingArea>
+        <fillPercent>0.50</fillPercent>
+        <holdsRoof>false</holdsRoof>
+        <building>
+            <isEdifice>false</isEdifice>
+        </building>
+        <statBases>
+            <WorkToBuild>850</WorkToBuild>
+        </statBases>
+        <graphicData>
+            <texPath>Things/Building/PawnHatch/PawnHatch_Open</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <damageData>
+                <enabled>false</enabled>
+            </damageData>
+        </graphicData>
+        <uiIconPath>Things/Building/Door/DoorSimple_MenuIcon</uiIconPath>
+        <costStuffCount>25</costStuffCount>
+        <comps>
+            <li Class="PawnStorages.CompProperties_PawnStorage">
+                <needsDrop>true</needsDrop>
+                <maxStoredPawns>9</maxStoredPawns>
+                <releaseOption>true</releaseOption>
+                <releaseAllOption>true</releaseAllOption>
+                <convertOption>true</convertOption>
+                <idleResearch>true</idleResearch>
+                <canBeScheduled>true</canBeScheduled>
+                <pawnRestIncreaseTick>0.00003</pawnRestIncreaseTick>
+            </li>
+            <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
+                <drawAssignmentOverlay>false</drawAssignmentOverlay>
+                <compClass>PawnStorages.CompAssignableToPawn_PawnStorage</compClass>
+            </li>
+        </comps>
+        <modExtensions>
+            <li Class="PawnStorages.PSExtension">
+                <extraGraphicData>
+                    <texPath>Things/Building/PawnHatch/PawnHatch_Closed</texPath>
+                    <graphicClass>Graphic_Single</graphicClass>
+                    <damageData>
+                        <enabled>false</enabled>
+                    </damageData>
+                </extraGraphicData>
+            </li>
+        </modExtensions>
+    </ThingDef>
+    <ThingDef ParentName="BuildingBase">
+        <defName>PS_BatteryFarm</defName>
+        <minifiedDef>MinifiedThing</minifiedDef>
+        <label>Battery Farm</label>
+        <description>A battery farm. For animals. Not batteries. \n\n Squeeze in up to 16 animals that give produce, keep them supplied with nutrition, and reap the rewards without the filth!</description>
+        <thingClass>PawnStorages.Farm.Building_PSFarm</thingClass>
+        <graphicData>
+            <texPath>Things/Building/Production/PS_BatteryFarm</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <drawSize>(3.9,3.9)</drawSize>
+        </graphicData>
+        <drawerType>MapMeshAndRealTime</drawerType>
+        <size>(3,3)</size>
+        <thingCategories>
+            <li>BuildingsProduction</li>
+        </thingCategories>
+        <tickerType>Normal</tickerType>
+        <altitudeLayer>Building</altitudeLayer>
+        <passability>PassThroughOnly</passability>
+        <pathCost>100</pathCost>
+        <blockWind>true</blockWind>
+        <rotatable>true</rotatable>
+        <clearBuildingArea>false</clearBuildingArea>
+        <fillPercent>0.50</fillPercent>
+        <holdsRoof>false</holdsRoof>
+        <inspectorTabs>
+            <li>PawnStorages.Farm.ITab_Production</li>
+            <li>PawnStorages.Farm.ITab_Farm</li>
+            <li>PawnStorages.Farm.ITab_Assignments</li>
+            <li>ITab_BiosculpterNutritionStorage</li>
+        </inspectorTabs>
+        <designationCategory>Production</designationCategory>
+        <comps>
+            <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
+                <drawAssignmentOverlay>false</drawAssignmentOverlay>
+                <maxAssignedPawnsCount>16</maxAssignedPawnsCount>
+                <colonyAnimalsOnly>true</colonyAnimalsOnly>
+                <showGizmo>true</showGizmo>
+            </li>
+            <li Class="PawnStorages.Farm.Comps.CompProperties_FarmStorage">
+                <needsDrop>true</needsDrop>
+                <releaseOption>true</releaseOption>
+                <convertOption>false</convertOption>
+                <appendOfName>true</appendOfName>
+                <lightEffect>true</lightEffect>
+                <storageStation>PS_BatteryFarm</storageStation>
+            </li>
+            <li Class="PawnStorages.CompProperties_PawnStorageNutrition">
+                <HasTip>false</HasTip>
+                <MainTex>Things/Building/Production/PS_BatteryFarm</MainTex>
+                <AltTex>Things/Building/Production/PS_BatteryFarmRustic</AltTex>
+            </li>
+            <li Class="PawnStorages.Farm.Comps.CompProperties_FarmProducer">
+            </li>
+            <li MayRequire="VanillaExpanded.VNutrientE" Class="PipeSystem.CompProperties_Resource">
+                <pipeNet>VNPE_NutrientPasteNet</pipeNet>
+            </li>
+            <li Class="PawnStorages.CompProperties_Renamable" />
+        </comps>
+        <building>
+            <wantsHopperAdjacent>true</wantsHopperAdjacent>
+            <destroySound>BuildingDestroyed_Metal_Big</destroySound>
+            <fixedStorageSettings>
+                <priority>Important</priority>
+                <filter>
+                    <categories>
+                        <li>Foods</li>
+                    </categories>
+                    <specialFiltersToDisallow>
+                        <li>AllowPlantFood</li>
+                    </specialFiltersToDisallow>
+                </filter>
+            </fixedStorageSettings>
+            <defaultStorageSettings>
+                <priority>Important</priority>
+                <filter>
+                    <categories>
+                        <li>Foods</li>
+                    </categories>
+                </filter>
+            </defaultStorageSettings>
+        </building>
+        <statBases>
+            <WorkToBuild>1500</WorkToBuild>
+            <MaxHitPoints>100</MaxHitPoints>
+            <Flammability>0.5</Flammability>
+            <Mass>30</Mass>
+        </statBases>
+        <costList>
+            <Steel>150</Steel>
+            <WoodLog>150</WoodLog>
+            <Hay>150</Hay>
+        </costList>
+        <constructEffect>ConstructMetal</constructEffect>
+        <placeWorkers>
+            <li>PawnStorages.PlaceWorker_DrawRotationArrow</li>
+        </placeWorkers>
+        <uiIconPath>Things/Building/Production/PS_BatteryFarm</uiIconPath>
+        <uiIconScale>0.85</uiIconScale>
+        <modExtensions>
+            <li Class="PawnStorages.PSExtension" />
+        </modExtensions>
+    </ThingDef>
+    <ThingDef ParentName="BuildingBase">
+        <defName>PS_BreedingFarm</defName>
+        <minifiedDef>MinifiedThing</minifiedDef>
+        <label>Breeding Domes</label>
+        <description>A breeding farm. \n\n Squeeze in up to 16 animals that mate, keep them supplied with nutrition, and reap the rewards without the filth!</description>
+        <drawerType>MapMeshAndRealTime</drawerType>
+        <!-- <drawerType>MapMeshOnly</drawerType> -->
+        <thingClass>PawnStorages.Farm.Building_PSFarm</thingClass>
+        <graphicData>
+            <texPath>Things/Building/Production/PS_BreedingDomes</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <drawSize>(5,5)</drawSize>
+        </graphicData>
+        <size>(3,3)</size>
+        <thingCategories>
+            <li>BuildingsProduction</li>
+        </thingCategories>
+        <tickerType>Normal</tickerType>
+        <altitudeLayer>Building</altitudeLayer>
+        <passability>PassThroughOnly</passability>
+        <pathCost>100</pathCost>
+        <blockWind>true</blockWind>
+        <rotatable>true</rotatable>
+        <clearBuildingArea>false</clearBuildingArea>
+        <fillPercent>0.50</fillPercent>
+        <holdsRoof>false</holdsRoof>
+        <inspectorTabs>
+            <li>PawnStorages.Farm.ITab_Farm</li>
+            <li>ITab_BiosculpterNutritionStorage</li>
+            <li>PawnStorages.Farm.ITab_Breeding</li>
+            <li>PawnStorages.Farm.ITab_Slaughter</li>
+            <li>PawnStorages.Farm.ITab_Assignments</li>
+        </inspectorTabs>
+        <designationCategory>Production</designationCategory>
+        <comps>
+            <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
+                <drawAssignmentOverlay>false</drawAssignmentOverlay>
+                <maxAssignedPawnsCount>16</maxAssignedPawnsCount>
+                <colonyAnimalsOnly>true</colonyAnimalsOnly>
+                <showGizmo>true</showGizmo>
+            </li>
+            <li Class="PawnStorages.Farm.Comps.CompProperties_FarmStorage">
+                <needsDrop>true</needsDrop>
+                <releaseOption>true</releaseOption>
+                <convertOption>false</convertOption>
+                <appendOfName>true</appendOfName>
+                <lightEffect>true</lightEffect>
+                <storageStation>PS_BatteryFarm</storageStation>
+            </li>
+            <li Class="PawnStorages.CompProperties_PawnStorageNutrition">
+                <HasTip>true</HasTip>
+                <TipScale>5</TipScale>
+                <MainTex>Things/Building/Production/PS_BreedingDomes</MainTex>
+                <Tip>Things/Building/Production/PS_BreedingDomesJustTheTip</Tip>
+                <SansTip>Things/Building/Production/PS_BreedingDomesNoTip</SansTip>
+            </li>
+            <li Class="PawnStorages.Farm.Comps.CompProperties_FarmBreeder">
+            </li>
+            <li MayRequire="VanillaExpanded.VNutrientE" Class="PipeSystem.CompProperties_Resource">
+                <pipeNet>VNPE_NutrientPasteNet</pipeNet>
+            </li>
+            <li Class="PawnStorages.CompProperties_Renamable" />
+        </comps>
+        <building>
+            <wantsHopperAdjacent>true</wantsHopperAdjacent>
+            <destroySound>BuildingDestroyed_Metal_Big</destroySound>
+            <fixedStorageSettings>
+                <priority>Important</priority>
+                <filter>
+                    <categories>
+                        <li>Foods</li>
+                    </categories>
+                    <specialFiltersToDisallow>
+                        <li>AllowPlantFood</li>
+                    </specialFiltersToDisallow>
+                </filter>
+            </fixedStorageSettings>
+            <defaultStorageSettings>
+                <priority>Important</priority>
+                <filter>
+                    <categories>
+                        <li>Foods</li>
+                    </categories>
+                </filter>
+            </defaultStorageSettings>
+        </building>
+        <statBases>
+            <WorkToBuild>1500</WorkToBuild>
+            <MaxHitPoints>100</MaxHitPoints>
+            <Flammability>0.5</Flammability>
+            <Mass>30</Mass>
+        </statBases>
+        <costList>
+            <Steel>150</Steel>
+            <WoodLog>150</WoodLog>
+            <Hay>150</Hay>
+        </costList>
+        <constructEffect>ConstructMetal</constructEffect>
+        <placeWorkers>
+            <li>PawnStorages.PlaceWorker_DrawRotationArrow</li>
+        </placeWorkers>
+        <uiIconPath>Things/Building/Production/PS_BreedingDomes</uiIconPath>
+        <uiIconScale>0.85</uiIconScale>
+        <modExtensions>
+            <li Class="PawnStorages.PSExtension" />
+        </modExtensions>
+    </ThingDef>
+
+    <ThingDef ParentName="BuildingBase">
+        <defName>PS_Factory</defName>
+        <minifiedDef>MinifiedThing</minifiedDef>
+        <label>Factory</label>
+        <description>A factory. \n\n Squeeze in up to 24 factory workers, keep them supplied with nutrition and materials and watch the items flow in!</description>
+        <drawerType>MapMeshAndRealTime</drawerType>
+        <thingClass>PawnStorages.Factory.Building_PSFactory</thingClass>
+        <graphicData>
+            <texPath>Things/Building/Production/PS_Factory</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <drawSize>(9,4)</drawSize>
+            <color>(70, 70, 75)</color>
+        </graphicData>
+        <size>(9,4)</size>
+        <thingCategories>
+            <li>BuildingsProduction</li>
+        </thingCategories>
+        <tickerType>Normal</tickerType>
+        <altitudeLayer>Building</altitudeLayer>
+        <passability>PassThroughOnly</passability>
+        <pathCost>100</pathCost>
+        <blockWind>true</blockWind>
+        <rotatable>true</rotatable>
+        <clearBuildingArea>false</clearBuildingArea>
+        <fillPercent>0.50</fillPercent>
+        <holdsRoof>false</holdsRoof>
+        <inspectorTabs>
+            <li>ITab_BiosculpterNutritionStorage</li>
+            <li>PawnStorages.Factory.ITab_Bills</li>
+        </inspectorTabs>
+        <designationCategory>Production</designationCategory>
+        <comps>
+            <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
+                <drawAssignmentOverlay>false</drawAssignmentOverlay>
+                <maxAssignedPawnsCount>24</maxAssignedPawnsCount>
+                <showGizmo>true</showGizmo>
+                <toolUsersOnly>true</toolUsersOnly>
+                <disallowEntityStoringCommand>true</disallowEntityStoringCommand>
+            </li>
+            <li Class="PawnStorages.Factory.CompProperties_FactoryProducer"/>
+            <li Class="PawnStorages.CompProperties_PawnStorageNutrition" />
+            <li Class="PawnStorages.CompProperties_PawnStorage">
+                <maxStoredPawns>24</maxStoredPawns>
+                <needsDrop>true</needsDrop>
+                <selfReleaseOption>true</selfReleaseOption>
+                <releaseAllOption>true</releaseAllOption>
+                <convertOption>true</convertOption>
+                <appendOfName>true</appendOfName>
+                <lightEffect>true</lightEffect>
+                <allowNonColonist>true</allowNonColonist>
+                <canBeScheduled>true</canBeScheduled>
+                <canBeRotated>false</canBeRotated>
+            </li>
+            <li MayRequire="VanillaExpanded.VNutrientE" Class="PipeSystem.CompProperties_Resource">
+                <pipeNet>VNPE_NutrientPasteNet</pipeNet>
+            </li>
+            <li Class="PawnStorages.CompProperties_Renamable" />
+        </comps>
+        <building>
+            <wantsHopperAdjacent>true</wantsHopperAdjacent>
+            <destroySound>BuildingDestroyed_Metal_Big</destroySound>
+            <storageGroupTag>PS_Factory</storageGroupTag>
+            <fixedStorageSettings>
+                <priority>Important</priority>
+                <filter>
+                    <categories>
+                        <li>Foods</li>
+                    </categories>
+                    <specialFiltersToDisallow>
+                        <li>AllowPlantFood</li>
+                    </specialFiltersToDisallow>
+                </filter>
+            </fixedStorageSettings>
+            <defaultStorageSettings>
+                <priority>Important</priority>
+                <filter>
+                    <categories>
+                        <li>Foods</li>
+                    </categories>
+                </filter>
+            </defaultStorageSettings>
+        </building>
+        <statBases>
+            <WorkToBuild>1500</WorkToBuild>
+            <MaxHitPoints>100</MaxHitPoints>
+            <Flammability>0.5</Flammability>
+            <Mass>30</Mass>
+        </statBases>
+        <costList>
+            <Steel>350</Steel>
+            <ComponentIndustrial>3</ComponentIndustrial>
+        </costList>
+        <constructEffect>ConstructMetal</constructEffect>
+        <placeWorkers>
+            <li>PawnStorages.PlaceWorker_DrawRotationArrow</li>
+        </placeWorkers>
+        <uiIconPath>Things/Building/Production/PS_Factory</uiIconPath>
+        <uiIconScale>0.85</uiIconScale>
+        <uiIconColor>(70, 70, 75)</uiIconColor>
+        <modExtensions>
+            <li Class="PawnStorages.PSExtension" />
+        </modExtensions>
+        <researchPrerequisites>
+            <li>Electricity</li>
+        </researchPrerequisites>
+        <techLevel>Industrial</techLevel>
+    </ThingDef>
+
+    <ThingDef ParentName="BuildingBase">
+        <defName>PS_FactoryHopper</defName>
+        <label>factory hopper</label>
+        <description>Holds resources for factories.</description>
+        <thingClass>Building_Storage</thingClass>
+        <graphicData>
+            <texPath>Things/Building/Production/Hopper</texPath>
+            <graphicClass>Graphic_Multi</graphicClass>
+            <damageData>
+                <rect>(0.05,0.1,0.9,0.9)</rect>
+                <cornerTL>Damage/Corner</cornerTL>
+                <cornerTR>Damage/Corner</cornerTR>
+            </damageData>
+            <color>(70, 70, 75)</color>
+        </graphicData>
+        <altitudeLayer>Building</altitudeLayer>
+        <passability>PassThroughOnly</passability>
+        <fillPercent>0.5</fillPercent>
+        <pathCost>42</pathCost>
+        <canOverlapZones>false</canOverlapZones>
+        <building>
+            <isHopper>true</isHopper>
+            <storageGroupTag>Hopper</storageGroupTag>
+            <blueprintClass>Blueprint_Storage</blueprintClass>
+            <fixedStorageSettings>
+                <filter>
+                    <disallowNotEverStorable>true</disallowNotEverStorable>
+                    <categories>
+                        <li>Root</li>
+                    </categories>
+                    <disallowedCategories>
+                        <li>Plants</li>
+                        <li>Buildings</li>
+                    </disallowedCategories>
+                </filter>
+            </fixedStorageSettings>
+            <defaultStorageSettings>
+                <priority>Preferred</priority>
+                <filter>
+                    <categories>
+                        <li>ResourcesRaw</li>
+                        <li>Leathers</li>
+                    </categories>
+                </filter>
+            </defaultStorageSettings>
+            <buildingTags>
+                <li>Production</li>
+            </buildingTags>
+        </building>
+        <inspectorTabs>
+            <li>ITab_Storage</li>
+        </inspectorTabs>
+        <castEdgeShadows>true</castEdgeShadows>
+        <statBases>
+            <WorkToBuild>300</WorkToBuild>
+            <MaxHitPoints>100</MaxHitPoints>
+            <Flammability>0.5</Flammability>
+        </statBases>
+        <costList>
+            <Steel>15</Steel>
+        </costList>
+        <tickerType>Never</tickerType>
+        <rotatable>true</rotatable>
+        <neverMultiSelect>true</neverMultiSelect>
+        <designationCategory>Production</designationCategory>
+        <uiOrder>2140</uiOrder>
+        <surfaceType>Item</surfaceType>
+        <placeWorkers>
+            <li>PlaceWorker_NextToHopperAccepter</li>
+        </placeWorkers>
+        <constructEffect>ConstructMetal</constructEffect>
+        <researchPrerequisites />
+        <uiIconPath>Things/Building/Production/Hopper_MenuIcon</uiIconPath>
+        <uiIconScale>0.85</uiIconScale>
+        <uiIconColor>(70, 70, 75)</uiIconColor>
+        <techLevel>Industrial</techLevel>
+    </ThingDef>
+
+
+    <ThingDef ParentName="BuildingBase">
+        <defName>PS_BugWallStorage</defName>
+        <label>Wall Nest</label>
+        <description>An insect like wall nest capable of storing multiple pawns. Can be placed on walls like a Wall Lamp.</description>
+        <thingClass>PawnStorages.Building_PawnStorage</thingClass>
+        <rotatable>true</rotatable>
+        <graphicData>
+            <texPath>Things/Building/PS_BugWallStorage</texPath>
+            <graphicClass>Graphic_Multi</graphicClass>
+            <drawOffsetNorth>(0,0,0.75)</drawOffsetNorth>
+            <drawOffsetSouth>(0,0,-0.9)</drawOffsetSouth>
+            <drawOffsetWest>(-0.9,0,0)</drawOffsetWest>
+            <drawOffsetEast>(0.9,0,0)</drawOffsetEast>
+            <damageData>
+                <enabled>false</enabled>
+            </damageData>
+        </graphicData>
+        <tickerType>Normal</tickerType>
+        <altitudeLayer>BuildingOnTop</altitudeLayer>
+        <passability>Standable</passability>
+        <terrainAffordanceNeeded IsNull="True" />
+        <researchPrerequisites IsNull="True" />
+        <pathCost>0</pathCost>
+        <overrideMinifiedRot>North</overrideMinifiedRot>
+        <minifiedDrawOffset>(0, 0, 0.2)</minifiedDrawOffset>
+        <uiOrder>2991</uiOrder>
+        <containedPawnsSelectable>true</containedPawnsSelectable>
+        <building>
+            <isEdifice>false</isEdifice>
+            <isAttachment>true</isAttachment>
+        </building>
+        <placeWorkers>
+            <li>Placeworker_AttachedToWall</li>
+        </placeWorkers>
+        <inspectorTabs>
+            <li>PawnStorages.TickedStorage.ITab_PawnList</li>
+        </inspectorTabs>
+        <designationCategory>Furniture</designationCategory>
+        <comps>
+            <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
+                <maxAssignedPawnsCount>16</maxAssignedPawnsCount>
+                <colonyAnimalsOnly>true</colonyAnimalsOnly>
+                <showGizmo>true</showGizmo>
+            </li>
+            <li Class="PawnStorages.TickedStorage.CompProperties_TickedStorage">
+                <allowNonColonist>true</allowNonColonist>
+                <tickAge>false</tickAge>
+                <tickHediffs>false</tickHediffs>
+                <needsDrop>false</needsDrop>
+                <releaseOption>true</releaseOption>
+                <releaseAllOption>true</releaseAllOption>
+                <maxStoredPawns>16</maxStoredPawns>
+                <convertOption>true</convertOption>
+                <canBeScheduled>true</canBeScheduled>
+                <showStoredPawnHeadOnly>true</showStoredPawnHeadOnly>
+            </li>
+        </comps>
+        <statBases>
+            <WorkToBuild>600</WorkToBuild>
+            <MaxHitPoints>50</MaxHitPoints>
+            <Flammability>0.5</Flammability>
+            <Mass>5</Mass>
+        </statBases>
+        <costList>
+            <InsectJelly>15</InsectJelly>
+        </costList>
+        <uiIconPath>Things/Building/PS_BugWallStorage_UI</uiIconPath>
+        <uiIconScale>0.85</uiIconScale>
+        <modExtensions>
+            <li Class="PawnStorages.PSExtension" />
+        </modExtensions>
+    </ThingDef>
+
+    <ThingDef ParentName="BuildingBase">
+        <defName>PS_BugWallCocoon</defName>
+        <label>Wall Mounted Cocoon</label>
+        <description>An insect like cocoon that can bind and suspend a pawn. It provides nutrients while keeping the pawn in a semi hibernated state.\n\nThe pawns hediffs will keep ticking, but age and hunger do not.</description>
+        <thingClass>PawnStorages.Building_PawnStorage</thingClass>
+        <rotatable>true</rotatable>
+        <graphicData>
+            <texPath>Things/Building/PS_BugCocoonWallMount</texPath>
+            <graphicClass>Graphic_Multi</graphicClass>
+            <drawOffsetNorth>(0,0,0.75)</drawOffsetNorth>
+            <drawOffsetSouth>(0,0,-1)</drawOffsetSouth>
+            <drawOffsetWest>(-0.3,0,0)</drawOffsetWest>
+            <drawOffsetEast>(0.3,0,0)</drawOffsetEast>
+            <drawSize>(0.8,0.8)</drawSize>
+            <damageData>
+                <enabled>false</enabled>
+            </damageData>
+        </graphicData>
+        <tickerType>Normal</tickerType>
+        <altitudeLayer>BuildingOnTop</altitudeLayer>
+        <passability>Standable</passability>
+        <terrainAffordanceNeeded IsNull="True" />
+        <researchPrerequisites IsNull="True" />
+        <pathCost>0</pathCost>
+        <overrideMinifiedRot>North</overrideMinifiedRot>
+        <uiOrder>2991</uiOrder>
+        <containedPawnsSelectable>true</containedPawnsSelectable>
+        <building>
+            <isEdifice>false</isEdifice>
+            <isAttachment>true</isAttachment>
+        </building>
+        <placeWorkers>
+            <li>Placeworker_AttachedToWall</li>
+        </placeWorkers>
+        <inspectorTabs>
+            <li>PawnStorages.TickedStorage.ITab_PawnList</li>
+        </inspectorTabs>
+        <designationCategory>Furniture</designationCategory>
+        <comps>
+            <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
+                <maxAssignedPawnsCount>1</maxAssignedPawnsCount>
+                <showGizmo>true</showGizmo>
+                <pawnDrawScaleX>0.6</pawnDrawScaleX>
+                <pawnDrawScaleZ>0.6</pawnDrawScaleZ>
+                <pawnDrawOffsetX>0</pawnDrawOffsetX>
+                <pawnDrawOffsetZ>1.8</pawnDrawOffsetZ>
+                <drawGrayscale>false</drawGrayscale>
+                <cameraZoom>1.5</cameraZoom>
+            </li>
+            <li Class="PawnStorages.TickedStorage.CompProperties_TickedStorage">
+                <allowNonColonist>true</allowNonColonist>
+                <tickAge>false</tickAge>
+                <tickHediffs>true</tickHediffs>
+                <needsDrop>false</needsDrop>
+                <releaseOption>true</releaseOption>
+                <releaseAllOption>true</releaseAllOption>
+                <maxStoredPawns>1</maxStoredPawns>
+                <convertOption>true</convertOption>
+                <canBeScheduled>true</canBeScheduled>
+                <showStoredPawnHeadOnly>true</showStoredPawnHeadOnly>
+                <showStoredPawn>true</showStoredPawn>
+            </li>
+            <li Class="CompProperties_Glower">
+                <glowRadius>2</glowRadius>
+                <glowColor>(139, 189, 79,0)</glowColor>
+            </li>
+        </comps>
+        <statBases>
+            <WorkToBuild>600</WorkToBuild>
+            <MaxHitPoints>50</MaxHitPoints>
+            <Flammability>0.5</Flammability>
+            <Mass>5</Mass>
+        </statBases>
+        <costList>
+            <InsectJelly>15</InsectJelly>
+        </costList>
+        <uiIconPath>Things/Building/PS_BugCocoon</uiIconPath>
+        <modExtensions>
+            <li Class="PawnStorages.PSExtension">
+                <onlyRenderPawnNorth>true</onlyRenderPawnNorth>
+                <overlayGraphicData>
+                    <texPath>Things/Building/PS_BugCocoonWallMount_TopLayer</texPath>
+                    <graphicClass>Graphic_Single</graphicClass>
+                    <drawSize>(0.8,0.8)</drawSize>
+                </overlayGraphicData>
+            </li>
+        </modExtensions>
+    </ThingDef>
+
+    <ThingDef ParentName="BuildingBase">
+        <defName>PS_BugCocoon</defName>
+        <label>Cocoon</label>
+        <description>An insect like cocoon that can bind and suspend a pawn. It provides nutrients while keeping the pawn in a semi hibernated state.\n\nThe pawns hediffs will keep ticking, but age and hunger do not.</description>
+        <thingClass>PawnStorages.Building_PawnStorage</thingClass>
+        <rotatable>true</rotatable>
+        <graphicData>
+            <texPath>Things/Building/PS_BugCocoon</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <drawSize>(1,2)</drawSize>
+        </graphicData>
+        <size>(1,2)</size>
+        <tickerType>Normal</tickerType>
+        <altitudeLayer>Building</altitudeLayer>
+        <passability>PassThroughOnly</passability>
+        <researchPrerequisites IsNull="True" />
+        <pathCost>100</pathCost>
+        <overrideMinifiedRot>North</overrideMinifiedRot>
+        <minifiedDrawOffset>(0, 0, 0.2)</minifiedDrawOffset>
+        <uiOrder>2991</uiOrder>
+        <designationCategory>Furniture</designationCategory>
+        <containedPawnsSelectable>true</containedPawnsSelectable>
+        <hasInteractionCell>true</hasInteractionCell>
+        <interactionCellOffset>(0, 0, -1)</interactionCellOffset>
+        <comps>
+            <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
+                <maxAssignedPawnsCount>1</maxAssignedPawnsCount>
+                <colonyAnimalsOnly>false</colonyAnimalsOnly>
+                <showGizmo>true</showGizmo>
+                <pawnDrawScaleX>1</pawnDrawScaleX>
+                <pawnDrawScaleZ>0.5</pawnDrawScaleZ>
+                <drawGrayscale>false</drawGrayscale>
+                <cameraZoom>1.25</cameraZoom>
+            </li>
+            <li Class="PawnStorages.TickedStorage.CompProperties_TickedStorage">
+                <allowNonColonist>true</allowNonColonist>
+                <tickAge>false</tickAge>
+                <tickHediffs>true</tickHediffs>
+                <needsDrop>false</needsDrop>
+                <releaseOption>true</releaseOption>
+                <releaseAllOption>true</releaseAllOption>
+                <maxStoredPawns>1</maxStoredPawns>
+                <convertOption>true</convertOption>
+                <canBeScheduled>true</canBeScheduled>
+                <showStoredPawnHeadOnly>true</showStoredPawnHeadOnly>
+                <showStoredPawn>true</showStoredPawn>
+            </li>
+            <li Class="CompProperties_Glower">
+                <glowRadius>2</glowRadius>
+                <glowColor>(139, 189, 79,0)</glowColor>
+            </li>
+        </comps>
+        <statBases>
+            <WorkToBuild>600</WorkToBuild>
+            <MaxHitPoints>50</MaxHitPoints>
+            <Flammability>0.5</Flammability>
+            <Mass>5</Mass>
+        </statBases>
+        <costList>
+            <InsectJelly>20</InsectJelly>
+        </costList>
+        <uiIconPath>Things/Building/PS_BugCocoon</uiIconPath>
+        <modExtensions>
+            <li Class="PawnStorages.PSExtension" >
+                <overlayGraphicData>
+                    <texPath>Things/Building/PS_BugCocoonTopLayer</texPath>
+                    <graphicClass>Graphic_Single</graphicClass>
+                    <drawSize>(1,2)</drawSize>
+                </overlayGraphicData>
+            </li>
+        </modExtensions>
+    </ThingDef>
+</Defs>

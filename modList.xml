@@ -1,30 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModsConfigData>
-    <version>1.5.4297 rev1078</version>
-    <activeMods>
-        <li>brrainz.harmony</li>
-        <li>ludeon.rimworld</li>
-        <li>ludeon.rimworld.royalty</li>
-        <li>ludeon.rimworld.ideology</li>
-        <li>ludeon.rimworld.biotech</li>
-        <li>ludeon.rimworld.anomaly</li>
-        <li>unlimitedhugs.hugslib</li>
-        <li>unlimitedhugs.defensivepositions</li>
-        <li>keyz182.keyzlocalmodalert</li>
-        <li>pb3n.simplewarrants</li>
-        <li>oskarpotocki.vanillafactionsexpanded.core_steam</li>
-        <li>vanillaexpanded.vnutriente</li>
-        <li>orpheusly.pawnstorages</li>
-        <li>vanillaexpanded.vchemfuele</li>
-        <li>vanillaexpanded.helixiengas</li>
-        <li>bambaryla.vcepu</li>
-        <li>smashphil.xmlpatchhelper</li>
-    </activeMods>
-    <knownExpansions>
-        <li>ludeon.rimworld</li>
-        <li>ludeon.rimworld.royalty</li>
-        <li>ludeon.rimworld.ideology</li>
-        <li>ludeon.rimworld.biotech</li>
-        <li>ludeon.rimworld.anomaly</li>
-    </knownExpansions>
+	<version>1.6.4518 rev84</version>
+	<activeMods>
+		<li>brrainz.harmony</li>
+		<li>ludeon.rimworld</li>
+		<li>ludeon.rimworld.royalty</li>
+		<li>ludeon.rimworld.ideology</li>
+		<li>ludeon.rimworld.biotech</li>
+		<li>ludeon.rimworld.anomaly</li>
+		<li>ludeon.rimworld.odyssey</li>
+		<li>keyz182.keyzlocalmodalert</li>
+		<li>ray1203.simplecamerasetting</li>
+		<li>imranfish.xmlextensions</li>
+		<li>smashphil.xmlpatchhelper</li>
+		<li>oskarpotocki.vanillafactionsexpanded.core</li>
+		<li>mss.flavourpack</li>
+		<li>orpheusly.pawnstorages</li>
+	</activeMods>
+	<knownExpansions>
+		<li>ludeon.rimworld.royalty</li>
+		<li>ludeon.rimworld.ideology</li>
+		<li>ludeon.rimworld.biotech</li>
+		<li>ludeon.rimworld.anomaly</li>
+		<li>ludeon.rimworld.odyssey</li>
+	</knownExpansions>
 </ModsConfigData>
