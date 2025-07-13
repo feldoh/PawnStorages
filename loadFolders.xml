@@ -27,14 +27,13 @@
     <v1.6>
         <li>Common</li>
         <li>1.6</li>
-        <!-- <li IfModActive="oskarpotocki.vanillafactionsexpanded.core">
+        <li IfModActive="oskarpotocki.vanillafactionsexpanded.core">
             Compatibility/oskarpotocki.vanillafactionsexpanded.core/1.6</li>
         <li IfModActive="oskarpotocki.vanillafactionsexpanded.core_steam">
             Compatibility/oskarpotocki.vanillafactionsexpanded.core/1.6</li>
-        <li IfModActive="OskarPotocki.VFE.Deserters">Compatibility/OskarPotocki.VFE.Deserters/1.6</li>
+        <!-- <li IfModActive="OskarPotocki.VFE.Deserters">Compatibility/OskarPotocki.VFE.Deserters/1.6</li> -->
         <li IfModActive="neronix17.outerrim.core">Compatibility/starwars/Common</li>
-        <li IfModActive="pb3n.SimpleWarrants">Compatibility/pb3n.SimpleWarrants/1.6</li>
-        <li IfModActive="unlimitedhugs.defensivepositions">
-            Compatibility/UnlimitedHugs.DefensivePositions/1.6</li> -->
+        <!-- <li IfModActive="pb3n.SimpleWarrants">Compatibility/pb3n.SimpleWarrants/1.6</li> -->
+        <!-- <li IfModActive="unlimitedhugs.defensivepositions">Compatibility/UnlimitedHugs.DefensivePositions/1.6</li> -->
     </v1.6>
 </loadFolders>

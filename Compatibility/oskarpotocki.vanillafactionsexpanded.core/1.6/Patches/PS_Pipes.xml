@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+    <Operation Class="PatchOperationAttributeSet">
+        <xpath>Defs/ThingDef/comps/li[@Class="PawnStorages.CompProperties_PawnStorageNutrition"]</xpath>
+        <value>PawnStorages.VEF.CompProperties_PipedPawnStorageNutrition</value>
+        <attribute>Class</attribute>
+    </Operation>
+</Patch>
