@@ -17,16 +17,16 @@ public class FloatMenuOptionProvider_Arrest : FloatMenuOptionProvider
 
     public override bool RequiresManipulation => true;
 
-    public override bool SelectedPawnValid(Pawn pawn, FloatMenuContext context)
+    public override bool TargetPawnValid(Pawn pawn, FloatMenuContext context)
     {
-        return base.SelectedPawnValid(pawn, context) && (pawn.Downed || pawn.guilt.IsGuilty) && (!pawn.IsWildMan() || pawn.IsPrisonerOfColony);
+        return base.TargetPawnValid(pawn, context) && (pawn.Downed || (pawn.guilt?.IsGuilty ?? false)) && (!pawn.IsWildMan() || pawn.IsPrisonerOfColony);
     }
 
     public override IEnumerable<FloatMenuOption> GetOptionsFor(
         Pawn clickedPawn,
         FloatMenuContext context)
     {
-        if (!clickedPawn.CanBeArrestedBy(context.FirstSelectedPawn))
+        if (!(clickedPawn.CanBeArrestedBy(context.FirstSelectedPawn) || clickedPawn.CanBeCaptured()))
         {
             yield break;
         }

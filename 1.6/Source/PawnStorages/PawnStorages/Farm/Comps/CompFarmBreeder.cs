@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using PawnStorages.Farm.Interfaces;
 using RimWorld;
@@ -29,7 +30,7 @@ namespace PawnStorages.Farm.Comps
         {
             if (!AutoSlaughterCullOrder.NullOrEmpty()) return AutoSlaughterCullOrder;
             AutoSlaughterCullOrder = new Dictionary<PawnKindDef, AutoSlaughterCullOrder>();
-            foreach (PawnKindDef allDef in DefDatabase<PawnKindDef>.AllDefs.Where(d=> d.race != null && d.race.race.Animal && d.race.GetStatValueAbstract(StatDefOf.Wildness) < 1 && !d.race.race.Dryad && !d.race.IsCorpse && !AutoSlaughterCullOrder.ContainsKey(d)))
+            foreach (PawnKindDef allDef in Utility.AllAnimalKinds.Value.Where(d=> !AutoSlaughterCullOrder.ContainsKey(d)))
             {
                 AutoSlaughterCullOrder.Add(allDef, new AutoSlaughterCullOrder());
             }
@@ -39,12 +40,8 @@ namespace PawnStorages.Farm.Comps
 
         private void TryPopulateMissingAnimals()
         {
-            foreach (PawnKindDef allDef in DefDatabase<PawnKindDef>.AllDefs)
+            foreach (PawnKindDef allDef in Utility.AllAnimalKinds.Value.Where(d => !AutoSlaughterSettings.ContainsKey(d)))
             {
-                if (allDef.race == null || !allDef.race.race.Animal || !(allDef.race.GetStatValueAbstract(StatDefOf.Wildness) < 1.0) || allDef.race.race.Dryad || allDef.race.IsCorpse ||
-                    AutoSlaughterSettings.ContainsKey(allDef))
-                    continue;
-
                 AutoSlaughterConfig config = new() { animal = allDef.race };
                 AutoSlaughterSettings.Add(allDef, config);
             }

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using PawnStorages.Farm.Comps;
 using RimWorld;
 using UnityEngine;
@@ -40,7 +38,7 @@ namespace PawnStorages.Farm
 
             Widgets.DefIcon(new Rect(5f, position + 7.5f, 45f, 45f), animal.def, drawPlaceholder: true, color: Listing_TreeThingFilter.NoMatchColor);
 
-            Widgets.Label(new Rect(55f, position, width - 90f, 20f),"PS_FarmTab_Name".Translate(animal.NameFullColored));
+            Widgets.Label(new Rect(55f, position, width - 90f, 20f), "PS_FarmTab_Name".Translate(animal.NameFullColored));
             if (comp.farmAssignments.TryGetValue(animal, out Building f))
             {
                 if (f.HasComp<CompFarmStorage>())

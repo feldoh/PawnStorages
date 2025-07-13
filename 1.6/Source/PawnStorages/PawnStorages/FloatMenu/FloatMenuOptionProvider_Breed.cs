@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using RimWorld;
 using Verse;
 using Verse.AI;
@@ -17,9 +15,11 @@ public class FloatMenuOptionProvider_Breed : FloatMenuOptionProvider
 
     public override bool RequiresManipulation => true;
 
-    public override bool SelectedPawnValid(Pawn pawn, FloatMenuContext context)
+    public override bool MechanoidCanDo => true;
+
+    public override bool TargetPawnValid(Pawn pawn, FloatMenuContext context)
     {
-        return base.SelectedPawnValid(pawn, context) && WorkGiver_Warden_TakeToStorage.GetStorageForFarmAnimal(pawn, assign: false, breeding: true) != null;
+        return base.TargetPawnValid(pawn, context) && WorkGiver_Warden_TakeToStorage.GetStorageForFarmAnimal(pawn, assign: false, breeding: true) != null;
     }
 
     public override IEnumerable<FloatMenuOption> GetOptionsFor(
@@ -33,7 +33,7 @@ public class FloatMenuOptionProvider_Breed : FloatMenuOptionProvider
         }
         else
         {
-            ThingWithComps building = WorkGiver_Warden_TakeToStorage.GetStorageForFarmAnimal(clickedPawn, assign: false);
+            ThingWithComps building = WorkGiver_Warden_TakeToStorage.GetStorageForFarmAnimal(clickedPawn, assign: false, breeding: true);
 
             if (building != null)
             {

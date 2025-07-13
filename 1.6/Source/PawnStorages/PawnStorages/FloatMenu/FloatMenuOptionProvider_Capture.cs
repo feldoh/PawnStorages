@@ -12,9 +12,9 @@ public class FloatMenuOptionProvider_Capture: FloatMenuOptionProvider
     public override bool Undrafted => true;
     public override bool Multiselect => true;
 
-    public override bool SelectedPawnValid(Pawn pawn, FloatMenuContext context)
+    public override bool TargetPawnValid(Pawn pawn, FloatMenuContext context)
     {
-        return base.SelectedPawnValid(pawn, context) && !pawn.RaceProps.Humanlike;
+        return base.TargetPawnValid(pawn, context) && !pawn.RaceProps.Humanlike;
     }
 
     public override IEnumerable<FloatMenuOption> GetOptionsFor(Pawn clickedPawn, FloatMenuContext context)

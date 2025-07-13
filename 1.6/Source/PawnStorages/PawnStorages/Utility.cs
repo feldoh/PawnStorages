@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace PawnStorages;
 public static class Utility
 {
     // Shared state
+    public static List<ThingDef> producerAnimals;
     public static List<ThingDef> animals;
 
     public static bool IsWall(this ThingDef def)
@@ -154,15 +156,23 @@ public static class Utility
         return typeof(CompEggLayer).IsAssignableFrom(c.compClass) || typeof(CompHasGatherableBodyResource).IsAssignableFrom(c.compClass);
     }
 
+    public static Lazy<List<PawnKindDef>> AllAnimalKinds = new(() => DefDatabase<PawnKindDef>.AllDefs.Where(d=> d.race != null && d.race.race.Animal && d.race.GetStatValueAbstract(StatDefOf.Wildness) < 1 && !d.race.race.Dryad && !d.race.IsCorpse).ToList());
+
     public static bool ValidateThingDef(ThingDef td, bool IsProducer)
     {
-        return td.category == ThingCategory.Pawn && td.thingCategories != null &&
-               td.thingCategories.Contains(ThingCategoryDefOf.Animals) &&
-               (IsProducer && (td.comps?.Any(CompPropertiesIsProducer) ?? false) || !IsProducer);
+        bool raceIsAnimal = td.race is { Animal: true, Dryad: false } && td.GetStatValueAbstract(StatDefOf.Wildness) < 1.0 && !td.IsCorpse;
+        bool categoryIsAnimal = td.category == ThingCategory.Pawn && td.thingCategories != null && td.thingCategories.Contains(ThingCategoryDefOf.Animals);
+        return (categoryIsAnimal || raceIsAnimal) &&
+               (!IsProducer || (td.comps?.Any(CompPropertiesIsProducer) ?? false));
     }
 
     public static List<ThingDef> Animals(bool IsProducer)
     {
-        return animals ??= DefDatabase<ThingDef>.AllDefs.Where(td => ValidateThingDef(td, IsProducer)).ToList();
+        if (IsProducer)
+        {
+            return producerAnimals ??= DefDatabase<ThingDef>.AllDefs.Where(td => ValidateThingDef(td, true)).ToList();
+        }
+
+        return animals ??= AllAnimalKinds.Value.Select(k => k.race).ToList();
     }
 }

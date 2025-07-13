@@ -17,9 +17,9 @@ public class FloatMenuOptionProvider_Farm : FloatMenuOptionProvider
 
     public override bool RequiresManipulation => true;
 
-    public override bool SelectedPawnValid(Pawn pawn, FloatMenuContext context)
+    public override bool TargetPawnValid(Pawn pawn, FloatMenuContext context)
     {
-        return base.SelectedPawnValid(pawn, context) && WorkGiver_Warden_TakeToStorage.GetStorageForFarmAnimal(pawn, assign: false, breeding: false) != null;
+        return base.TargetPawnValid(pawn, context) && WorkGiver_Warden_TakeToStorage.GetStorageForFarmAnimal(pawn, assign: false, breeding: false) != null;
     }
 
     public override IEnumerable<FloatMenuOption> GetOptionsFor(

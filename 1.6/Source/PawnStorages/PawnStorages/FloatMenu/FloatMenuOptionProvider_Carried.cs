@@ -17,9 +17,11 @@ public class FloatMenuOptionProvider_Carried : FloatMenuOptionProvider
 
     public override bool RequiresManipulation => true;
 
-    public override bool TargetPawnValid(Pawn pawn, FloatMenuContext context)
+    public override bool MechanoidCanDo => true;
+
+    public override bool SelectedPawnValid(Pawn pawn, FloatMenuContext context)
     {
-        return base.TargetPawnValid(pawn, context) && pawn.carryTracker?.CarriedThing is Pawn;
+        return base.SelectedPawnValid(pawn, context) && pawn.carryTracker?.CarriedThing is Pawn;
     }
 
     public override bool TargetThingValid(Thing thing, FloatMenuContext context)
@@ -31,23 +33,23 @@ public class FloatMenuOptionProvider_Carried : FloatMenuOptionProvider
         Thing clickedThing,
         FloatMenuContext context)
     {
-        Pawn carriedPawn = context.FirstSelectedPawn.carryTracker.CarriedThing as Pawn;
-        if (carriedPawn == null) yield break;
+        if (context.FirstSelectedPawn.carryTracker.CarriedThing is not Pawn carriedPawn) yield break;
 
         TaggedString label = "PlaceIn".Translate((NamedArgument) (Thing) carriedPawn, (NamedArgument) clickedThing);
-        Action action = () =>
+
+        yield return FloatMenuUtility.DecoratePrioritizedTask(new FloatMenuOption(label, Action), context.FirstSelectedPawn,
+            clickedThing);
+        yield break;
+
+        void Action()
         {
             clickedThing.TryGetComp<CompPawnStorage>()?.TryAssignPawn(carriedPawn);
-            Job job = JobMaker.MakeJob(
-                carriedPawn.IsPrisonerOfColony || carriedPawn.InAggroMentalState ||
-                carriedPawn.HostileTo(Faction.OfPlayer)
-                    ? PS_DefOf.PS_CaptureCarriedToPawnStorage
-                    : PS_DefOf.PS_TakeToPawnStorage, carriedPawn, clickedThing);
+            Job job = JobMaker.MakeJob(carriedPawn.IsPrisonerOfColony || carriedPawn.InAggroMentalState || carriedPawn.HostileTo(Faction.OfPlayer)
+                ? PS_DefOf.PS_CaptureCarriedToPawnStorage
+                : PS_DefOf.PS_TakeToPawnStorage, carriedPawn, clickedThing);
             job.count = 1;
             job.playerForced = true;
             context.FirstSelectedPawn.jobs.TryTakeOrderedJob(job);
-        };
-        yield return FloatMenuUtility.DecoratePrioritizedTask(new FloatMenuOption(label, action), context.FirstSelectedPawn,
-            clickedThing);
+        }
     }
 }
