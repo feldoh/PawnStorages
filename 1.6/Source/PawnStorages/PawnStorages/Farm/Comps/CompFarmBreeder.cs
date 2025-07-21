@@ -159,15 +159,13 @@ namespace PawnStorages.Farm.Comps
                 float gestationDays = AnimalProductionUtility.GestationDaysEach(type.Key.race);
                 if (gestationDays <= 0f) continue;
 
-                float gestationTicks = gestationDays * 60000 * PawnStoragesMod.settings.BreedingScale;
+                float gestationTicks = gestationDays * GenDate.TicksPerDay * PawnStoragesMod.settings.BreedingScale;
 
-                float progressPerCycle = ParentAsBreederParent.BuildingTickInterval / gestationTicks;
+                float progressPerInterval = ParentAsBreederParent.BuildingTickInterval / gestationTicks;
 
-                BreedingProgress[type.Key] = 0.0f;
+                BreedingProgress[type.Key] = Mathf.Clamp01(BreedingProgress[type.Key] + progressPerInterval * nonMales.Count);
 
-                BreedingProgress[type.Key] = Mathf.Clamp(BreedingProgress[type.Key] + progressPerCycle * nonMales.Count, 0f, 1f);
-
-                if (!(BreedingProgress[type.Key] >= 1f)) continue;
+                if (BreedingProgress[type.Key] < 1f) continue;
 
                 if (ParentAsBreederParent.BreedablePawns.Count >= PawnStoragesMod.settings.MaxPawnsInFarm) break;
 
@@ -197,13 +195,13 @@ namespace PawnStorages.Farm.Comps
                 return;
             }
 
-            List<IGrouping<PawnKindDef, Pawn>> types = (from p in ParentAsBreederParent.AllHealthyPawns
+            List<IGrouping<PawnKindDef, Pawn>> pawnsByKind = (from p in ParentAsBreederParent.AllHealthyPawns
                 group p by p.kindDef
                 into def
                 select def).ToList();
 
-            TryCull(types);
-            TryBreed(types);
+            TryCull(pawnsByKind);
+            TryBreed(pawnsByKind);
         }
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
