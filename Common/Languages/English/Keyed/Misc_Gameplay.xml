@@ -125,4 +125,6 @@
 
     <PS_RenameDialog_Label>Rename (clear to reset):</PS_RenameDialog_Label>
     <PS_RenameDialog_Apply>Apply</PS_RenameDialog_Apply>
+
+    <PS_PipeSystem_NotConnected>Not connected to {0}.</PS_PipeSystem_NotConnected>
 </LanguageData>
