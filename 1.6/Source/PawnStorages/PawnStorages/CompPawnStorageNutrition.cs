@@ -26,7 +26,10 @@ public class CompPawnStorageNutrition : ThingComp
     public virtual float storedNutrition
     {
         get => _storedNutrition;
-        set { _storedNutrition = value; }
+        set
+        {
+            _storedNutrition = value;
+        }
     }
 
     public virtual float TargetNutritionLevel
@@ -51,8 +54,7 @@ public class CompPawnStorageNutrition : ThingComp
     public virtual bool AbsorbToFeedIfNeeded(Need_Food foodNeeds, float desiredFeed, out float amountFed)
     {
         amountFed = 0f;
-        if (storedNutrition <= 0 && !TryAbsorbNutritionFromHopper(TargetNutritionLevel))
-            return false;
+        if (storedNutrition <= 0 && !TryAbsorbNutritionFromHopper(TargetNutritionLevel)) return false;
         float available = Mathf.Min(desiredFeed, storedNutrition);
         storedNutrition -= available;
         foodNeeds.CurLevel += available;
@@ -80,8 +82,7 @@ public class CompPawnStorageNutrition : ThingComp
     {
         base.CompTick();
 
-        if (!PawnStoragesMod.settings.AllowNeedsDrop)
-            return;
+        if (!PawnStoragesMod.settings.AllowNeedsDrop) return;
 
         if (!IsPiped && parent.IsHashIntervalTick(Props.TicksToAbsorbNutrients) && ParentAsNutritionStorageParent.IsActive)
         {
@@ -112,7 +113,8 @@ public class CompPawnStorageNutrition : ThingComp
                     foodNeeds.lastNonStarvingTick = Find.TickManager.TicksGame;
 
                 // Need_Food.NeedInterval hardcodes 150 ticks, so adjust
-                float adjustedMalnutritionSeverityPerInterval = foodNeeds.MalnutritionSeverityPerInterval / 150f * Props.PawnTickInterval;
+                float adjustedMalnutritionSeverityPerInterval =
+                    foodNeeds.MalnutritionSeverityPerInterval / 150f * Props.PawnTickInterval;
                 if (foodNeeds.Starving)
                     HealthUtility.AdjustSeverity(pawn, HediffDefOf.Malnutrition, adjustedMalnutritionSeverityPerInterval);
                 else
@@ -144,10 +146,8 @@ public class CompPawnStorageNutrition : ThingComp
         {
             //Need fall ticker
             Need_Food foodNeeds = pawn.needs?.food;
-            if (foodNeeds == null)
-                continue;
-            if (!parent.IsHashIntervalTick(foodNeeds.TicksUntilHungryWhenFed / 2))
-                continue;
+            if (foodNeeds == null) continue;
+            if (!parent.IsHashIntervalTick(foodNeeds.TicksUntilHungryWhenFed)) continue;
             float nutritionDesired = foodNeeds.NutritionWanted;
             FeedAndRecordWantedAmount(foodNeeds, nutritionDesired, pawn);
         }
@@ -185,14 +185,16 @@ public class CompPawnStorageNutrition : ThingComp
             pawn.ageTracker.BirthdayBiological(pawn.ageTracker.AgeBiologicalYears);
     }
 
-    public List<IntVec3> AdjCellsCardinalInBounds => cachedAdjCellsCardinal ??= GenAdj.CellsAdjacentCardinal(parent).Where(c => c.InBounds(parent.Map)).ToList();
+
+    public List<IntVec3> AdjCellsCardinalInBounds =>
+        cachedAdjCellsCardinal ??= GenAdj.CellsAdjacentCardinal(parent)
+            .Where(c => c.InBounds(parent.Map))
+            .ToList();
 
     public virtual bool TryAbsorbNutritionFromHopper(float nutrition)
     {
-        if (nutrition <= 0)
-            return false;
-        if (!HasEnoughFeedstockInHoppers())
-            return false;
+        if (nutrition <= 0) return false;
+        if (!HasEnoughFeedstockInHoppers()) return false;
 
         Thing feedInAnyHopper = FindFeedInAnyHopper();
         if (feedInAnyHopper == null)
@@ -251,7 +253,7 @@ public class CompPawnStorageNutrition : ThingComp
 
             if (feedStockThing != null && hopper != null)
                 num += feedStockThing.stackCount * feedStockThing.GetStatValue(StatDefOf.Nutrition);
-            if (num >= (double)parent.def.building.nutritionCostPerDispense)
+            if (num >= (double) parent.def.building.nutritionCostPerDispense)
                 return true;
         }
 
@@ -267,52 +269,33 @@ public class CompPawnStorageNutrition : ThingComp
                 nutritionComp = this,
                 defaultLabel = "PS_CommandSetNutritionLevel".Translate(),
                 defaultDesc = "PS_CommandSetNutritionLevelDesc".Translate(),
-                icon = CompRefuelable.SetTargetFuelLevelCommand,
+                icon = CompRefuelable.SetTargetFuelLevelCommand
             };
         }
-        if (!DebugSettings.ShowDevGizmos)
-            yield break;
+        if (!DebugSettings.ShowDevGizmos) yield break;
         yield return new Command_Action
         {
-            defaultLabel = "Feed Now",
-            action = DoFeed,
-            icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll"),
+            defaultLabel = "Feed Now", action = DoFeed, icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll")
         };
         yield return new Command_Action
         {
-            defaultLabel = "Fill Nutrition",
-            action = delegate
-            {
-                storedNutrition = MaxNutrition;
-            },
-            icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll"),
+            defaultLabel = "Fill Nutrition", action = delegate { storedNutrition = MaxNutrition; }, icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll")
         };
         yield return new Command_Action
         {
             defaultLabel = "+10 Nutrition",
-            action = delegate
-            {
-                storedNutrition = Mathf.Clamp(storedNutrition + 10f, 0f, 500f);
-            },
-            icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll"),
+            action = delegate { storedNutrition = Mathf.Clamp(storedNutrition + 10f, 0f, 500f); },
+            icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll")
         };
         yield return new Command_Action
         {
-            defaultLabel = "Empty Nutrition",
-            action = delegate
-            {
-                storedNutrition = 0;
-            },
-            icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll"),
+            defaultLabel = "Empty Nutrition", action = delegate { storedNutrition = 0; }, icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll")
         };
         yield return new Command_Action
         {
             defaultLabel = "Absorb Nutrition from Hopper",
-            action = delegate
-            {
-                TryAbsorbNutritionFromHopper(TargetNutritionLevel - storedNutrition);
-            },
-            icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll"),
+            action = delegate { TryAbsorbNutritionFromHopper(TargetNutritionLevel - storedNutrition); },
+            icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll")
         };
     }
 
@@ -321,10 +304,9 @@ public class CompPawnStorageNutrition : ThingComp
     public override void PostDraw()
     {
         base.PostDraw();
-        if (!Props.HasTip)
-            return;
+        if (!Props.HasTip) return;
 
-        ((Graphic_Single)parent.Graphic).mat = Props.MainTexture;
+        ((Graphic_Single) parent.Graphic).mat = Props.MainTexture;
 
         float filled = 0.6f;
 
