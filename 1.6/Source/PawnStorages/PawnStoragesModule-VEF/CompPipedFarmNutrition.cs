@@ -32,7 +32,9 @@ public class CompPipedPawnStorageNutrition : CompPawnStorageNutrition
         // Try to absorb from the network if needed
         if (desiredFeed > ResourceStorage.AmountStored)
         {
-            pipeNet.DrawAmongStorage(desiredFeed, pipeNet.storages.Except(ResourceStorage).ToList());
+            // Try to pull what we need to make up the desire
+            float toPull = desiredFeed - ResourceStorage.AmountStored;
+            pipeNet.DrawAmongStorage(toPull, pipeNet.storages.Except(ResourceStorage).ToList());
         }
 
         amountFed = Mathf.Min(ResourceStorage.AmountStored, desiredFeed);
