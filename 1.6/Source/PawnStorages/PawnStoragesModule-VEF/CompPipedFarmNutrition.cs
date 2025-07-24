@@ -9,17 +9,13 @@ namespace PawnStorages.VEF;
 
 public class CompPipedPawnStorageNutrition : CompPawnStorageNutrition
 {
-    public CompResourceStorage _compResource;
-    public bool _haveCheckedForComp = false;
     private Lazy<CompResourceStorage> _resourceStorage;
 
     public virtual CompResourceStorage ResourceStorage => _resourceStorage.Value;
-
-    public PipeNet pipeNet => ResourceStorage?.PipeNet;
-
+    public PipeNet PipeNet => ResourceStorage?.PipeNet;
     public override bool IsPiped => true;
-    public override float storedNutrition => pipeNet?.Stored ?? 0;
-    public override float MaxNutrition => pipeNet?.AvailableCapacity ?? 0;
+    public override float storedNutrition => PipeNet?.Stored ?? 0;
+    public override float MaxNutrition => PipeNet?.AvailableCapacity ?? 0;
 
     public override void Initialize(CompProperties props)
     {
@@ -29,12 +25,16 @@ public class CompPipedPawnStorageNutrition : CompPawnStorageNutrition
 
     public override bool AbsorbToFeedIfNeeded(Need_Food foodNeeds, float desiredFeed, out float amountFed)
     {
+        amountFed = 0;
+        if (PipeNet == null || ResourceStorage == null)
+            return false;
+
         // Try to absorb from the network if needed
         if (desiredFeed > ResourceStorage.AmountStored)
         {
             // Try to pull what we need to make up the desire
             float toPull = desiredFeed - ResourceStorage.AmountStored;
-            pipeNet.DrawAmongStorage(toPull, pipeNet.storages.Except(ResourceStorage).ToList());
+            PipeNet.DrawAmongStorage(toPull, PipeNet.storages.Except(ResourceStorage).ToList());
         }
 
         amountFed = Mathf.Min(ResourceStorage.AmountStored, desiredFeed);
@@ -45,7 +45,7 @@ public class CompPipedPawnStorageNutrition : CompPawnStorageNutrition
 
     public override bool TryAbsorbNutritionFromHopper(float requestedNutrition)
     {
-        if (!IsValidNutritionRequest(requestedNutrition))
+        if (!IsValidNutritionRequest(requestedNutrition) || PipeNet == null)
             return false;
 
         Thing feedSource = FindFeedInAnyHopper();
@@ -58,7 +58,7 @@ public class CompPipedPawnStorageNutrition : CompPawnStorageNutrition
         if (absorbedNutrition <= 0)
             return false;
 
-        pipeNet.DistributeAmongStorage(absorbedNutrition, out float _);
+        PipeNet.DistributeAmongStorage(absorbedNutrition, out float _);
         return true;
     }
 
@@ -69,6 +69,14 @@ public class CompPipedPawnStorageNutrition : CompPawnStorageNutrition
 
     private float ProcessFeedAbsorption(Thing feedSource, float nutritionToAbsorb)
     {
+        /*
+         * Processes the absorption of specified nutrition from a given feed source. Determines the amount of nutrition
+         * that can be absorbed from the provided feed source and updates its state accordingly. The remaining
+         * unabsorbed nutrition is returned.
+         */
+        if (feedSource == null)
+            return nutritionToAbsorb;
+
         float remainingNutrition = nutritionToAbsorb;
         float nutritionPerUnit = feedSource.GetStatValue(StatDefOf.Nutrition);
 
