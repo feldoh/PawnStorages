@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModsConfigData>
-	<version>1.6.4518 rev84</version>
+	<version>1.6.4528 rev1222</version>
 	<activeMods>
 		<li>brrainz.harmony</li>
 		<li>ludeon.rimworld</li>
@@ -14,6 +14,7 @@
 		<li>imranfish.xmlextensions</li>
 		<li>smashphil.xmlpatchhelper</li>
 		<li>oskarpotocki.vanillafactionsexpanded.core</li>
+		<li>vanillaexpanded.vnutriente</li>
 		<li>mss.flavourpack</li>
 		<li>orpheusly.pawnstorages</li>
 	</activeMods>
