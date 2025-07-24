@@ -66,14 +66,13 @@ public class CompPawnStorageNutrition : ThingComp
     public virtual float FeedAndRecordWantedAmount(Need_Food foodNeeds, float neededFood, Pawn pawn, bool record = true)
     {
         float totalFeed = 0f;
-        while (neededFood > 0 && AbsorbToFeedIfNeeded(foodNeeds, neededFood, out float amountFed))
+        while (neededFood > 0 && AbsorbToFeedIfNeeded(foodNeeds, neededFood, out float amountFed) && amountFed > 0)
         {
             totalFeed += amountFed;
             neededFood -= amountFed;
         }
 
-        if (totalFeed > 0f && record)
-            pawn.records.AddTo(RecordDefOf.NutritionEaten, totalFeed);
+        if (totalFeed > 0f && record) pawn.records.AddTo(RecordDefOf.NutritionEaten, totalFeed);
         return totalFeed;
     }
 
