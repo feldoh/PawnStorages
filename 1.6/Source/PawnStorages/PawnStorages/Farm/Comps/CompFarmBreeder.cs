@@ -163,6 +163,7 @@ namespace PawnStorages.Farm.Comps
 
                 float progressPerInterval = ParentAsBreederParent.BuildingTickInterval / gestationTicks;
 
+                if (!BreedingProgress.ContainsKey(type.Key)) BreedingProgress[type.Key] = 0f;
                 BreedingProgress[type.Key] = Mathf.Clamp01(BreedingProgress[type.Key] + progressPerInterval * nonMales.Count);
 
                 if (BreedingProgress[type.Key] < 1f) continue;
