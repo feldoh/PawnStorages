@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using PipeSystem;
 using RimWorld;
 using UnityEngine;
@@ -28,9 +29,16 @@ public class CompPipedPawnStorageNutrition : CompPawnStorageNutrition
 
     public override bool AbsorbToFeedIfNeeded(Need_Food foodNeeds, float desiredFeed, out float amountFed)
     {
-        amountFed = Mathf.Min(pipeNet.Stored, desiredFeed);
-        pipeNet.DrawAmongStorage(amountFed, pipeNet.storages);
-        return true;
+        // Try to absorb from the network if needed
+        if (desiredFeed > ResourceStorage.AmountStored)
+        {
+            pipeNet.DrawAmongStorage(desiredFeed, pipeNet.storages.Except(ResourceStorage).ToList());
+        }
+
+        amountFed = Mathf.Min(ResourceStorage.AmountStored, desiredFeed);
+
+        // If we have enough to fulfil the desire, return true
+        return Mathf.Approximately(amountFed, desiredFeed);
     }
 
     public override bool TryAbsorbNutritionFromHopper(float requestedNutrition)
