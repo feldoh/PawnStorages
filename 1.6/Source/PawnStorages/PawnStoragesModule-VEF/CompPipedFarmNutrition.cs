@@ -1,55 +1,61 @@
-﻿using PipeSystem;
+﻿using System;
+using System.Linq;
+using PipeSystem;
 using RimWorld;
 using UnityEngine;
 using Verse;
 
 namespace PawnStorages.VEF;
 
-public class CompPipedPawnStorageNutrition: CompPawnStorageNutrition
+public class CompPipedPawnStorageNutrition : CompPawnStorageNutrition
 {
-    public CompResource _compResource;
-    public bool _haveCheckedForComp = false;
-    public virtual CompResource compResource
-    {
-        get
-        {
-            if (!_haveCheckedForComp && _compResource == null && parent.HasComp<CompResource>())
-            {
-                _compResource = parent.GetComp<CompResource>();
-                // make sure we only check once.
-                _haveCheckedForComp = true;
-            }
-            return _compResource;
-        }
-    }
+    private Lazy<CompResourceStorage> _resourceStorage;
 
-    public override bool IsPiped => IsAttachedToNet(out PipeNet pipeNet, out CompResource resource);
-    public override float storedNutrition => IsAttachedToNet(out PipeNet pipeNet, out CompResource resource) ? pipeNet.Stored : base.storedNutrition;
-    public override float MaxNutrition => IsAttachedToNet(out PipeNet pipeNet, out CompResource resource) ? pipeNet.AvailableCapacity : base.MaxNutrition;
+    public virtual CompResourceStorage ResourceStorage => _resourceStorage.Value;
+    public PipeNet PipeNet => ResourceStorage?.PipeNet;
+    public override bool IsPiped => true;
+    public override float StoredNutrition => PipeNet?.Stored ?? 0;
+    public override float MaxNutrition => PipeNet?.AvailableCapacity ?? 0;
 
-    public bool IsAttachedToNet(out PipeNet pipeNet, out CompResource resource)
+    public override void Initialize(CompProperties properties)
     {
-        pipeNet = null;
-        resource = compResource;
-        if (resource is not { PipeNet: { } net }) return false;
-        pipeNet = net;
-        return pipeNet.connectors.Count > 1;
+        base.Initialize(properties);
+        _resourceStorage = new Lazy<CompResourceStorage>(() => parent?.GetComp<CompResourceStorage>());
     }
 
     public override bool AbsorbToFeedIfNeeded(Need_Food foodNeeds, float desiredFeed, out float amountFed)
     {
-        if (!IsAttachedToNet(out PipeNet pipeNet, out CompResource resource)) return base.AbsorbToFeedIfNeeded(foodNeeds, desiredFeed, out amountFed);
+        amountFed = 0;
+        if (PipeNet == null || ResourceStorage == null)
+            return false;
 
-        amountFed = Mathf.Min(pipeNet.Stored, desiredFeed);
-        pipeNet.DrawAmongStorage(amountFed, pipeNet.storages);
-        return true;
+        // Try to absorb from the network if needed
+        if (desiredFeed > ResourceStorage.AmountStored)
+        {
+            // Try to pull what we need to make up the desire
+            float toPull = desiredFeed - ResourceStorage.AmountStored;
+            PipeNet.DrawAmongStorage(toPull, PipeNet.storages.Except(ResourceStorage).ToList());
+        }
+
+        amountFed = Mathf.Min(ResourceStorage.AmountStored, desiredFeed);
+        foodNeeds.CurLevel += amountFed;
+        ResourceStorage.DrawResource(amountFed);
+
+        // If we have enough to fulfil the desire, return true
+        return Mathf.Approximately(amountFed, desiredFeed);
     }
 
-    public override bool TryAbsorbNutritionFromHopper(float nutrition)
+    public override bool IsValidNutritionRequest(float nutrition)
     {
-        if (!IsAttachedToNet(out PipeNet pipeNet, out CompResource resource)) return base.TryAbsorbNutritionFromHopper(nutrition);
-
-        return !(pipeNet.Stored < nutrition);
+        if (PipeNet is null) return false;
+        return nutrition > 0 && HasEnoughFeedstockInHoppers();
     }
 
+    public override bool AddNutritionToStorage(float amount)
+    {
+        if (amount <= 0 || Mathf.Approximately(amount, 0)) return false;
+        if (PipeNet is null) return false;
+        PipeNet.DistributeAmongStorage(amount, out float stored);
+        return stored > 0;
+    }
 }
