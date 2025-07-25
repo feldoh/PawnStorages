@@ -106,7 +106,7 @@ public class CompPawnStorageNutrition : ThingComp
 
     public virtual void AbsorbNutritionTick()
     {
-        if (IsPiped || !parent.IsHashIntervalTick(Props.TicksToAbsorbNutrients) || !ParentAsNutritionStorageParent!.IsActive)
+        if (!parent.IsHashIntervalTick(Props.TicksToAbsorbNutrients) || !ParentAsNutritionStorageParent!.IsActive)
         {
             return;
         }
