@@ -205,6 +205,8 @@ public class CompPawnStorageNutrition : ThingComp
             Need_Food foodNeeds = pawn.needs?.food;
             if (foodNeeds is null)
                 continue;
+            // TODO: calls to .TicksUntilHungryWhenFed are a candidate for caching/optimisation
+            // DoFeed is about 90% of the CompTick, and calls to .TicksUntilHungryWhenFed are about 90% of DoFeed
             if (!parent.IsHashIntervalTick(foodNeeds.TicksUntilHungryWhenFed / 8))
                 continue;
             float nutritionDesired = foodNeeds.NutritionWanted;
