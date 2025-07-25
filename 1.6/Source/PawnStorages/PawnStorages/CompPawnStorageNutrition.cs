@@ -91,11 +91,10 @@ public class CompPawnStorageNutrition : ThingComp
         int maxIterGuard = 20;
 
         // Keep feeding until needs are met or we run out of nutrition/iterations
-        while (neededFood > 0 && AbsorbToFeedIfNeeded(foodNeeds, neededFood, out float amountFed) && amountFed > 0 && --maxIterGuard > 0)
+        while (neededFood > 0 && AbsorbToFeedIfNeeded(foodNeeds, neededFood, out float amountFed) && amountFed > 0 && !Mathf.Approximately(amountFed, 0) && --maxIterGuard > 0)
         {
             totalFeed += amountFed;
             neededFood -= amountFed;
-            if(Mathf.Approximately(amountFed, 0)) break; // Exit if amount fed is essentially zero
         }
 
         // Record nutrition eaten if requested
@@ -324,7 +323,7 @@ public class CompPawnStorageNutrition : ThingComp
         return def.IsNutritionGivingIngestible && def.ingestible.preferability != FoodPreferability.Undefined;
     }
 
-    public virtual bool ValidFeedstock(ThingDef def) => IsAcceptableFeedstock(def) && def.ingestible.preferability != FoodPreferability.Undefined;
+    public virtual bool ValidFeedstock(ThingDef def) => IsAcceptableFeedstock(def);
 
     public virtual Thing FindFeedInAnyHopper()
     {
