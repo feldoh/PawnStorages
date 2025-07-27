@@ -195,6 +195,8 @@ public class CompPawnStorageNutrition : ThingComp
 
     private const float MalnutritionSeverityThreshold = 0.75f;
 
+    public const int TimesToCheckPerHungerInterval = 8;
+
     public virtual void DoFeed()
     {
         if(ParentAsNutritionStorageParent is null) return;
@@ -206,7 +208,7 @@ public class CompPawnStorageNutrition : ThingComp
                 continue;
             // TODO: calls to .TicksUntilHungryWhenFed are a candidate for caching/optimisation
             // DoFeed is about 90% of the CompTick, and calls to .TicksUntilHungryWhenFed are about 90% of DoFeed
-            if (!parent.IsHashIntervalTick(foodNeeds.TicksUntilHungryWhenFed / 8))
+            if (!parent.IsHashIntervalTick(foodNeeds.TicksUntilHungryWhenFed / TimesToCheckPerHungerInterval))
                 continue;
             float nutritionDesired = foodNeeds.NutritionWanted;
             FeedAndRecordWantedAmount(foodNeeds, nutritionDesired, pawn);
