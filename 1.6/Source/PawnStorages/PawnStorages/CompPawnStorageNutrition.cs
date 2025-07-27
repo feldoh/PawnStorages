@@ -281,7 +281,8 @@ public class CompPawnStorageNutrition : ThingComp
 
             if (unitsToAbsorb > 1)
             {
-                feedSource.SplitOff(unitsToAbsorb);
+                Thing thing = feedSource.SplitOff(unitsToAbsorb);
+                thing.Destroy();
             }
             else
             {
