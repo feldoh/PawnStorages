@@ -91,7 +91,7 @@ public class CompPawnStorageNutrition : ThingComp
         int maxIterGuard = 20;
 
         // Keep feeding until needs are met or we run out of nutrition/iterations
-        while (neededFood > 0 && AbsorbToFeedIfNeeded(foodNeeds, neededFood, out float amountFed) && amountFed > 0 && !Mathf.Approximately(amountFed, 0) && --maxIterGuard > 0)
+        while (neededFood > 0 && --maxIterGuard > 0 && AbsorbToFeedIfNeeded(foodNeeds, neededFood, out float amountFed) && amountFed > 0 && !Mathf.Approximately(amountFed, 0))
         {
             totalFeed += amountFed;
             neededFood -= amountFed;
