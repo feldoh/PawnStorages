@@ -110,7 +110,7 @@ public class CompPawnStorageNutrition : ThingComp
             return;
         }
 
-        parent.DirtyMapMesh(parent.Map);
+        if(PawnStoragesMod.settings.SuggestiveSilo) parent.DirtyMapMesh(parent.Map);
         if (StoredNutrition <= TargetNutritionLevel)
         {
             TryAbsorbNutritionFromSource(TargetNutritionLevel - StoredNutrition);
@@ -166,7 +166,7 @@ public class CompPawnStorageNutrition : ThingComp
         }
 
         // Update map mesh to reflect changes for suggestive silos
-        parent.DirtyMapMesh(parent.Map);
+        if(PawnStoragesMod.settings.SuggestiveSilo) parent.DirtyMapMesh(parent.Map);
     }
 
     public override void CompTick()
@@ -380,7 +380,7 @@ public class CompPawnStorageNutrition : ThingComp
             if (feedStockThing != null && hopper != null)
                 num += feedStockThing.stackCount * feedStockThing.GetStatValue(StatDefOf.Nutrition);
 
-            if (num > 0 && num >= (double)parent.def.building.nutritionCostPerDispense)
+            if (num > 0)
                 return true;
         }
 
