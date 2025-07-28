@@ -270,7 +270,7 @@ public class CompPawnStorageNutrition : ThingComp
 
         while (remainingNutrition > 0)
         {
-            int unitsToAbsorb = Mathf.Min(feedSource.stackCount, Mathf.FloorToInt(remainingNutrition / nutritionPerUnit));
+            int unitsToAbsorb = Mathf.Min(feedSource.stackCount, Mathf.CeilToInt(remainingNutrition / nutritionPerUnit));
 
             if (unitsToAbsorb <= 0)
                 break;
