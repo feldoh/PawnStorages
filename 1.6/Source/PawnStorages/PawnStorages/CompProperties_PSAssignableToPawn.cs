@@ -1,5 +1,6 @@
 ﻿using RimWorld;
 using UnityEngine;
+using Verse;
 
 namespace PawnStorages
 {
@@ -17,5 +18,6 @@ namespace PawnStorages
         public float pawnDrawOffsetZ = 0f;
         public float cameraZoom = 1.5f;
         public CompProperties_PSAssignableToPawn() => compClass = typeof(CompAssignableToPawn_PawnStorage);
+
     }
 }

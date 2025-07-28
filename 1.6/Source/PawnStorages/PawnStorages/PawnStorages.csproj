@@ -61,8 +61,6 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Lib.Harmony" Version="*" ExcludeAssets="runtime" />
-        <PackageReference Include="UnlimitedHugs.Rimworld.HugsLib" Version="*" ExcludeAssets="runtime" />
-        <!-- Use Version="*-*" to get the latest beta! -->
     </ItemGroup>
 
     <ItemGroup>
@@ -89,5 +87,8 @@
     <Target Name="PreCleanAssemblies">
         <RemoveDir Directories="$(OutputPath)" Condition="Exists('$(OutputPath)')" />
     </Target>
-
+    <!-- Add A step to the build to run csharpier on build -->
+    <!-- <Target Name="FormatCode" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Release' And '$(ExitCode)' == '0' " DependsOnTargets="CheckCsharpier">
+        <Exec Command="csharpier format ." />
+    </Target> -->
 </Project>
