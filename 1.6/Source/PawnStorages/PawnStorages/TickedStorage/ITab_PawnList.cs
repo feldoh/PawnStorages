@@ -36,15 +36,15 @@ public class ITab_PawnList : ITab
 
         if (ParentAsPawnListParent?.NeedsDrop() ?? false)
         {
-            Widgets.Label(new Rect(55f, position, width - 90f, 20f),
-                (pawn.needs?.food?.Starving ?? false ? "PS_FarmTab_NameStarving" : "PS_FarmTab_Name").Translate(pawn.LabelShort));
-            Widgets.Label(new Rect(55f, position + 20f, width - 90f, 20f),
-                "PS_FarmTab_Nutrition".Translate((pawn.needs?.food?.CurLevelPercentage ?? 0f).ToStringPercent()));
+            Widgets.Label(
+                new Rect(55f, position, width - 90f, 20f),
+                (pawn.needs?.food?.Starving ?? false ? "PS_FarmTab_NameStarving" : "PS_FarmTab_Name").Translate(pawn.LabelShort)
+            );
+            Widgets.Label(new Rect(55f, position + 20f, width - 90f, 20f), "PS_FarmTab_Nutrition".Translate((pawn.needs?.food?.CurLevelPercentage ?? 0f).ToStringPercent()));
         }
         else
         {
-            Widgets.Label(new Rect(55f, position, width - 90f, 20f),
-                ("PS_FarmTab_Name").Translate(pawn.LabelShort));
+            Widgets.Label(new Rect(55f, position, width - 90f, 20f), ("PS_FarmTab_Name").Translate(pawn.LabelShort));
         }
 
         Rect btn = new Rect(new Vector2(width - 50f, position + 15f), new Vector2(30f, 30f));
@@ -54,7 +54,8 @@ public class ITab_PawnList : ITab
 
     public override void FillTab()
     {
-        if ((ParentAsPawnListParent?.GetDirectlyHeldThings()?.Count ?? 0) <= 0) return;
+        if ((ParentAsPawnListParent?.GetDirectlyHeldThings()?.Count ?? 0) <= 0)
+            return;
 
         Widgets.Label(new Rect(5.0f, 0.0f, WinSize.x, 30f), "PS_PawnListTab".Translate());
 
@@ -73,7 +74,7 @@ public class ITab_PawnList : ITab
         List<Pawn> removed = [];
         foreach (Thing thing in ParentAsPawnListParent.GetDirectlyHeldThings())
         {
-            Pawn pawn = (Pawn) thing;
+            Pawn pawn = (Pawn)thing;
             if (DrawLine(num, scrollViewRect.width, pawn))
             {
                 removed.Add(pawn);

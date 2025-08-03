@@ -44,15 +44,16 @@ namespace PawnStorages.Farm
 
             if (compFarmBreeder != null)
             {
-                Widgets.Label(new Rect(45f, position + 20f, width - 90f, 20f),
-                    $"Progress: {Mathf.CeilToInt(progress * 100)}%");
+                Widgets.Label(new Rect(45f, position + 20f, width - 90f, 20f), $"Progress: {Mathf.CeilToInt(progress * 100)}%");
             }
         }
 
         public override void FillTab()
         {
-            if (compFarmBreeder == null) return;
-            if (!compFarmBreeder.BreedingProgress.Any()) return;
+            if (compFarmBreeder == null)
+                return;
+            if (!compFarmBreeder.BreedingProgress.Any())
+                return;
 
             Widgets.Label(new Rect(5.0f, 0.0f, WinSize.x, 30f), "Breeding Animals");
 
@@ -75,7 +76,6 @@ namespace PawnStorages.Farm
 
                 num += LineHeight;
             }
-
 
             Widgets.EndScrollView();
         }

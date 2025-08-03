@@ -2,7 +2,7 @@
 
 namespace PawnStorages.Farm;
 
-public class AutoSlaughterCullOrder: IExposable
+public class AutoSlaughterCullOrder : IExposable
 {
     public bool AllAscending = false;
     public bool AdultMaleAscending = false;
@@ -21,6 +21,7 @@ public class AutoSlaughterCullOrder: IExposable
             _ => AllAscending
         };
     }
+
     public void ExposeData()
     {
         Scribe_Values.Look(ref AllAscending, "AllAscending");

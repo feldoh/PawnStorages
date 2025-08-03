@@ -66,8 +66,7 @@ public class ITab_Farm : ITab
         List<ThingDef> allowable;
         if (QuickSearchWidget.filter.Active)
         {
-            allowable = ParentAsFarmTabParent.AllowableThing.Where(tDef =>
-                tDef.LabelCap.ToString().ToLower().Contains(QuickSearchWidget.filter.Text.ToLower())).ToList();
+            allowable = ParentAsFarmTabParent.AllowableThing.Where(tDef => tDef.LabelCap.ToString().ToLower().Contains(QuickSearchWidget.filter.Text.ToLower())).ToList();
         }
         else
         {
@@ -83,7 +82,6 @@ public class ITab_Farm : ITab
 
             float labelX = iconWidth + 2f + 5f;
             Rect labelLeft = new(labelX, num, viewRect.width - 26f - labelX - 5f, LineHeight);
-
 
             Widgets.DrawHighlightIfMouseover(labelLeft);
             if (!tDef.DescriptionDetailed.NullOrEmpty())
@@ -101,7 +99,6 @@ public class ITab_Farm : ITab
             Text.Anchor = TextAnchor.UpperLeft;
             GUI.color = Color.white;
 
-
             bool checkOn = ParentAsFarmTabParent.AllowedThings[tDef];
             bool flag = checkOn;
 
@@ -111,7 +108,6 @@ public class ITab_Farm : ITab
 
             num += LineHeight + 2f;
         }
-
 
         Widgets.EndScrollView();
 
@@ -128,11 +124,12 @@ public class ThingDefLabelCapComparer : IComparer<ThingDef>
             // Handle null cases first
             null when y == null => 0,
             null => -1,
-            _ => y == null
-                ? 1
-                :
-                // Compare based on LabelCap
-                string.Compare(x.LabelCap, y.LabelCap, StringComparison.InvariantCultureIgnoreCase)
+            _
+                => y == null
+                    ? 1
+                    :
+                    // Compare based on LabelCap
+                    string.Compare(x.LabelCap, y.LabelCap, StringComparison.InvariantCultureIgnoreCase)
         };
     }
 

@@ -13,7 +13,8 @@ namespace PawnStorages.Farm.Comps
         {
             base.CompTick();
 
-            if (!PawnStoragesMod.settings.AllowNeedsDrop) return;
+            if (!PawnStoragesMod.settings.AllowNeedsDrop)
+                return;
 
             if (parent.IsHashIntervalTick(ParentAsProductionParent.BuildingTickInterval))
             {
@@ -24,15 +25,21 @@ namespace PawnStorages.Farm.Comps
                         EggLayerTick(compLayer, ParentAsProductionParent.BuildingTickInterval);
                     }
 
-                    if (pawn.TryGetComp(out CompHasGatherableBodyResource compGatherable) &&
-                        (pawn.gender == Gender.Female || compGatherable is not CompMilkable milkable || !milkable.Props.milkFemaleOnly))
+                    if (
+                        pawn.TryGetComp(out CompHasGatherableBodyResource compGatherable)
+                        && (pawn.gender == Gender.Female || compGatherable is not CompMilkable milkable || !milkable.Props.milkFemaleOnly)
+                    )
                     {
                         GatherableTick(compGatherable, ParentAsProductionParent.BuildingTickInterval);
                     }
                 }
             }
 
-            if (!ProduceNow && (!parent.IsHashIntervalTick(60000 / Math.Max(PawnStoragesMod.settings.ProductionsPerDay, 1)) || DaysProduce.Count <= 0 || !ParentAsProductionParent.IsActive)) return;
+            if (
+                !ProduceNow
+                && (!parent.IsHashIntervalTick(60000 / Math.Max(PawnStoragesMod.settings.ProductionsPerDay, 1)) || DaysProduce.Count <= 0 || !ParentAsProductionParent.IsActive)
+            )
+                return;
             List<Thing> failedToPlace = [];
             failedToPlace.AddRange(DaysProduce.Where(thing => !GenPlace.TryPlaceThing(thing, parent.Position, parent.Map, ThingPlaceMode.Near)));
             DaysProduce.Clear();
@@ -41,9 +48,11 @@ namespace PawnStorages.Farm.Comps
 
         public void EggLayerTick(CompEggLayer layer, int tickInterval = 1)
         {
-            if (!layer.Active) return;
+            if (!layer.Active)
+                return;
             float eggReadyIncrement = (float)(1f / ((double)layer.Props.eggLayIntervalDays * 60000f));
-            if (layer.parent is not Pawn layingPawn) return;
+            if (layer.parent is not Pawn layingPawn)
+                return;
             eggReadyIncrement *= PawnUtility.BodyResourceGrowthSpeed(layingPawn);
             // we're not doing this every tick so bump the progress
             eggReadyIncrement *= tickInterval;
@@ -51,12 +60,15 @@ namespace PawnStorages.Farm.Comps
             layer.eggProgress += eggReadyIncrement;
             layer.eggProgress = Mathf.Clamp(layer.eggProgress, 0f, 1f);
 
-            if (!(layer.eggProgress >= 1f)) return;
+            if (!(layer.eggProgress >= 1f))
+                return;
             Thing egg = null;
-            if (layer.Props.eggFertilizedDef != null &&
-                layer.Props.eggFertilizationCountMax > 0 &&
-                ParentAsProductionParent.ProducingPawns.Find(p => p.kindDef == layingPawn.kindDef) is {} fertilizer &&
-                (layer.Props.eggUnfertilizedDef == null || Rand.Bool)) // Flip a coin to see if fertilised unless there is no unfertilised option
+            if (
+                layer.Props.eggFertilizedDef != null
+                && layer.Props.eggFertilizationCountMax > 0
+                && ParentAsProductionParent.ProducingPawns.Find(p => p.kindDef == layingPawn.kindDef) is { } fertilizer
+                && (layer.Props.eggUnfertilizedDef == null || Rand.Bool)
+            ) // Flip a coin to see if fertilised unless there is no unfertilised option
             {
                 layer.Fertilize(fertilizer);
                 egg = layer.ProduceEgg();
@@ -76,7 +88,8 @@ namespace PawnStorages.Farm.Comps
 
         public void GatherableTick(CompHasGatherableBodyResource gatherable, int tickInterval = 1)
         {
-            if (!gatherable.Active) return;
+            if (!gatherable.Active)
+                return;
             float gatherableReadyIncrement = (float)(1f / ((double)gatherable.GatherResourcesIntervalDays * 60000f));
             gatherableReadyIncrement *= PawnUtility.BodyResourceGrowthSpeed(gatherable.parent as Pawn);
             // we're not doing this every tick so bump the progress
@@ -85,7 +98,8 @@ namespace PawnStorages.Farm.Comps
             gatherable.fullness += gatherableReadyIncrement;
             gatherable.fullness = Mathf.Clamp(gatherable.fullness, 0f, 1f);
 
-            if (!gatherable.ActiveAndFull) return;
+            if (!gatherable.ActiveAndFull)
+                return;
             int amountToGenerate = GenMath.RoundRandom(gatherable.ResourceAmount * gatherable.fullness);
             while (amountToGenerate > 0f)
             {
@@ -101,8 +115,10 @@ namespace PawnStorages.Farm.Comps
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
-            foreach (Gizmo gizmo in base.CompGetGizmosExtra()) yield return gizmo;
-            if (!DebugSettings.ShowDevGizmos) yield break;
+            foreach (Gizmo gizmo in base.CompGetGizmosExtra())
+                yield return gizmo;
+            if (!DebugSettings.ShowDevGizmos)
+                yield break;
             yield return new Command_Action
             {
                 defaultLabel = "Make all animals ready to produce",

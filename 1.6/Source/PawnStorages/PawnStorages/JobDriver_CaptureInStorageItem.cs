@@ -23,18 +23,22 @@ public class JobDriver_CaptureInStorageItem : JobDriver_TakeToStorage
         this.FailOnDestroyedOrNull(TakeeIndex);
         this.FailOnAggroMentalStateAndHostile(TakeeIndex);
 
-        Toil goToTakee = Toils_Goto.GotoThing(TakeeIndex, PathEndMode.ClosestTouch)
+        Toil goToTakee = Toils_Goto
+            .GotoThing(TakeeIndex, PathEndMode.ClosestTouch)
             .FailOnDespawnedNullOrForbidden(TakeeIndex)
             .FailOn(() => !(Takee.Downed || !Takee.HostileTo(pawn)));
         Toil checkArrestResistance = ToilMaker.MakeToil();
         checkArrestResistance.initAction = delegate
         {
-            if (job.def == PS_DefOf.PS_CaptureEntityInPawnStorage || job.def == PS_DefOf.PS_CaptureAnimalInPawnStorage) return;
-            if (!job.def.makeTargetPrisoner) return;
+            if (job.def == PS_DefOf.PS_CaptureEntityInPawnStorage || job.def == PS_DefOf.PS_CaptureAnimalInPawnStorage)
+                return;
+            if (!job.def.makeTargetPrisoner)
+                return;
             Pawn victim = (Pawn)job.targetA.Thing;
             victim.GetLord()?.Notify_PawnAttemptArrested(victim);
             GenClamor.DoClamor(victim, 10f, ClamorDefOf.Harm);
-            if (victim.IsPrisoner || victim.IsSlave) return;
+            if (victim.IsPrisoner || victim.IsSlave)
+                return;
             QuestUtility.SendQuestTargetSignals(victim.questTags, "Arrested", victim.Named("SUBJECT"));
             if (victim.Faction != null)
             {
@@ -54,41 +58,45 @@ public class JobDriver_CaptureInStorageItem : JobDriver_TakeToStorage
         };
         yield return setTakeeSettings;
         yield return StoreIntoStorageItem(PawnStorageAssigned, pawn, Takee, TakeeRescued);
-        yield return Toils_General.Do(delegate
-        {
-            if (!job.ritualTag.NullOrEmpty())
+        yield return Toils_General.Do(
+            delegate
             {
-                if (Takee.GetLord()?.LordJob is LordJob_Ritual lordJob_Ritual)
+                if (!job.ritualTag.NullOrEmpty())
                 {
-                    lordJob_Ritual.AddTagForPawn(Takee, job.ritualTag);
-                }
+                    if (Takee.GetLord()?.LordJob is LordJob_Ritual lordJob_Ritual)
+                    {
+                        lordJob_Ritual.AddTagForPawn(Takee, job.ritualTag);
+                    }
 
-                if (pawn.GetLord()?.LordJob is LordJob_Ritual lordJob_Ritual2)
-                {
-                    lordJob_Ritual2.AddTagForPawn(pawn, job.ritualTag);
+                    if (pawn.GetLord()?.LordJob is LordJob_Ritual lordJob_Ritual2)
+                    {
+                        lordJob_Ritual2.AddTagForPawn(pawn, job.ritualTag);
+                    }
                 }
             }
-        });
+        );
     }
 
     public static Toil StoreIntoStorageItem(ThingWithComps storage, Pawn taker, Pawn takee, bool rescued = false)
     {
         Toil toil = ToilMaker.MakeToil();
-        toil.AddFinishAction( delegate
-        {
-            takee.Notify_Teleported(false);
-            takee.stances.CancelBusyStanceHard();
-            if (takee.Downed || !takee.HostileTo(taker))
+        toil.AddFinishAction(
+            delegate
             {
-                CompPawnStorage comp = storage.TryGetComp<CompPawnStorage>();
-                if (comp.CanStore)
-                    comp.StorePawn(takee);
-            }
+                takee.Notify_Teleported(false);
+                takee.stances.CancelBusyStanceHard();
+                if (takee.Downed || !takee.HostileTo(taker))
+                {
+                    CompPawnStorage comp = storage.TryGetComp<CompPawnStorage>();
+                    if (comp.CanStore)
+                        comp.StorePawn(takee);
+                }
 
-            if (rescued)
-                takee.relations.Notify_RescuedBy(taker);
-            takee.mindState.Notify_TuckedIntoBed();
-        });
+                if (rescued)
+                    takee.relations.Notify_RescuedBy(taker);
+                takee.mindState.Notify_TuckedIntoBed();
+            }
+        );
         toil.defaultCompleteMode = ToilCompleteMode.Delay;
         toil.defaultDuration = 75;
         toil.WithProgressBarToilDelay(TakeeIndex);

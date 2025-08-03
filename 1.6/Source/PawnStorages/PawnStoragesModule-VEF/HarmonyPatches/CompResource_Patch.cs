@@ -13,11 +13,10 @@ public static class CompResource_Patch
     {
         if (__instance.PipeNet == null || __instance.PipeNet.connectors.Count <= 1)
         {
-            __result = "PS_PipeSystem_NotConnected".Translate((NamedArgument) __instance.Resource.name);
+            __result = "PS_PipeSystem_NotConnected".Translate((NamedArgument)__instance.Resource.name);
             return false;
         }
 
         return true;
-
     }
 }

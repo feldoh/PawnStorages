@@ -13,11 +13,17 @@ public class ITab_Bills : ITab
     private float viewHeight = 1000f;
     private Vector2 scrollPosition;
     private static readonly Vector2 WinSize = new(420f, 480f);
-    [TweakValue("Interface", 0.0f, 128f)] private static float PasteX = 48f;
-    [TweakValue("Interface", 0.0f, 128f)] private static float PasteY = 3f;
-    [TweakValue("Interface", 0.0f, 32f)] private static float PasteSize = 24f;
 
-    protected Building_PSFactory SelFactory => (Building_PSFactory) SelThing;
+    [TweakValue("Interface", 0.0f, 128f)]
+    private static float PasteX = 48f;
+
+    [TweakValue("Interface", 0.0f, 128f)]
+    private static float PasteY = 3f;
+
+    [TweakValue("Interface", 0.0f, 32f)]
+    private static float PasteSize = 24f;
+
+    protected Building_PSFactory SelFactory => (Building_PSFactory)SelThing;
 
     public ITab_Bills()
     {
@@ -32,8 +38,11 @@ public class ITab_Bills : ITab
         Rect rect = new(WinSize.x - PasteX, PasteY, PasteSize, PasteSize);
         if (BillUtility.Clipboard != null)
         {
-            if (!SelFactory.AllRecipesUnfiltered.Contains(BillUtility.Clipboard.recipe) || !BillUtility.Clipboard.recipe.AvailableNow ||
-                !BillUtility.Clipboard.recipe.AvailableOnNow(SelFactory))
+            if (
+                !SelFactory.AllRecipesUnfiltered.Contains(BillUtility.Clipboard.recipe)
+                || !BillUtility.Clipboard.recipe.AvailableNow
+                || !BillUtility.Clipboard.recipe.AvailableOnNow(SelFactory)
+            )
             {
                 GUI.color = Color.gray;
                 Widgets.DrawTextureFitted(rect, TexButton.Paste, 1f);
@@ -69,15 +78,26 @@ public class ITab_Bills : ITab
 
         List<FloatMenuOption> RecipeOptionsMaker()
         {
-            List<FloatMenuOption> list = SelFactory.AllRecipesUnfiltered.Where(recipeDef => recipeDef.AvailableNow)
-                .Select(recipe => new FloatMenuOption(recipe.LabelCap, delegate
+            List<FloatMenuOption> list = SelFactory
+                .AllRecipesUnfiltered.Where(recipeDef => recipeDef.AvailableNow)
+                .Select(recipe => new FloatMenuOption(
+                    recipe.LabelCap,
+                    delegate
                     {
                         Bill bill2 = recipe.MakeNewBill();
                         SelFactory.BillStack.AddBill(bill2);
-                        if (recipe.conceptLearned != null) PlayerKnowledgeDatabase.KnowledgeDemonstrated(recipe.conceptLearned, KnowledgeAmount.Total);
-                        if (TutorSystem.TutorialMode) TutorSystem.Notify_Event((EventPack) "AddBill-" + recipe.LabelCap);
-                    }, MenuOptionPriority.Default, null, null, 29f,
-                    billOptionRect => Widgets.InfoCardButton(billOptionRect.x + 5f, billOptionRect.y + (billOptionRect.height - 24f) / 2f, recipe), null))
+                        if (recipe.conceptLearned != null)
+                            PlayerKnowledgeDatabase.KnowledgeDemonstrated(recipe.conceptLearned, KnowledgeAmount.Total);
+                        if (TutorSystem.TutorialMode)
+                            TutorSystem.Notify_Event((EventPack)"AddBill-" + recipe.LabelCap);
+                    },
+                    MenuOptionPriority.Default,
+                    null,
+                    null,
+                    29f,
+                    billOptionRect => Widgets.InfoCardButton(billOptionRect.x + 5f, billOptionRect.y + (billOptionRect.height - 24f) / 2f, recipe),
+                    null
+                ))
                 .ToList();
             return list.Any() ? list : [new FloatMenuOption("NoneBrackets".Translate(), null, MenuOptionPriority.Default, null, null, 0f, null, null)];
         }

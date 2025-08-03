@@ -22,14 +22,11 @@ public class FloatMenuOptionProvider_Farm : FloatMenuOptionProvider
         return base.TargetPawnValid(pawn, context) && WorkGiver_Warden_TakeToStorage.GetStorageForFarmAnimal(pawn, assign: false, breeding: false) != null;
     }
 
-    public override IEnumerable<FloatMenuOption> GetOptionsFor(
-        Pawn clickedPawn,
-        FloatMenuContext context)
+    public override IEnumerable<FloatMenuOption> GetOptionsFor(Pawn clickedPawn, FloatMenuContext context)
     {
         if (!context.FirstSelectedPawn.CanReach(clickedPawn, PathEndMode.OnCell, Danger.Deadly))
         {
-            yield return new FloatMenuOption(
-                "PS_NoFarm".Translate((NamedArgument) clickedPawn.Label) + ": " + "NoPath".Translate().CapitalizeFirst(), null);
+            yield return new FloatMenuOption("PS_NoFarm".Translate((NamedArgument)clickedPawn.Label) + ": " + "NoPath".Translate().CapitalizeFirst(), null);
         }
         else
         {
@@ -37,21 +34,23 @@ public class FloatMenuOptionProvider_Farm : FloatMenuOptionProvider
 
             if (building != null)
             {
-                yield return FloatMenuUtility.DecoratePrioritizedTask(new FloatMenuOption(
-                    "PS_FarmAnimal".Translate((NamedArgument) clickedPawn.Label,
-                        (NamedArgument) building.LabelCap),
-                    () =>
-                    {
-                        Job job = JobMaker.MakeJob(PS_DefOf.PS_CaptureAnimalToFarm, clickedPawn, (LocalTargetInfo) (Thing) building);
-                        job.count = 1;
-                        context.FirstSelectedPawn.jobs.TryTakeOrderedJob(job);
-                    }), context.FirstSelectedPawn, clickedPawn);
+                yield return FloatMenuUtility.DecoratePrioritizedTask(
+                    new FloatMenuOption(
+                        "PS_FarmAnimal".Translate((NamedArgument)clickedPawn.Label, (NamedArgument)building.LabelCap),
+                        () =>
+                        {
+                            Job job = JobMaker.MakeJob(PS_DefOf.PS_CaptureAnimalToFarm, clickedPawn, (LocalTargetInfo)(Thing)building);
+                            job.count = 1;
+                            context.FirstSelectedPawn.jobs.TryTakeOrderedJob(job);
+                        }
+                    ),
+                    context.FirstSelectedPawn,
+                    clickedPawn
+                );
             }
             else
             {
-                yield return new FloatMenuOption(
-                    "PS_NoFarm".Translate((NamedArgument) clickedPawn.Label),
-                    null);
+                yield return new FloatMenuOption("PS_NoFarm".Translate((NamedArgument)clickedPawn.Label), null);
             }
         }
     }

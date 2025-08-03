@@ -16,7 +16,8 @@ public static class DrawTimeAssignmentSelectorGrid_Patch
         rect2.xMax = rect2.center.x;
         rect2.yMax = rect2.center.y;
         rect2.x += 4f * rect2.width;
-        if (ModsConfig.RoyaltyActive) rect2.x += rect2.width;
+        if (ModsConfig.RoyaltyActive)
+            rect2.x += rect2.width;
         DrawTimeAssignmentSelectorFor(rect2, PS_DefOf.PS_Home);
     }
 
@@ -31,7 +32,8 @@ public static class DrawTimeAssignmentSelectorGrid_Patch
         }
 
         GUI.color = Color.white;
-        if (Mouse.IsOver(rect)) Widgets.DrawHighlight(rect);
+        if (Mouse.IsOver(rect))
+            Widgets.DrawHighlight(rect);
         Text.Font = GameFont.Small;
         Text.Anchor = TextAnchor.MiddleCenter;
         GUI.color = Color.white;

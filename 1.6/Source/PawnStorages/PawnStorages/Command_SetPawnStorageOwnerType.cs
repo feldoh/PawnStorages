@@ -40,10 +40,13 @@ public class Command_SetPawnStorageOwnerType : Command
         base.ProcessInput(ev);
         List<FloatMenuOption> options =
         [
-            new FloatMenuOption("ForColonistUse".Translate(), () => assignable.OwnerType = BedOwnerType.Colonist, Command_SetBedOwnerType.ForColonistsTex,
-                Color.white),
-            new FloatMenuOption("CommandBedSetForPrisonersLabel".Translate(), () => assignable.OwnerType = BedOwnerType.Prisoner, Command_SetBedOwnerType.ForPrisonersTex,
-                Color.white)
+            new FloatMenuOption("ForColonistUse".Translate(), () => assignable.OwnerType = BedOwnerType.Colonist, Command_SetBedOwnerType.ForColonistsTex, Color.white),
+            new FloatMenuOption(
+                "CommandBedSetForPrisonersLabel".Translate(),
+                () => assignable.OwnerType = BedOwnerType.Prisoner,
+                Command_SetBedOwnerType.ForPrisonersTex,
+                Color.white
+            )
         ];
         if (ModsConfig.IdeologyActive)
             options.Add(new("PS_Storage_Use_Slaves".Translate(), () => assignable.OwnerType = BedOwnerType.Prisoner, Command_SetBedOwnerType.ForSlavesTex, Color.white));

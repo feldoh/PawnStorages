@@ -20,11 +20,11 @@ public class Projectile_Capturing : Projectile
     public EffecterDef EffecterDef;
 
     public CompPawnStorage ProjectileStorage => GetComp<CompPawnStorage>();
-    
+
     protected Vector3 wiggleAngleFrom = new Vector3(0.0F, 45.0F, 0.0F);
     protected Vector3 wiggleAngleTo = new Vector3(0.0F, -45.0F, 0.0F);
     protected float WiggleFrequency = 4F;
-    
+
     public override void ExposeData()
     {
         base.ExposeData();
@@ -44,12 +44,13 @@ public class Projectile_Capturing : Projectile
         ProjectileHitFlags hitFlags,
         bool preventFriendlyFire = false,
         Thing equipment = null,
-        ThingDef targetCoverDef = null)
+        ThingDef targetCoverDef = null
+    )
     {
-        Equipment = (ThingWithComps) equipment;
-        base.Launch(launcher,origin,usedTarget, intendedTarget, hitFlags, preventFriendlyFire, equipment, this.targetCoverDef);
+        Equipment = (ThingWithComps)equipment;
+        base.Launch(launcher, origin, usedTarget, intendedTarget, hitFlags, preventFriendlyFire, equipment, this.targetCoverDef);
     }
-    
+
     public override void DrawAt(Vector3 drawLoc, bool flip = false)
     {
         float height = ArcHeightFactor * GenMath.InverseParabola(DistanceCoveredFractionArc);
@@ -61,7 +62,7 @@ public class Projectile_Capturing : Projectile
         if (def.projectile.spinRate != 0.0)
         {
             float num = 60f / def.projectile.spinRate;
-            rotation = Quaternion.AngleAxis((float) (Find.TickManager.TicksGame % (double) num / num * 360.0), Vector3.up);
+            rotation = Quaternion.AngleAxis((float)(Find.TickManager.TicksGame % (double)num / num * 360.0), Vector3.up);
         }
 
         if (ticksToCapture > 0)
@@ -77,16 +78,17 @@ public class Projectile_Capturing : Projectile
 
     public void DoWiggle(ref Quaternion rot, ref Vector3 pos)
     {
-        if (ticksToCapture is (<= 30 or > 60) and (<= 90 or > 120) and (<= 150 or > 180)) return;
-        
+        if (ticksToCapture is (<= 30 or > 60) and (<= 90 or > 120) and (<= 150 or > 180))
+            return;
+
         Quaternion from = Quaternion.Euler(wiggleAngleFrom);
         Quaternion to = Quaternion.Euler(wiggleAngleTo);
-        
+
         float val = Mathf.PI * (ticksToCapture / 60f) * WiggleFrequency;
         float lerp = 0.5F * (1.0F + Mathf.Sin(val));
         float lerpz = 0.5F * (1.0F + Mathf.Sin(val * 2));
-            
-        rot *=  Quaternion.Lerp(from, to, lerp);
+
+        rot *= Quaternion.Lerp(from, to, lerp);
         pos.x += Mathf.Lerp(0.25f, -0.25f, lerp);
         pos.z += Mathf.Lerp(0, -0.05f, lerpz);
     }
@@ -111,7 +113,7 @@ public class Projectile_Capturing : Projectile
             CompPawnStorage storageComp = Equipment.GetComp<CompPawnStorage>();
             if (storageComp == null)
             {
-                storageComp = (CompPawnStorage) Activator.CreateInstance(typeof(CompPawnStorage));
+                storageComp = (CompPawnStorage)Activator.CreateInstance(typeof(CompPawnStorage));
                 storageComp.parent = Equipment;
                 Equipment.comps.Add(storageComp);
             }
@@ -124,7 +126,7 @@ public class Projectile_Capturing : Projectile
                 }
             }
         }
-        
+
         Destroy();
     }
 
@@ -159,22 +161,25 @@ public class Projectile_Capturing : Projectile
 
     public bool PrepCapture()
     {
-        if(BlockedByShield) return false;
-        
-        if (HitThing is not Pawn pawn) return false;
-        
+        if (BlockedByShield)
+            return false;
+
+        if (HitThing is not Pawn pawn)
+            return false;
+
         Equipment.Destroy();
 
         if (pawn.Faction != LauncherPawn?.Faction && pawn.SlaveFaction != LauncherPawn?.Faction && !pawn.IsPrisonerOfColony)
         {
-            if (!pawn.Downed) return false;
+            if (!pawn.Downed)
+                return false;
             pawn.guest?.CapturedBy(LauncherPawn?.Faction, LauncherPawn);
         }
         else
         {
             return !TryAddToNewBall(pawn, out NewlySpawnedBall);
         }
-        
+
         ProjectileStorage.StorePawn(pawn);
         PS_DefOf.PS_CaptureSound.PlayOneShot(new TargetInfo(Position, Map));
 
@@ -202,7 +207,8 @@ public class Projectile_Capturing : Projectile
     {
         RunEffector();
         ball = (ThingWithComps)GenSpawn.Spawn(equipmentDef, HitThing.Position, ThingMap, WipeMode.VanishOrMoveAside);
-        if (!ball.TryGetComp<CompPawnStorage>(out CompPawnStorage comp)) return false;
+        if (!ball.TryGetComp<CompPawnStorage>(out CompPawnStorage comp))
+            return false;
         if (comp?.CanAssign(pawn, true) ?? false)
         {
             if (transferTarget is not null)
@@ -213,7 +219,7 @@ public class Projectile_Capturing : Projectile
             {
                 comp.StorePawn(pawn);
             }
-        
+
             Hediff hediff = pawn.health.GetOrAddHediff(PS_DefOf.PS_CapturedPawn);
             hediff.visible = false;
         }
@@ -223,15 +229,15 @@ public class Projectile_Capturing : Projectile
 
     public bool Capture()
     {
-        if (HitThing is not Pawn pawn) return false;
+        if (HitThing is not Pawn pawn)
+            return false;
         return TryAddToNewBall(pawn, out NewlySpawnedBall, ProjectileStorage);
     }
 
     public void Release()
     {
         IntVec3 position = HitThing?.Position ?? Position;
-        
+
         EquipmentStorageComp?.ReleaseContentsAt(ThingMap, position);
     }
-    
 }

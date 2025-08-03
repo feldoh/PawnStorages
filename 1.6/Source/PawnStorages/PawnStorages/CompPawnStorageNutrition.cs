@@ -12,7 +12,8 @@ namespace PawnStorages;
 [StaticConstructorOnStartup]
 public class CompPawnStorageNutrition : ThingComp
 {
-    [CanBeNull] public INutritionStorageParent ParentAsNutritionStorageParent => parent as INutritionStorageParent;
+    [CanBeNull]
+    public INutritionStorageParent ParentAsNutritionStorageParent => parent as INutritionStorageParent;
 
     private float _storedNutrition = 0f;
     private float _targetNutritionLevel = -1f;
@@ -54,7 +55,8 @@ public class CompPawnStorageNutrition : ThingComp
         amountFed = 0f;
 
         // exit early if pawn is full
-        if (Mathf.Approximately(foodNeeds.CurLevel, 1)) return false;
+        if (Mathf.Approximately(foodNeeds.CurLevel, 1))
+            return false;
 
         desiredFeed = Mathf.Max(0, desiredFeed);
 
@@ -72,7 +74,6 @@ public class CompPawnStorageNutrition : ThingComp
         return Mathf.Approximately(amountFed, desiredFeed);
     }
 
-
     public virtual float ResolveStarvationIfPossibleAndNecessary(Need_Food foodNeeds, Pawn pawn) =>
         !foodNeeds.Starving ? 0f : FeedAndRecordWantedAmount(foodNeeds, foodNeeds.NutritionWanted, pawn);
 
@@ -83,7 +84,8 @@ public class CompPawnStorageNutrition : ThingComp
          */
 
         // Only feed pawns when they reach the threshold
-        if (foodNeeds == null || foodNeeds.CurLevelPercentage >= Props.pawnFeedThreshold) return 0;
+        if (foodNeeds == null || foodNeeds.CurLevelPercentage >= Props.pawnFeedThreshold)
+            return 0;
 
         float totalFeed = 0f;
 
@@ -110,7 +112,8 @@ public class CompPawnStorageNutrition : ThingComp
             return;
         }
 
-        if(PawnStoragesMod.settings.SuggestiveSilo) parent.DirtyMapMesh(parent.Map);
+        if (PawnStoragesMod.settings.SuggestiveSilo)
+            parent.DirtyMapMesh(parent.Map);
         if (StoredNutrition <= TargetNutritionLevel)
         {
             TryAbsorbNutritionFromSource(TargetNutritionLevel - StoredNutrition);
@@ -166,7 +169,8 @@ public class CompPawnStorageNutrition : ThingComp
         }
 
         // Update map mesh to reflect changes for suggestive silos
-        if(PawnStoragesMod.settings.SuggestiveSilo) parent.DirtyMapMesh(parent.Map);
+        if (PawnStoragesMod.settings.SuggestiveSilo)
+            parent.DirtyMapMesh(parent.Map);
     }
 
     public override void CompTick()
@@ -199,7 +203,8 @@ public class CompPawnStorageNutrition : ThingComp
 
     public virtual void DoFeed()
     {
-        if(ParentAsNutritionStorageParent is null) return;
+        if (ParentAsNutritionStorageParent is null)
+            return;
         foreach (Pawn pawn in ParentAsNutritionStorageParent.StoredPawns)
         {
             //Need fall ticker
@@ -249,7 +254,6 @@ public class CompPawnStorageNutrition : ThingComp
 
     public List<IntVec3> AdjCellsCardinalInBounds => GenAdj.CellsAdjacentCardinal(parent).Where(c => c.InBounds(parent.Map)).ToList();
 
-
     public virtual bool IsValidNutritionRequest(float nutrition)
     {
         return nutrition > 0 && HasEnoughFeedstockInHoppers();
@@ -295,7 +299,8 @@ public class CompPawnStorageNutrition : ThingComp
 
     public virtual bool AddNutritionToStorage(float amount)
     {
-        if (amount <= 0 || Mathf.Approximately(amount, 0)) return false;
+        if (amount <= 0 || Mathf.Approximately(amount, 0))
+            return false;
         StoredNutrition += amount;
         return true;
     }
@@ -310,7 +315,8 @@ public class CompPawnStorageNutrition : ThingComp
             return false;
 
         Thing feedSource = FindFeedInAnyHopper();
-        if (feedSource is null) return false;
+        if (feedSource is null)
+            return false;
 
         float remainingNutrition = ProcessFeedAbsorption(feedSource, requestedNutrition);
         float absorbedNutrition = requestedNutrition - remainingNutrition;
@@ -371,7 +377,7 @@ public class CompPawnStorageNutrition : ThingComp
 
             foreach (Thing potentialFeedStockThing in potentialFeedStockThings)
             {
-                if (IsAcceptableFeedstock(potentialFeedStockThing.def) )
+                if (IsAcceptableFeedstock(potentialFeedStockThing.def))
                     feedStockThing = potentialFeedStockThing;
                 if (potentialFeedStockThing.IsHopper())
                     hopper = potentialFeedStockThing;
@@ -453,7 +459,8 @@ public class CompPawnStorageNutrition : ThingComp
         if (!Props.HasTip)
             return;
 
-        if(parent.Graphic is not Graphic_Single graphic) return;
+        if (parent.Graphic is not Graphic_Single graphic)
+            return;
         graphic.mat = Props.MainTexture;
 
         float filled = 0.6f;

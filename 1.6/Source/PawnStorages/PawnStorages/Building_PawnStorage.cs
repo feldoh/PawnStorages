@@ -64,7 +64,14 @@ public class Building_PawnStorage : PSBuilding, IPawnListParent, IThingGlower
             if (OnlyRenderPawnNorth && Rotation == Rot4.North || !OnlyRenderPawnNorth)
             {
                 // Pass in PawnHealthState.Mobile as an override to ensure the pawn is drawn upright
-                RenderTexture texture = PortraitsCache.Get(pawn, new Vector2(175f, 175f), rot, new Vector3(0f, 0f, 0.1f), compAssignable.Props.cameraZoom, healthStateOverride: PawnHealthState.Mobile);
+                RenderTexture texture = PortraitsCache.Get(
+                    pawn,
+                    new Vector2(175f, 175f),
+                    rot,
+                    new Vector3(0f, 0f, 0.1f),
+                    compAssignable.Props.cameraZoom,
+                    healthStateOverride: PawnHealthState.Mobile
+                );
 
                 MaterialRequest req2 = default;
                 if (compAssignable.Props.drawGrayscale)
@@ -77,7 +84,8 @@ public class Building_PawnStorage : PSBuilding, IPawnListParent, IThingGlower
                 }
 
                 req2.shader = Graphic.data?.shaderType?.Shader;
-                if (req2.shader == null) req2.shader = ShaderDatabase.DefaultShader;
+                if (req2.shader == null)
+                    req2.shader = ShaderDatabase.DefaultShader;
                 req2.color = DrawColor;
                 req2.colorTwo = DrawColorTwo;
 
@@ -92,7 +100,7 @@ public class Building_PawnStorage : PSBuilding, IPawnListParent, IThingGlower
                 {
                     pos -= StatueOffset;
                     pos.y = AltitudeLayer.MoteOverhead.AltitudeFor();
-                    Printer_Mesh.PrintMesh(layer, Matrix4x4.TRS(pos, Rot4.North.AsQuat, new Vector3(1,1,1)), OverlayGraphic.MeshAt(Rotation), OverlayGraphic.MatAt(Rotation));
+                    Printer_Mesh.PrintMesh(layer, Matrix4x4.TRS(pos, Rot4.North.AsQuat, new Vector3(1, 1, 1)), OverlayGraphic.MeshAt(Rotation), OverlayGraphic.MatAt(Rotation));
                 }
             }
         }
@@ -108,7 +116,6 @@ public class Building_PawnStorage : PSBuilding, IPawnListParent, IThingGlower
     public void ReleasePawn(Pawn pawn)
     {
         storageComp?.ReleaseSingle(Map, pawn, true, true);
-
     }
 
     public bool NeedsDrop()

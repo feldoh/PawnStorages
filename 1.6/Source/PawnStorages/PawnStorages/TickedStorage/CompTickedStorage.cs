@@ -7,29 +7,27 @@ using Verse;
 
 namespace PawnStorages.TickedStorage;
 
-public class CompTickedStorage: CompPawnStorage
+public class CompTickedStorage : CompPawnStorage
 {
     public PSBuilding ParentAsPSBuilding => parent as PSBuilding;
     public List<Pawn> StoredPawns => GetDirectlyHeldThings().Select(p => p as Pawn).ToList();
     public new CompProperties_TickedStorage Props => props as CompProperties_TickedStorage;
 
-    public override float NutritionRequiredPerDay() => compAssignable.AssignedPawns.Sum(animal =>
-        SimplifiedPastureNutritionSimulator.NutritionConsumedPerDay(animal.def, animal.ageTracker.CurLifeStage));
+    public override float NutritionRequiredPerDay() =>
+        compAssignable.AssignedPawns.Sum(animal => SimplifiedPastureNutritionSimulator.NutritionConsumedPerDay(animal.def, animal.ageTracker.CurLifeStage));
 
     public IEnumerable<PawnKindDef> HeldPawnTypes => innerContainer.innerList.Select(p => p.kindDef).Distinct();
-
 
     public override string CompInspectStringExtra()
     {
         StringBuilder sb = new();
         sb.AppendLine($"Stored: {innerContainer.Count}/{MaxStoredPawns()}");
-        if (innerContainer?.Any<Pawn>() != true) return sb.ToString().TrimStart().TrimEnd();
+        if (innerContainer?.Any<Pawn>() != true)
+            return sb.ToString().TrimStart().TrimEnd();
         sb.AppendLine("PS_StoredPawns".Translate());
         foreach (Pawn pawn in innerContainer)
         {
-            sb.AppendLine(pawn.needs.food.Starving
-                ? $"    - {pawn.LabelCap} ({pawn.gender.GetLabel()}) [Starving!]"
-                : $"    - {pawn.LabelCap} ({pawn.gender.GetLabel()})");
+            sb.AppendLine(pawn.needs.food.Starving ? $"    - {pawn.LabelCap} ({pawn.gender.GetLabel()}) [Starving!]" : $"    - {pawn.LabelCap} ({pawn.gender.GetLabel()})");
         }
 
         return sb.ToString().TrimStart().TrimEnd();
@@ -65,8 +63,7 @@ public class CompTickedStorage: CompPawnStorage
             return;
 
         // Need_Food.NeedInterval hardcodes 150 ticks, so adjust
-        float adjustedMalnutritionSeverityPerInterval =
-            foodNeeds.MalnutritionSeverityPerInterval / 150f * interval;
+        float adjustedMalnutritionSeverityPerInterval = foodNeeds.MalnutritionSeverityPerInterval / 150f * interval;
 
         if (foodNeeds.Starving)
             HealthUtility.AdjustSeverity(pawn, HediffDefOf.Malnutrition, adjustedMalnutritionSeverityPerInterval);
@@ -82,7 +79,7 @@ public class CompTickedStorage: CompPawnStorage
             return;
         Pawn_HealthTracker.tmpRemovedHediffs.Clear();
         Pawn_HealthTracker.tmpHediffs.Clear();
-        Pawn_HealthTracker.tmpHediffs.AddRange((IEnumerable<Hediff>) health.hediffSet.hediffs);
+        Pawn_HealthTracker.tmpHediffs.AddRange((IEnumerable<Hediff>)health.hediffSet.hediffs);
         foreach (Hediff tmpHediff in Pawn_HealthTracker.tmpHediffs.Where(tmpHediff => !Pawn_HealthTracker.tmpRemovedHediffs.Contains(tmpHediff)))
         {
             try
@@ -128,7 +125,6 @@ public class CompTickedStorage: CompPawnStorage
 
         foreach (Pawn pawn in StoredPawns)
         {
-
             if (Props.tickAge)
             {
                 EmulateScaledPawnAgeTick(pawn);

@@ -18,7 +18,8 @@ namespace PawnStorages.Farm.Comps
 
         public Dictionary<PawnKindDef, AutoSlaughterConfig> GetOrPopulateAutoSlaughterSettings()
         {
-            if (!AutoSlaughterSettings.NullOrEmpty()) return AutoSlaughterSettings;
+            if (!AutoSlaughterSettings.NullOrEmpty())
+                return AutoSlaughterSettings;
             AutoSlaughterSettings = new Dictionary<PawnKindDef, AutoSlaughterConfig>();
             TryPopulateMissingAnimals();
             return AutoSlaughterSettings;
@@ -28,9 +29,10 @@ namespace PawnStorages.Farm.Comps
 
         public Dictionary<PawnKindDef, AutoSlaughterCullOrder> GetOrPopulateAutoSlaughterCullOrder()
         {
-            if (!AutoSlaughterCullOrder.NullOrEmpty()) return AutoSlaughterCullOrder;
+            if (!AutoSlaughterCullOrder.NullOrEmpty())
+                return AutoSlaughterCullOrder;
             AutoSlaughterCullOrder = new Dictionary<PawnKindDef, AutoSlaughterCullOrder>();
-            foreach (PawnKindDef allDef in Utility.AllAnimalKinds.Value.Where(d=> !AutoSlaughterCullOrder.ContainsKey(d)))
+            foreach (PawnKindDef allDef in Utility.AllAnimalKinds.Value.Where(d => !AutoSlaughterCullOrder.ContainsKey(d)))
             {
                 AutoSlaughterCullOrder.Add(allDef, new AutoSlaughterCullOrder());
             }
@@ -51,10 +53,7 @@ namespace PawnStorages.Farm.Comps
 
         public Dictionary<PawnKindDef, float> BreedingProgress
         {
-            get
-            {
-                return breedingProgress ??= new Dictionary<PawnKindDef, float>();
-            }
+            get { return breedingProgress ??= new Dictionary<PawnKindDef, float>(); }
         }
 
         public override void PostExposeData()
@@ -74,8 +73,7 @@ namespace PawnStorages.Farm.Comps
             GetOrPopulateAutoSlaughterCullOrder();
         }
 
-        public void ExecutionInt(
-            Pawn victim)
+        public void ExecutionInt(Pawn victim)
         {
             ParentAsBreederParent.ReleasePawn(victim);
             int num = Mathf.Max(GenMath.RoundRandom(victim.BodySize * 8), 1);
@@ -84,7 +82,7 @@ namespace PawnStorages.Farm.Comps
 
             Find.HistoryEventsManager.RecordEvent(new HistoryEvent(HistoryEventDefOf.SlaughteredAnimal, parent.Named(HistoryEventArgsNames.Doer)));
             BodyPartRecord bodyPartRecord = ExecutionUtility.ExecuteCutPart(victim);
-            int partHealth = (int) victim.health.hediffSet.GetPartHealth(bodyPartRecord);
+            int partHealth = (int)victim.health.hediffSet.GetPartHealth(bodyPartRecord);
             int amount = Mathf.Min(partHealth - 1, 1);
 
             DamageInfo dinfo = new(DamageDefOf.ExecutionCut, amount, 999f, instigator: parent, hitPart: bodyPartRecord, instigatorGuilty: false, spawnFilth: true);
@@ -92,7 +90,7 @@ namespace PawnStorages.Farm.Comps
             victim.TakeDamage(dinfo);
             if (!victim.Dead)
                 victim.Kill(dinfo, null);
-            SoundDefOf.Execute_Cut.PlayOneShot((SoundInfo) (Thing) victim);
+            SoundDefOf.Execute_Cut.PlayOneShot((SoundInfo)(Thing)victim);
         }
 
         public bool CullFirstOverLimit(int max, List<Pawn> pawns)
@@ -122,8 +120,7 @@ namespace PawnStorages.Farm.Comps
                     continue;
                 }
 
-                var groupedByAgeAndGender = type
-                    .GroupBy(p => new { p.ageTracker.Adult, p.gender })
+                var groupedByAgeAndGender = type.GroupBy(p => new { p.ageTracker.Adult, p.gender })
                     .Select(group => new
                     {
                         FarmAnimalCharacteristics = new FarmAnimalCharacteristics(group.Key.Adult, group.Key.gender),
@@ -131,13 +128,13 @@ namespace PawnStorages.Farm.Comps
                             ? group.OrderBy(p => p.ageTracker.ageBiologicalTicksInt)
                             : group.OrderByDescending(p => p.ageTracker.ageBiologicalTicksInt)
                     })
-                    .OrderBy(g => g.FarmAnimalCharacteristics).ToList();
+                    .OrderBy(g => g.FarmAnimalCharacteristics)
+                    .ToList();
 
-                bool culledThisCycle = Enumerable.Any(groupedByAgeAndGender,
-                    group => CullFirstOverLimit(group.FarmAnimalCharacteristics.CullValue(config),
-                        group.Pawns.ToList()));
+                bool culledThisCycle = Enumerable.Any(groupedByAgeAndGender, group => CullFirstOverLimit(group.FarmAnimalCharacteristics.CullValue(config), group.Pawns.ToList()));
 
-                if (!culledThisCycle) CullFirstOverLimit(config.maxTotal, type.ToList());
+                if (!culledThisCycle)
+                    CullFirstOverLimit(config.maxTotal, type.ToList());
             }
         }
 
@@ -151,34 +148,35 @@ namespace PawnStorages.Farm.Comps
                 bool genderless = !type.Key.RaceProps.hasGenders;
 
                 // no more females, reset
-                if (!nonMales.Any() && !genderless) BreedingProgress[type.Key] = 0f;
+                if (!nonMales.Any() && !genderless)
+                    BreedingProgress[type.Key] = 0f;
 
                 // no males, stop progress
-                if (!males && !genderless) continue;
+                if (!males && !genderless)
+                    continue;
 
                 float gestationDays = AnimalProductionUtility.GestationDaysEach(type.Key.race);
-                if (gestationDays <= 0f) continue;
+                if (gestationDays <= 0f)
+                    continue;
 
                 float gestationTicks = gestationDays * GenDate.TicksPerDay * PawnStoragesMod.settings.BreedingScale;
 
                 float progressPerInterval = ParentAsBreederParent.BuildingTickInterval / gestationTicks;
 
-                if (!BreedingProgress.ContainsKey(type.Key)) BreedingProgress[type.Key] = 0f;
+                if (!BreedingProgress.ContainsKey(type.Key))
+                    BreedingProgress[type.Key] = 0f;
                 BreedingProgress[type.Key] = Mathf.Clamp01(BreedingProgress[type.Key] + progressPerInterval * nonMales.Count);
 
-                if (BreedingProgress[type.Key] < 1f) continue;
+                if (BreedingProgress[type.Key] < 1f)
+                    continue;
 
-                if (ParentAsBreederParent.BreedablePawns.Count >= PawnStoragesMod.settings.MaxPawnsInFarm) break;
+                if (ParentAsBreederParent.BreedablePawns.Count >= PawnStoragesMod.settings.MaxPawnsInFarm)
+                    break;
 
                 BreedingProgress[type.Key] = 0f;
                 Pawn newPawn = PawnGenerator.GeneratePawn(
-                    new PawnGenerationRequest(
-                        type.Key,
-                        Faction.OfPlayer,
-                        allowDowned: true,
-                        forceNoIdeo: true,
-                        developmentalStages: DevelopmentalStage.Newborn
-                    ));
+                    new PawnGenerationRequest(type.Key, Faction.OfPlayer, allowDowned: true, forceNoIdeo: true, developmentalStages: DevelopmentalStage.Newborn)
+                );
 
                 ParentAsBreederParent.Notify_PawnBorn(newPawn);
             }
@@ -188,18 +186,15 @@ namespace PawnStorages.Farm.Comps
         {
             base.CompTick();
 
-            if (!PawnStoragesMod.settings.AllowNeedsDrop) return;
-
+            if (!PawnStoragesMod.settings.AllowNeedsDrop)
+                return;
 
             if (!parent.IsHashIntervalTick(ParentAsBreederParent.BuildingTickInterval))
             {
                 return;
             }
 
-            List<IGrouping<PawnKindDef, Pawn>> pawnsByKind = (from p in ParentAsBreederParent.AllHealthyPawns
-                group p by p.kindDef
-                into def
-                select def).ToList();
+            List<IGrouping<PawnKindDef, Pawn>> pawnsByKind = (from p in ParentAsBreederParent.AllHealthyPawns group p by p.kindDef into def select def).ToList();
 
             TryCull(pawnsByKind);
             TryBreed(pawnsByKind);
@@ -207,7 +202,8 @@ namespace PawnStorages.Farm.Comps
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
-            if (!DebugSettings.ShowDevGizmos) yield break;
+            if (!DebugSettings.ShowDevGizmos)
+                yield break;
             yield return new Command_Action
             {
                 defaultLabel = "Make breeding progress 100%",

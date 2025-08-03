@@ -6,7 +6,8 @@ public class PlaceWorker_WallDoor : PlaceWorker
 {
     public override AcceptanceReport AllowsPlacing(BuildableDef checkingDef, IntVec3 loc, Rot4 rot, Map map, Thing thingToIgnore = null, Thing thing = null)
     {
-        if (!loc.GetThingList(map).Any(t => t.def.IsWall())) return false;
+        if (!loc.GetThingList(map).Any(t => t.def.IsWall()))
+            return false;
         IntVec3 newLoc = loc;
         if (rot == Rot4.North)
             newLoc += IntVec3.South;

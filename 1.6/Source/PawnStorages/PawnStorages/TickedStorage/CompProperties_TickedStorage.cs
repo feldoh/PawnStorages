@@ -1,6 +1,6 @@
 ﻿namespace PawnStorages.TickedStorage;
 
-public class CompProperties_TickedStorage: CompProperties_PawnStorage
+public class CompProperties_TickedStorage : CompProperties_PawnStorage
 {
     public bool tickHediffs = true;
     public bool tickAge = false;

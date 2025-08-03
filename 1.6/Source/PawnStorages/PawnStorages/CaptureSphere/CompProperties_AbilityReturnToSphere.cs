@@ -7,6 +7,6 @@ public class CompProperties_AbilityReturnToSphere : CompProperties_AbilityEffect
 {
     public EffecterDef Effector;
     public ThingDef SphereDef;
-    public CompProperties_AbilityReturnToSphere() => this.compClass = typeof (CompAbilityReturnToSphere);
-    
+
+    public CompProperties_AbilityReturnToSphere() => this.compClass = typeof(CompAbilityReturnToSphere);
 }

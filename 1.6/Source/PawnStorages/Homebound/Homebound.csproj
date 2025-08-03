@@ -44,10 +44,16 @@
         <None Include="../../../../.editorconfig" />
     </ItemGroup>
 
+    <Target Name="CheckCsharpier" BeforeTargets="Build">
+        <Exec Command="dotnet csharpier --version" IgnoreExitCode="true">
+            <Output TaskParameter="ExitCode" PropertyName="ExitCode"/>
+        </Exec>
+    </Target>
+
     <!-- Add A step to the build to run csharpier on build -->
-    <!-- <Target Name="FormatCode" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Release' And '$(ExitCode)' == '0' " DependsOnTargets="CheckCsharpier">
-        <Exec Command="csharpier format ." />
-    </Target> -->
+    <Target Name="FormatCode" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Release' And '$(ExitCode)' == '0' " DependsOnTargets="CheckCsharpier">
+        <Exec Command="dotnet csharpier ." />
+    </Target>
 
     <Target Name="CleanRelease" AfterTargets="Clean">
         <RemoveDir Directories="$(ReleasePath)" Condition="Exists('$(ReleasePath)')" />

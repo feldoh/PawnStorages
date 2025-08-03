@@ -27,7 +27,8 @@ namespace PawnStorages.Farm
             Rect rect = new Rect(0.0f, position, width, LineHeight);
 
             FarmJob_MapComponent comp = SelThing.Map.GetComponent<FarmJob_MapComponent>();
-            if (comp == null) return;
+            if (comp == null)
+                return;
 
             if (alternate)
             {
@@ -49,7 +50,8 @@ namespace PawnStorages.Farm
 
             Rect btn = new Rect(new Vector2(width - 80f, position + 15f), new Vector2(70f, 30f));
 
-            if (!Widgets.ButtonText(btn, "PS_AssignmentTab_Set".Translate(), true, false, true)) return;
+            if (!Widgets.ButtonText(btn, "PS_AssignmentTab_Set".Translate(), true, false, true))
+                return;
 
             string message = "PS_AssignmentTab_Assigned".Translate(animal.NameFullColored, compFarmStorage.parent.Label);
 
@@ -67,7 +69,8 @@ namespace PawnStorages.Farm
 
         public override void FillTab()
         {
-            if (compFarmStorage == null) return;
+            if (compFarmStorage == null)
+                return;
 
             Widgets.Label(new Rect(5.0f, 0.0f, WinSize.x, 30f), "PS_AssignmentTab_TopLabel".Translate());
 
@@ -88,7 +91,7 @@ namespace PawnStorages.Farm
             List<Pawn> removed = [];
             foreach (Pawn thing in animals)
             {
-                Pawn animal = (Pawn) thing;
+                Pawn animal = (Pawn)thing;
                 DrawLine(num, scrollViewRect.width, animal, ref alternate);
                 num += LineHeight;
             }

@@ -7,7 +7,8 @@ public class PawnStoragesMod : Mod
 {
     public static Settings settings;
 
-    public PawnStoragesMod(ModContentPack content) : base(content)
+    public PawnStoragesMod(ModContentPack content)
+        : base(content)
     {
         // initialize settings
         settings = GetSettings<Settings>();

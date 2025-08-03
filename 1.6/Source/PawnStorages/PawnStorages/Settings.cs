@@ -27,7 +27,8 @@ public class Settings : ModSettings
         options.Begin(wrect);
 
         options.CheckboxLabeled("PS_Settings_AllowNeedsDrop".Translate(), ref AllowNeedsDrop);
-        if (ModsConfig.anomalyActive) options.CheckboxLabeled("PS_Settings_SpecialReleaseAll".Translate(), ref SpecialReleaseAll);
+        if (ModsConfig.anomalyActive)
+            options.CheckboxLabeled("PS_Settings_SpecialReleaseAll".Translate(), ref SpecialReleaseAll);
         options.Gap(GapHeight);
         options.Label("PS_Settings_Advanced".Translate());
         ForcedPawn = options.TextEntryLabeled("PS_Settings_ForceNextPawnStatue".Translate(), ForcedPawn);

@@ -58,15 +58,21 @@ namespace PawnStorages.Farm
 
             if (NeedsDrop)
             {
-                Widgets.Label(new Rect(55f, position, width - 90f, 20f),
-                    (pawn.needs?.food?.Starving ?? false ? "PS_FarmTab_NameStarving" : "PS_FarmTab_Name").Translate(pawn.LabelShort));
+                Widgets.Label(
+                    new Rect(55f, position, width - 90f, 20f),
+                    (pawn.needs?.food?.Starving ?? false ? "PS_FarmTab_NameStarving" : "PS_FarmTab_Name").Translate(pawn.LabelShort)
+                );
 
                 if (compFarmProducer != null)
                 {
-                    Widgets.Label(new Rect(55f, position + 20f, width - 90f, 20f),
-                        "PS_FarmTab_Nutrition".Translate((pawn.needs?.food?.CurLevelPercentage ?? 0f).ToStringPercent()));
-                    Widgets.Label(new Rect(55f, position + 40f, width - 90f, 20f),
-                        "PS_FarmTab_Fullness".Translate(PawnFullness(pawn).ToStringPercent(), pawn.gender.GetLabel(animal: true)));
+                    Widgets.Label(
+                        new Rect(55f, position + 20f, width - 90f, 20f),
+                        "PS_FarmTab_Nutrition".Translate((pawn.needs?.food?.CurLevelPercentage ?? 0f).ToStringPercent())
+                    );
+                    Widgets.Label(
+                        new Rect(55f, position + 40f, width - 90f, 20f),
+                        "PS_FarmTab_Fullness".Translate(PawnFullness(pawn).ToStringPercent(), pawn.gender.GetLabel(animal: true))
+                    );
                 }
             }
 
@@ -77,8 +83,10 @@ namespace PawnStorages.Farm
 
         public override void FillTab()
         {
-            if (compFarmStorage == null) return;
-            if (compFarmStorage.GetDirectlyHeldThings().Count <= 0) return;
+            if (compFarmStorage == null)
+                return;
+            if (compFarmStorage.GetDirectlyHeldThings().Count <= 0)
+                return;
 
             Widgets.Label(new Rect(5.0f, 0.0f, WinSize.x, 30f), "PS_FarmTab_TopLabel".Translate());
 
@@ -97,7 +105,7 @@ namespace PawnStorages.Farm
             List<Pawn> removed = [];
             foreach (Thing thing in compFarmStorage.GetDirectlyHeldThings())
             {
-                Pawn pawn = (Pawn) thing;
+                Pawn pawn = (Pawn)thing;
                 if (DrawLine(num, scrollViewRect.width, pawn))
                 {
                     removed.Add(pawn);

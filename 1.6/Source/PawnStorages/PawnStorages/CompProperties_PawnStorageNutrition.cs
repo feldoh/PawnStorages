@@ -9,6 +9,7 @@ public class CompProperties_PawnStorageNutrition : CompProperties
     public float maxNutrition = 0;
     public int ticksToAbsorbNutrients = 0;
     public int pawnTickInterval = 0;
+
     // don't feed pawns until they reach this level
     public float pawnFeedThreshold = 0.75f;
     public float MaxNutrition => maxNutrition > 0 ? maxNutrition : PawnStoragesMod.settings.MaxFarmStoredNutrition;
@@ -39,7 +40,6 @@ public class CompProperties_PawnStorageNutrition : CompProperties
             MaterialCache[matPath] = mat;
 
             return mat;
-
         }
     }
 

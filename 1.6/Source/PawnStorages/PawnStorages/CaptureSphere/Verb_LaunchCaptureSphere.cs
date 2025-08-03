@@ -10,21 +10,22 @@ public class Verb_LaunchCaptureSphere : Verb_LaunchProjectile
     {
         get
         {
-            if (EquipmentSource.TryGetComp<CompPawnStorage>(out CompPawnStorage comp)) return comp;
-            
-            CompPawnStorage storageComp = (CompPawnStorage) Activator.CreateInstance(typeof(CompPawnStorage));
+            if (EquipmentSource.TryGetComp<CompPawnStorage>(out CompPawnStorage comp))
+                return comp;
+
+            CompPawnStorage storageComp = (CompPawnStorage)Activator.CreateInstance(typeof(CompPawnStorage));
             storageComp.parent = EquipmentSource;
             EquipmentSource.comps.Add(storageComp);
             return storageComp;
         }
     }
 
-    protected TargetingParameters targetParamsFilled = new()
-    {
-        canTargetLocations = true,
-        canTargetSelf = false,
-        canTargetPawns = true,
-    };
+    protected TargetingParameters targetParamsFilled =
+        new()
+        {
+            canTargetLocations = true,
+            canTargetSelf = false,
+            canTargetPawns = true,
+        };
     public override TargetingParameters targetParams => (PawnStorage.GetDirectlyHeldThings()?.Count ?? 0) > 0 ? targetParamsFilled : verbProps.targetParams;
-    
 }

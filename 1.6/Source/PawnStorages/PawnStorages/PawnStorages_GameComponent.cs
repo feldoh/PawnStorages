@@ -9,7 +9,6 @@ namespace PawnStorages;
 
 public class PawnStorages_GameComponent : GameComponent
 {
-
     private static HashSet<CompAssignableToPawn_PawnStorage> _CompAssignables = [];
 
     public static bool AssignablesDirty = false;
@@ -18,11 +17,11 @@ public class PawnStorages_GameComponent : GameComponent
     {
         get
         {
-            if (!AssignablesDirty) return _CompAssignables;
+            if (!AssignablesDirty)
+                return _CompAssignables;
 
             _CompAssignables.Clear();
-            foreach (CompAssignableToPawn_PawnStorage comp in Find.CurrentMap.spawnedThings.Select(thing =>
-                         thing.TryGetComp<CompAssignableToPawn_PawnStorage>()))
+            foreach (CompAssignableToPawn_PawnStorage comp in Find.CurrentMap.spawnedThings.Select(thing => thing.TryGetComp<CompAssignableToPawn_PawnStorage>()))
             {
                 if (comp != null)
                     _CompAssignables.Add(comp);
@@ -36,9 +35,7 @@ public class PawnStorages_GameComponent : GameComponent
 
     public static CompAssignableToPawn_PawnStorage GetAssignedStorage(Pawn pawn) => CompAssignables.FirstOrDefault(x => x.AssignedPawns.Contains(pawn));
 
-    public PawnStorages_GameComponent(Game game)
-    {
-    }
+    public PawnStorages_GameComponent(Game game) { }
 
     public override void LoadedGame()
     {
@@ -57,5 +54,4 @@ public class PawnStorages_GameComponent : GameComponent
         base.FinalizeInit();
         AssignablesDirty = true;
     }
-
 }

@@ -14,9 +14,9 @@ public static class ITab_Pawn_Character_PawnToShowInfoAbout_Patch
         CompPawnStorage comp = Find.Selector.SingleSelectedThing.TryGetComp<CompPawnStorage>();
         IPawnListParent holder = comp?.ParentAsPawnListParent;
 
-        if (!(holder?.GetDirectlyHeldThings()?.Any() ?? false)) return true;
+        if (!(holder?.GetDirectlyHeldThings()?.Any() ?? false))
+            return true;
         __result = (Pawn)holder.GetDirectlyHeldThings().First();
         return false;
-
     }
 }

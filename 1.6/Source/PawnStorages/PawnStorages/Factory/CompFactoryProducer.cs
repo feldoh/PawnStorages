@@ -16,14 +16,12 @@ public class CompFactoryProducer : CompPawnStorageProducer
 
     private List<IntVec3> cachedAdjCellsCardinal;
 
-    public List<IntVec3> AdjCellsCardinalInBounds =>
-        cachedAdjCellsCardinal ??= GenAdj.CellsAdjacentCardinal(parent)
-            .Where(c => c.InBounds(parent.Map))
-            .ToList();
+    public List<IntVec3> AdjCellsCardinalInBounds => cachedAdjCellsCardinal ??= GenAdj.CellsAdjacentCardinal(parent).Where(c => c.InBounds(parent.Map)).ToList();
 
     public void Notify_BillDeleted(Bill bill)
     {
-        if (CurrentBill == bill) CurrentBill = null;
+        if (CurrentBill == bill)
+            CurrentBill = null;
     }
 
     public Bill CurrentBill
@@ -36,21 +34,33 @@ public class CompFactoryProducer : CompPawnStorageProducer
     {
         base.CompTick();
 
-        if (!shouldBeActive || !PawnStoragesMod.settings.AllowNeedsDrop) return;
+        if (!shouldBeActive || !PawnStoragesMod.settings.AllowNeedsDrop)
+            return;
 
-        if (parent.IsHashIntervalTick(ParentAsProductionParent.BuildingTickInterval) && ParentAsProductionParent.ProducingPawns is { } parentProducingPawns && parentProducingPawns.Any())
+        if (
+            parent.IsHashIntervalTick(ParentAsProductionParent.BuildingTickInterval)
+            && ParentAsProductionParent.ProducingPawns is { } parentProducingPawns
+            && parentProducingPawns.Any()
+        )
         {
-            if (CurrentBill == null) TryPickNextBill();
-            if (CurrentBill != null) storedWork += parentProducingPawns.Count * ParentAsProductionParent.BuildingTickInterval;
+            if (CurrentBill == null)
+                TryPickNextBill();
+            if (CurrentBill != null)
+                storedWork += parentProducingPawns.Count * ParentAsProductionParent.BuildingTickInterval;
             float workAmount = CurrentBill?.GetWorkAmount() ?? 0f;
             while (CurrentBill != null && storedWork > workAmount && TryFinishBill(CurrentBill, BillForeman(parentProducingPawns)))
             {
                 storedWork -= workAmount;
-                if (!CurrentBill.ShouldDoNow()) TryPickNextBill();
+                if (!CurrentBill.ShouldDoNow())
+                    TryPickNextBill();
             }
         }
 
-        if (!ProduceNow && (!parent.IsHashIntervalTick(60000 / Math.Max(PawnStoragesMod.settings.ProductionsPerDay, 1)) || DaysProduce.Count <= 0 || !ParentAsProductionParent.IsActive)) return;
+        if (
+            !ProduceNow
+            && (!parent.IsHashIntervalTick(60000 / Math.Max(PawnStoragesMod.settings.ProductionsPerDay, 1)) || DaysProduce.Count <= 0 || !ParentAsProductionParent.IsActive)
+        )
+            return;
         List<Thing> failedToPlace = [];
         failedToPlace.AddRange(DaysProduce.Where(thing => !GenPlace.TryPlaceThing(thing, parent.Position, parent.Map, ThingPlaceMode.Near)));
         DaysProduce.Clear();
@@ -69,10 +79,10 @@ public class CompFactoryProducer : CompPawnStorageProducer
             }
         }
 
-        if (chosenIngredients.Count == 0) return false;
+        if (chosenIngredients.Count == 0)
+            return false;
 
-        DaysProduce.AddRange(GenRecipe.MakeRecipeProducts(bill.recipe, billForeman, chosenIngredients,
-            CalculateDominantIngredient(chosenIngredients, bill.recipe), ParentFactory));
+        DaysProduce.AddRange(GenRecipe.MakeRecipeProducts(bill.recipe, billForeman, chosenIngredients, CalculateDominantIngredient(chosenIngredients, bill.recipe), ParentFactory));
         bill.Notify_IterationCompleted(billForeman, chosenIngredients);
         ConsumeIngredients(chosenIngredients, bill.recipe, parent.Map);
         return true;
@@ -80,7 +90,8 @@ public class CompFactoryProducer : CompPawnStorageProducer
 
     public Building_PSFactory ParentFactory => parent as Building_PSFactory;
 
-    public Pawn BillForeman(List<Pawn> possiblePawns = null) => (possiblePawns?.Any() ?? false ? possiblePawns : ParentAsProductionParent.ProducingPawns)?.RandomElementWithFallback();
+    public Pawn BillForeman(List<Pawn> possiblePawns = null) =>
+        (possiblePawns?.Any() ?? false ? possiblePawns : ParentAsProductionParent.ProducingPawns)?.RandomElementWithFallback();
 
     public Dictionary<Thing, int> SelectedIngredientsFor(Bill bill)
     {
@@ -89,7 +100,8 @@ public class CompFactoryProducer : CompPawnStorageProducer
         Dictionary<Thing, int> reserved = [];
         Dictionary<IngredientCount, int> countSoFar = [];
         Dictionary<IngredientCount, bool> done = [];
-        foreach (IngredientCount ingredientCount in ingredientList) done.Add(ingredientCount, false);
+        foreach (IngredientCount ingredientCount in ingredientList)
+            done.Add(ingredientCount, false);
 
         foreach (IntVec3 cellsCardinalInBound in AdjCellsCardinalInBounds)
         {
@@ -99,7 +111,8 @@ public class CompFactoryProducer : CompPawnStorageProducer
             {
                 foreach (IngredientCount ingredientCount in ingredientList)
                 {
-                    if (done[ingredientCount] || !ingredientCount.filter.Allows(potentialInputItemThing)) continue;
+                    if (done[ingredientCount] || !ingredientCount.filter.Allows(potentialInputItemThing))
+                        continue;
                     int countSoFarForIngredient = countSoFar.GetWithFallback(ingredientCount, 0);
                     int required = ingredientCount.CountRequiredOfFor(potentialInputItemThing.def, bill.recipe);
                     required -= countSoFarForIngredient;
@@ -108,7 +121,8 @@ public class CompFactoryProducer : CompPawnStorageProducer
                         int reservedSoFar = reserved.GetWithFallback(potentialInputItemThing, 0);
                         int reservable = potentialInputItemThing.stackCount - reservedSoFar;
                         int toReserve = Math.Min(required, reservable);
-                        if (toReserve >= required) done[ingredientCount] = true;
+                        if (toReserve >= required)
+                            done[ingredientCount] = true;
                         reserved.SetOrAdd(potentialInputItemThing, toReserve + reservedSoFar);
                         countSoFar.SetOrAdd(ingredientCount, countSoFarForIngredient + toReserve);
                     }
@@ -159,11 +173,15 @@ public class CompFactoryProducer : CompPawnStorageProducer
 
     public override IEnumerable<Gizmo> CompGetGizmosExtra()
     {
-        foreach (Gizmo gizmo in base.CompGetGizmosExtra() ?? []) yield return gizmo;
+        foreach (Gizmo gizmo in base.CompGetGizmosExtra() ?? [])
+            yield return gizmo;
         yield return new Command_Toggle
         {
             defaultLabel = "Enabled".Translate(),
-            toggleAction = delegate { shouldBeActive = !shouldBeActive; },
+            toggleAction = delegate
+            {
+                shouldBeActive = !shouldBeActive;
+            },
             icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll"),
             isActive = () => shouldBeActive
         };

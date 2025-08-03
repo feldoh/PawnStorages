@@ -52,9 +52,9 @@
         </Reference>
     </ItemGroup>
 
-    <!-- <ItemGroup Condition="'@(Reference->WithMetadataValue('Identity', 'Assembly-CSharp')->Metadata('HintPath')->Exists())' == ''"> -->
-    <!--     <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6-*" /> -->
-    <!-- </ItemGroup> -->
+    <ItemGroup Condition="'@(Reference->WithMetadataValue('Identity', 'Assembly-CSharp')->Metadata('HintPath')->Exists())' == ''">
+        <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6-*" />
+    </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Krafs.Publicizer" Version="2.1.0">
             <PrivateAssets>all</PrivateAssets>
@@ -87,8 +87,15 @@
     <Target Name="PreCleanAssemblies">
         <RemoveDir Directories="$(OutputPath)" Condition="Exists('$(OutputPath)')" />
     </Target>
+
     <!-- Add A step to the build to run csharpier on build -->
-    <!-- <Target Name="FormatCode" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Release' And '$(ExitCode)' == '0' " DependsOnTargets="CheckCsharpier">
-        <Exec Command="csharpier format ." />
-    </Target> -->
+    <Target Name="CheckCsharpier" BeforeTargets="Build">
+        <Exec Command="dotnet csharpier --version" IgnoreExitCode="true">
+            <Output TaskParameter="ExitCode" PropertyName="ExitCode"/>
+        </Exec>
+    </Target>
+
+    <Target Name="FormatCode" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Release' And '$(ExitCode)' == '0' " DependsOnTargets="CheckCsharpier">
+        <Exec Command="dotnet csharpier ." />
+    </Target>
 </Project>

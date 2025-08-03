@@ -4,9 +4,8 @@ using Verse;
 
 namespace PawnStorages;
 
-
 [StaticConstructorOnStartup]
-public class CompRenamable: ThingComp
+public class CompRenamable : ThingComp
 {
     private static readonly Texture2D Rename;
 

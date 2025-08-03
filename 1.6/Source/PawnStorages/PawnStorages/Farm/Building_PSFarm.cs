@@ -3,8 +3,8 @@ using System.Linq;
 using System.Text;
 using PawnStorages.Farm.Comps;
 using PawnStorages.Farm.Interfaces;
-using PawnStorages.TickedStorage;
 using PawnStorages.Interfaces;
+using PawnStorages.TickedStorage;
 using RimWorld;
 using Verse;
 
@@ -21,7 +21,7 @@ public class Building_PSFarm : Building, IStoreSettingsParent, INutritionStorage
     protected Dictionary<ThingDef, bool> allowedThings;
 
     public Dictionary<ThingDef, bool> AllowedThings => allowedThings;
-    public HashSet<ThingDef> AllowedThingDefs => [..allowedThings.Keys];
+    public HashSet<ThingDef> AllowedThingDefs => [.. allowedThings.Keys];
 
     public bool Allowed(ThingDef potentialDef)
     {
@@ -85,8 +85,10 @@ public class Building_PSFarm : Building, IStoreSettingsParent, INutritionStorage
             yield return gizmo;
         Designator_Build allowedHopperDesignator = BuildCopyCommandUtility.FindAllowedDesignator(ThingDefOf.Hopper);
         Designator_Build allowedFarmHopperDesignator = BuildCopyCommandUtility.FindAllowedDesignator(PS_DefOf.PS_FarmHopper);
-        if (allowedHopperDesignator != null) yield return allowedHopperDesignator;
-        if (allowedFarmHopperDesignator != null) yield return allowedFarmHopperDesignator;
+        if (allowedHopperDesignator != null)
+            yield return allowedHopperDesignator;
+        if (allowedFarmHopperDesignator != null)
+            yield return allowedFarmHopperDesignator;
         foreach (Thing thing in (IEnumerable<Thing>)StoredPawns)
         {
             Gizmo gizmo;
@@ -117,9 +119,7 @@ public class Building_PSFarm : Building, IStoreSettingsParent, INutritionStorage
         return def.building.fixedStorageSettings;
     }
 
-    public void Notify_SettingsChanged()
-    {
-    }
+    public void Notify_SettingsChanged() { }
 
     public bool StorageTabVisible => true;
 
@@ -140,48 +140,31 @@ public class Building_PSFarm : Building, IStoreSettingsParent, INutritionStorage
 
     public List<Pawn> AllHealthyPawns
     {
-        get
-        {
-            return StoredPawns.Select(p => p).Where(pawn => !pawn.health.Dead && !pawn.health.Downed)
-                .ToList();
-        }
+        get { return StoredPawns.Select(p => p).Where(pawn => !pawn.health.Dead && !pawn.health.Downed).ToList(); }
     }
 
     public List<Pawn> BreedablePawns
     {
-        get
-        {
-            return !IsBreeder
-                ? []
-                : StoredPawns.Select(p => p).Where(pawn => pawn.ageTracker.Adult && !pawn.health.Dead && !pawn.health.Downed)
-                    .ToList();
-        }
+        get { return !IsBreeder ? [] : StoredPawns.Select(p => p).Where(pawn => pawn.ageTracker.Adult && !pawn.health.Dead && !pawn.health.Downed).ToList(); }
     }
 
     public List<Pawn> ProducingPawns
     {
-        get
-        {
-            return !IsProducer
-                ? []
-                : StoredPawns.Select(p => p)
-                    .Where(pawn => pawn.ageTracker.Adult && !pawn.health.Dead && !pawn.health.Downed)
-                    .ToList();
-        }
+        get { return !IsProducer ? [] : StoredPawns.Select(p => p).Where(pawn => pawn.ageTracker.Adult && !pawn.health.Dead && !pawn.health.Downed).ToList(); }
     }
 
     public int BuildingTickInterval => 250;
 
     public void Notify_PawnBorn(Pawn newPawn)
     {
-        if(newPawn.Spawned)
+        if (newPawn.Spawned)
             newPawn.DeSpawn();
 
         if (pawnStorage.innerContainer.Count >= pawnStorage.MaxStoredPawns())
         {
             Thing storageParent = pawnStorage.parent;
 
-            Messages.Message("PS_StorageFull".Translate(storageParent.LabelCap, newPawn.LabelCap), (Thing) newPawn, MessageTypeDefOf.NeutralEvent);
+            Messages.Message("PS_StorageFull".Translate(storageParent.LabelCap, newPawn.LabelCap), (Thing)newPawn, MessageTypeDefOf.NeutralEvent);
 
             PawnComponentsUtility.AddComponentsForSpawn(newPawn);
             pawnStorage.compAssignable?.TryUnassignPawn(newPawn);
@@ -214,11 +197,7 @@ public class Building_PSFarm : Building, IStoreSettingsParent, INutritionStorage
         base.Destroy(mode);
     }
 
-    public void Notify_PawnAdded(Pawn pawn)
-    {
-    }
+    public void Notify_PawnAdded(Pawn pawn) { }
 
-    public void Notify_PawnRemoved(Pawn pawn)
-    {
-    }
+    public void Notify_PawnRemoved(Pawn pawn) { }
 }

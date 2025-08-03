@@ -20,9 +20,10 @@ public class Building_PSFactory : Building, IStoreSettingsParent, INutritionStor
     protected Dictionary<ThingDef, bool> allowedThings;
 
     public Dictionary<ThingDef, bool> AllowedThings => allowedThings;
-    public HashSet<ThingDef> AllowedThingDefs => [..allowedThings.Keys];
+    public HashSet<ThingDef> AllowedThingDefs => [.. allowedThings.Keys];
 
     public bool CurrentlyUsableForBills() => false;
+
     public bool UsableForBillsAfterFueling() => false;
 
     public void Notify_BillDeleted(Bill bill) => factoryProducer?.Notify_BillDeleted(bill);
@@ -96,9 +97,11 @@ public class Building_PSFactory : Building, IStoreSettingsParent, INutritionStor
             yield return gizmo;
         Designator_Build allowedFactoryHopperDesignator = BuildCopyCommandUtility.FindAllowedDesignator(PS_DefOf.PS_FactoryHopper);
         Designator_Build allowedHopperDesignator = BuildCopyCommandUtility.FindAllowedDesignator(ThingDefOf.Hopper);
-        if (allowedFactoryHopperDesignator != null) yield return allowedFactoryHopperDesignator;
-        if (allowedHopperDesignator != null) yield return allowedHopperDesignator;
-        foreach (Thing thing in (IEnumerable<Thing>) StoredPawns)
+        if (allowedFactoryHopperDesignator != null)
+            yield return allowedFactoryHopperDesignator;
+        if (allowedHopperDesignator != null)
+            yield return allowedHopperDesignator;
+        foreach (Thing thing in (IEnumerable<Thing>)StoredPawns)
         {
             Gizmo gizmo;
             if ((gizmo = SelectContainedItemGizmo(thing, thing)) != null)
@@ -129,9 +132,7 @@ public class Building_PSFactory : Building, IStoreSettingsParent, INutritionStor
         return def.building.fixedStorageSettings;
     }
 
-    public void Notify_SettingsChanged()
-    {
-    }
+    public void Notify_SettingsChanged() { }
 
     public bool StorageTabVisible => true;
 
@@ -153,10 +154,7 @@ public class Building_PSFactory : Building, IStoreSettingsParent, INutritionStor
 
     public List<Pawn> AllHealthyPawns => StoredPawns.Select(p => p).Where(pawn => !pawn.health.Dead && !pawn.health.Downed).ToList();
 
-    public List<Pawn> ProducingPawns =>
-        !IsProducer
-            ? []
-            : StoredPawns.Select(p => p).Where(pawn => pawn.ageTracker.Adult && !pawn.health.Dead && !pawn.health.Downed).ToList();
+    public List<Pawn> ProducingPawns => !IsProducer ? [] : StoredPawns.Select(p => p).Where(pawn => pawn.ageTracker.Adult && !pawn.health.Dead && !pawn.health.Downed).ToList();
 
     public int BuildingTickInterval => 250;
 
@@ -169,12 +167,14 @@ public class Building_PSFactory : Building, IStoreSettingsParent, INutritionStor
     {
         get
         {
-            if (allRecipesCached != null) return allRecipesCached;
+            if (allRecipesCached != null)
+                return allRecipesCached;
             allRecipesCached = [];
             List<RecipeDef> defsListForReading = DefDatabase<RecipeDef>.AllDefsListForReading;
             foreach (RecipeDef t in defsListForReading)
             {
-                if (t.recipeUsers != null && !t.IsSurgery) allRecipesCached.Add(t);
+                if (t.recipeUsers != null && !t.IsSurgery)
+                    allRecipesCached.Add(t);
             }
 
             return allRecipesCached;

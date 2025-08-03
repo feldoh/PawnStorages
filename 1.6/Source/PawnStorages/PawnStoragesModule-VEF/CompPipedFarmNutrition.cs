@@ -77,7 +77,8 @@ public class CompPipedPawnStorageNutrition : CompPawnStorageNutrition
          */
 
         // Return false if amount is zero or negative
-        if (amount <= 0 || Mathf.Approximately(amount, 0)) return false;
+        if (amount <= 0 || Mathf.Approximately(amount, 0))
+            return false;
 
         // Calculate how much can actually be added based on storage capacity
         float amountToAdd = Mathf.Min(ResourceStorage.AmountCanAccept, amount);

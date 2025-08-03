@@ -23,7 +23,10 @@ public class CompPawnStorageProducer : ThingComp, IActive
         yield return new Command_Action
         {
             defaultLabel = "PS_ProduceNow".Translate(DaysProduce.Count),
-            action = delegate { ProduceNow = true; },
+            action = delegate
+            {
+                ProduceNow = true;
+            },
             icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll"),
             disabled = DaysProduce.Count <= 0,
             disabledReason = "PS_NothingToProduce".Translate()

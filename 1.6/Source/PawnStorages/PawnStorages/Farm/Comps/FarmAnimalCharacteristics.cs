@@ -10,7 +10,6 @@ public partial class CompFarmBreeder
         public bool Adult = adult;
         public Gender Gender = gender;
 
-
         public override string ToString()
         {
             return $"BreedingCharacteristics[Adult:{Adult}, Gender:{Gender}]";

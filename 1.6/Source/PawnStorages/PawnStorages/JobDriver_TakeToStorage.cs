@@ -39,10 +39,9 @@ public class JobDriver_TakeToStorage : JobDriver
             return base.GetReport();
         }
 
-        if(Storage.TryGetComp<CompAssignableToPawn_PawnStorage>()?.Props.drawAsFrozenInCarbonite ?? false)
+        if (Storage.TryGetComp<CompAssignableToPawn_PawnStorage>()?.Props.drawAsFrozenInCarbonite ?? false)
             return "PS_TakingToPlastinite".Translate(Takee.Label, Storage.Label);
         return "PS_TakingToStorage".Translate(Takee.Label, Storage.Label);
-
     }
 
     public override bool TryMakePreToilReservations(bool errorOnFailed)
@@ -55,27 +54,32 @@ public class JobDriver_TakeToStorage : JobDriver
         this.FailOnDestroyedOrNull(TakeeIndex);
         this.FailOnDestroyedOrNull(StorageIndex);
         this.FailOnAggroMentalStateAndHostile(TakeeIndex);
-        this.FailOn(delegate
-        {
-            if ((job.def == PS_DefOf.PS_CaptureEntityInPawnStorage &&
-                 PawnStorageAssignmentComp.OwnerType == BedOwnerType.Prisoner)
-                || job.def == PS_DefOf.PS_CaptureAnimalInPawnStorage) return false;
-            if (job.def.makeTargetPrisoner)
+        this.FailOn(
+            delegate
             {
-                if (PawnStorageAssignmentComp.OwnerType != BedOwnerType.Prisoner)
+                if (
+                    (job.def == PS_DefOf.PS_CaptureEntityInPawnStorage && PawnStorageAssignmentComp.OwnerType == BedOwnerType.Prisoner)
+                    || job.def == PS_DefOf.PS_CaptureAnimalInPawnStorage
+                )
+                    return false;
+                if (job.def.makeTargetPrisoner)
+                {
+                    if (PawnStorageAssignmentComp.OwnerType != BedOwnerType.Prisoner)
+                    {
+                        return true;
+                    }
+                }
+                else if ((PawnStorageAssignmentComp.OwnerType == BedOwnerType.Prisoner) != Takee.IsPrisoner)
                 {
                     return true;
                 }
-            }
-            else if ((PawnStorageAssignmentComp.OwnerType == BedOwnerType.Prisoner) != Takee.IsPrisoner)
-            {
-                return true;
-            }
 
-            return false;
-        });
+                return false;
+            }
+        );
 
-        Toil goToTakee = Toils_Goto.GotoThing(TakeeIndex, PathEndMode.ClosestTouch)
+        Toil goToTakee = Toils_Goto
+            .GotoThing(TakeeIndex, PathEndMode.ClosestTouch)
             .FailOnDespawnedNullOrForbidden(TakeeIndex)
             .FailOnDespawnedNullOrForbidden(StorageIndex)
             .FailOn(() => job.def == JobDefOf.Arrest && !Takee.CanBeArrestedBy(pawn))
@@ -83,12 +87,11 @@ public class JobDriver_TakeToStorage : JobDriver
             .FailOn(() => (job.def == JobDefOf.Rescue || job.def == JobDefOf.Capture) && !Takee.Downed)
             .FailOnSomeonePhysicallyInteracting(TargetIndex.A);
 
-
-
         Toil checkArrestResistance = ToilMaker.MakeToil();
         checkArrestResistance.initAction = delegate
         {
-            if (job.def == PS_DefOf.PS_CaptureEntityInPawnStorage || job.def == PS_DefOf.PS_CaptureAnimalInPawnStorage) return;
+            if (job.def == PS_DefOf.PS_CaptureEntityInPawnStorage || job.def == PS_DefOf.PS_CaptureAnimalInPawnStorage)
+                return;
             if (job.def.makeTargetPrisoner)
             {
                 Pawn victim = (Pawn)job.targetA.Thing;
@@ -115,14 +118,17 @@ public class JobDriver_TakeToStorage : JobDriver
         yield return checkArrestResistance;
         Toil startCarrying = Toils_Haul.StartCarryThing(TakeeIndex);
         startCarrying.AddPreInitAction(CheckMakeTakeeGuest);
-        startCarrying.AddFinishAction(delegate
-        {
-            if (job.def == PS_DefOf.PS_CaptureEntityInPawnStorage || job.def == PS_DefOf.PS_CaptureAnimalInPawnStorage) return;
-            if (pawn.Faction == Takee.Faction)
+        startCarrying.AddFinishAction(
+            delegate
             {
-                CheckMakeTakeePrisoner();
+                if (job.def == PS_DefOf.PS_CaptureEntityInPawnStorage || job.def == PS_DefOf.PS_CaptureAnimalInPawnStorage)
+                    return;
+                if (pawn.Faction == Takee.Faction)
+                {
+                    CheckMakeTakeePrisoner();
+                }
             }
-        });
+        );
         startCarrying.debugName = "startCarrying";
         Toil goToStorage = Toils_Goto.GotoThing(StorageIndex, PathEndMode.Touch).FailOn(() => !pawn.IsCarryingPawn(Takee));
         goToStorage.FailOnDespawnedNullOrForbidden(StorageIndex);
@@ -141,21 +147,23 @@ public class JobDriver_TakeToStorage : JobDriver
         yield return setTakeeSettings;
         yield return Toils_Reserve.Release(StorageIndex);
         yield return StoreIntoStorage(PawnStorageAssigned, pawn, Takee, TakeeRescued);
-        yield return Toils_General.Do(delegate
-        {
-            if (!job.ritualTag.NullOrEmpty())
+        yield return Toils_General.Do(
+            delegate
             {
-                if (Takee.GetLord()?.LordJob is LordJob_Ritual lordJob_Ritual)
+                if (!job.ritualTag.NullOrEmpty())
                 {
-                    lordJob_Ritual.AddTagForPawn(Takee, job.ritualTag);
-                }
+                    if (Takee.GetLord()?.LordJob is LordJob_Ritual lordJob_Ritual)
+                    {
+                        lordJob_Ritual.AddTagForPawn(Takee, job.ritualTag);
+                    }
 
-                if (pawn.GetLord()?.LordJob is LordJob_Ritual lordJob_Ritual2)
-                {
-                    lordJob_Ritual2.AddTagForPawn(pawn, job.ritualTag);
+                    if (pawn.GetLord()?.LordJob is LordJob_Ritual lordJob_Ritual2)
+                    {
+                        lordJob_Ritual2.AddTagForPawn(pawn, job.ritualTag);
+                    }
                 }
             }
-        });
+        );
         yield return Toils_General.WaitWith(StorageIndex, 75);
     }
 

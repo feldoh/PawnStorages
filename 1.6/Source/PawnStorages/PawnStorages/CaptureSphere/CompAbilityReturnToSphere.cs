@@ -7,7 +7,7 @@ namespace PawnStorages.CaptureSphere;
 
 public class CompAbilityReturnToSphere : CompAbilityEffect
 {
-    public new CompProperties_AbilityReturnToSphere Props => (CompProperties_AbilityReturnToSphere) props;
+    public new CompProperties_AbilityReturnToSphere Props => (CompProperties_AbilityReturnToSphere)props;
 
     public override void Apply(LocalTargetInfo target, LocalTargetInfo dest)
     {
@@ -16,10 +16,11 @@ public class CompAbilityReturnToSphere : CompAbilityEffect
         ThingWithComps newlySpawnedBall = (ThingWithComps)GenSpawn.Spawn(Props.SphereDef, parent.pawn.Position, parent.pawn.Map, WipeMode.VanishOrMoveAside);
         CompPawnStorage newlySpawnedBallStorageComp = newlySpawnedBall?.GetComp<CompPawnStorage>();
 
-        if(newlySpawnedBallStorageComp == null) return;
+        if (newlySpawnedBallStorageComp == null)
+            return;
 
-        if(!newlySpawnedBallStorageComp.CanAssign(parent.pawn, true)) return;
-
+        if (!newlySpawnedBallStorageComp.CanAssign(parent.pawn, true))
+            return;
 
         if (Props.Effector != null)
         {
@@ -33,10 +34,12 @@ public class CompAbilityReturnToSphere : CompAbilityEffect
 
     public override IEnumerable<Gizmo> CompGetGizmosExtra()
     {
-        foreach (Gizmo gizmo in base.CompGetGizmosExtra()) yield return gizmo;
-        if (DebugSettings.ShowDevGizmos || !parent.pawn.AnimalOrWildMan() ||
-            (parent.pawn.Faction != Faction.OfPlayer && parent.pawn.HostileTo(Faction.OfPlayer))) yield break;
+        foreach (Gizmo gizmo in base.CompGetGizmosExtra())
+            yield return gizmo;
+        if (DebugSettings.ShowDevGizmos || !parent.pawn.AnimalOrWildMan() || (parent.pawn.Faction != Faction.OfPlayer && parent.pawn.HostileTo(Faction.OfPlayer)))
+            yield break;
         foreach (Command gizmo in parent.GetGizmos())
-            if (gizmo is Command_Ability ability) yield return ability;
+            if (gizmo is Command_Ability ability)
+                yield return ability;
     }
 }

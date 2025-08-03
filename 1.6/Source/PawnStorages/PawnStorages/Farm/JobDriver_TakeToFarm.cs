@@ -28,17 +28,23 @@ public class JobDriver_TakeToFarm : JobDriver
         this.FailOnDestroyedOrNull(TakeeIndex);
         this.FailOnDestroyedOrNull(StorageIndex);
         this.FailOnAggroMentalStateAndHostile(TakeeIndex);
-        Toil goToTakee = Toils_Goto.GotoThing(TakeeIndex, PathEndMode.ClosestTouch).FailOnDespawnedNullOrForbidden(TakeeIndex).FailOnDespawnedNullOrForbidden(StorageIndex)
+        Toil goToTakee = Toils_Goto
+            .GotoThing(TakeeIndex, PathEndMode.ClosestTouch)
+            .FailOnDespawnedNullOrForbidden(TakeeIndex)
+            .FailOnDespawnedNullOrForbidden(StorageIndex)
             .FailOn(() => job.def == JobDefOf.Arrest && !Takee.CanBeArrestedBy(pawn))
             .FailOn(() => !pawn.CanReach(PawnStorageAssigned, PathEndMode.OnCell, Danger.Deadly))
             .FailOn(() => (job.def == JobDefOf.Rescue || job.def == JobDefOf.Capture) && !Takee.Downed)
             .FailOnSomeonePhysicallyInteracting(TargetIndex.A);
         yield return goToTakee;
         Toil startCarrying = Toils_Haul.StartCarryThing(TakeeIndex);
-        startCarrying.AddFinishAction(delegate
-        {
-            if (job.def == PS_DefOf.PS_CaptureEntityInPawnStorage || job.def == PS_DefOf.PS_CaptureAnimalInPawnStorage) return;
-        });
+        startCarrying.AddFinishAction(
+            delegate
+            {
+                if (job.def == PS_DefOf.PS_CaptureEntityInPawnStorage || job.def == PS_DefOf.PS_CaptureAnimalInPawnStorage)
+                    return;
+            }
+        );
         startCarrying.debugName = "startCarrying";
         Toil goToStorage = Toils_Goto.GotoThing(StorageIndex, PathEndMode.Touch).FailOn(() => !pawn.IsCarryingPawn(Takee));
         goToStorage.FailOnDespawnedNullOrForbidden(StorageIndex);
@@ -48,7 +54,10 @@ public class JobDriver_TakeToFarm : JobDriver
         yield return goToStorage;
         Toil setTakeeSettings = ToilMaker.MakeToil();
         setTakeeSettings.debugName = "takeeSettings";
-        setTakeeSettings.initAction = delegate { Takee.playerSettings ??= new Pawn_PlayerSettings(Takee); };
+        setTakeeSettings.initAction = delegate
+        {
+            Takee.playerSettings ??= new Pawn_PlayerSettings(Takee);
+        };
         yield return setTakeeSettings;
         yield return Toils_Reserve.Release(StorageIndex);
         yield return StoreIntoStorage(PawnStorageAssigned, pawn, Takee);

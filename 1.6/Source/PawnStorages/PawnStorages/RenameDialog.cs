@@ -8,7 +8,6 @@ public class RenameDialog(CompRenamable compItemLevelling, string name, IWindowD
     private string _name = name;
     public override Vector2 InitialSize => new Vector2(400f, 150f);
 
-
     public override void DoWindowContents(Rect inRect)
     {
         closeOnClickedOutside = true;

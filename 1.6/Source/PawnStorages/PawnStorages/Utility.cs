@@ -16,16 +16,18 @@ public static class Utility
 
     public static bool IsWall(this ThingDef def)
     {
-        if (def.category != ThingCategory.Building) return false;
-        if (!def.graphicData?.Linked ?? true) return false;
-        return (def.graphicData.linkFlags & LinkFlags.Wall) != LinkFlags.None &&
-               def.graphicData.linkType == LinkDrawerType.CornerFiller &&
-               def.fillPercent >= 1f &&
-               def.blockWind &&
-               def.coversFloor &&
-               def.castEdgeShadows &&
-               def.holdsRoof &&
-               def.blockLight;
+        if (def.category != ThingCategory.Building)
+            return false;
+        if (!def.graphicData?.Linked ?? true)
+            return false;
+        return (def.graphicData.linkFlags & LinkFlags.Wall) != LinkFlags.None
+            && def.graphicData.linkType == LinkDrawerType.CornerFiller
+            && def.fillPercent >= 1f
+            && def.blockWind
+            && def.coversFloor
+            && def.castEdgeShadows
+            && def.holdsRoof
+            && def.blockLight;
     }
 
     public static Mesh SetUVs(this Mesh mesh, bool flipped)
@@ -69,8 +71,7 @@ public static class Utility
 
     public static Texture2D MakeReadableTextureInstance(this RenderTexture source)
     {
-        RenderTexture temporary = RenderTexture.GetTemporary(source.width, source.height, 0,
-            RenderTextureFormat.Default, RenderTextureReadWrite.Linear);
+        RenderTexture temporary = RenderTexture.GetTemporary(source.width, source.height, 0, RenderTextureFormat.Default, RenderTextureReadWrite.Linear);
         temporary.name = "MakeReadableTexture_Temp";
         Graphics.Blit(source, temporary);
         RenderTexture active = RenderTexture.active;
@@ -85,17 +86,17 @@ public static class Utility
 
     public static void ReleasePawn(CompPawnStorage store, Pawn pawn, IntVec3 cell, Map map)
     {
-
         if (store.parent is Building bld && bld.def.hasInteractionCell)
         {
-           cell = store.parent.Position + bld.def.interactionCellOffset;
+            cell = store.parent.Position + bld.def.interactionCellOffset;
         }
 
         if (!cell.Walkable(map))
             foreach (IntVec3 t in GenRadial.RadialPattern)
             {
                 IntVec3 intVec = pawn.Position + t;
-                if (!intVec.Walkable(map)) continue;
+                if (!intVec.Walkable(map))
+                    continue;
                 cell = intVec;
                 break;
             }
@@ -105,7 +106,8 @@ public static class Utility
         //Spawn the release effecter
         store.Props.releaseEffect?.Spawn(cell, map);
 
-        if (store.Props.lightEffect) FleckMaker.ThrowLightningGlow(cell.ToVector3Shifted(), map, 0.5f);
+        if (store.Props.lightEffect)
+            FleckMaker.ThrowLightningGlow(cell.ToVector3Shifted(), map, 0.5f);
         if (store.Props.transformEffect)
             FleckMaker.ThrowExplosionCell(cell, map, FleckDefOf.ExplosionFlash, Color.white);
         map.mapDrawer.MapMeshDirty(store.parent.Position, MapMeshFlagDefOf.Things);
@@ -125,10 +127,15 @@ public static class Utility
     {
         if (store.RequiresStation())
         {
-            station = GenClosest.ClosestThingReachable(releaser.Position, releaser.Map,
-                ThingRequest.ForDef(store.Props.storageStation), PathEndMode.InteractionCell,
+            station = GenClosest.ClosestThingReachable(
+                releaser.Position,
+                releaser.Map,
+                ThingRequest.ForDef(store.Props.storageStation),
+                PathEndMode.InteractionCell,
                 TraverseParms.For(releaser),
-                9999f, x => releaser.CanReserve(x) && (x.TryGetComp<CompPowerTrader>()?.PowerOn ?? true));
+                9999f,
+                x => releaser.CanReserve(x) && (x.TryGetComp<CompPowerTrader>()?.PowerOn ?? true)
+            );
             return true;
         }
 
@@ -145,7 +152,8 @@ public static class Utility
             return JobMaker.MakeJob(PS_DefOf.PS_Release, store.parent, null, toRelease);
         }
 
-        if (station == null) return null;
+        if (station == null)
+            return null;
         Job job = JobMaker.MakeJob(PS_DefOf.PS_Release, store.parent, station, toRelease);
         job.count = 1;
         return job;
@@ -156,14 +164,19 @@ public static class Utility
         return typeof(CompEggLayer).IsAssignableFrom(c.compClass) || typeof(CompHasGatherableBodyResource).IsAssignableFrom(c.compClass);
     }
 
-    public static Lazy<List<PawnKindDef>> AllAnimalKinds = new(() => DefDatabase<PawnKindDef>.AllDefs.Where(d=> d.race != null && d.race.race.Animal && d.race.GetStatValueAbstract(StatDefOf.Wildness) < 1 && !d.race.race.Dryad && !d.race.IsCorpse).ToList());
+    public static Lazy<List<PawnKindDef>> AllAnimalKinds =
+        new(
+            () =>
+                DefDatabase<PawnKindDef>
+                    .AllDefs.Where(d => d.race != null && d.race.race.Animal && d.race.GetStatValueAbstract(StatDefOf.Wildness) < 1 && !d.race.race.Dryad && !d.race.IsCorpse)
+                    .ToList()
+        );
 
     public static bool ValidateThingDef(ThingDef td, bool IsProducer)
     {
         bool raceIsAnimal = td.race is { Animal: true, Dryad: false } && td.GetStatValueAbstract(StatDefOf.Wildness) < 1.0 && !td.IsCorpse;
         bool categoryIsAnimal = td.category == ThingCategory.Pawn && td.thingCategories != null && td.thingCategories.Contains(ThingCategoryDefOf.Animals);
-        return (categoryIsAnimal || raceIsAnimal) &&
-               (!IsProducer || (td.comps?.Any(CompPropertiesIsProducer) ?? false));
+        return (categoryIsAnimal || raceIsAnimal) && (!IsProducer || (td.comps?.Any(CompPropertiesIsProducer) ?? false));
     }
 
     public static List<ThingDef> Animals(bool IsProducer)

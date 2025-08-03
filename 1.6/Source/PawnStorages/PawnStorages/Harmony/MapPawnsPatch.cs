@@ -14,7 +14,8 @@ public static class MapPawnsPatch
     [HarmonyPostfix]
     public static void AllPawnsUnspawned(ref List<Pawn> __result)
     {
-        if (PawnStoragesMod.settings.ShowStoredPawnsInBar) return;
+        if (PawnStoragesMod.settings.ShowStoredPawnsInBar)
+            return;
         __result.RemoveAll(pawn => pawn.holdingOwner?.Owner is CompPawnStorage);
     }
 }
@@ -29,7 +30,8 @@ public static class ColonistBarColonistDrawerTranspiler
 
     public static void AddStorageIcons(List<ColonistBarColonistDrawer.IconDrawCall> iconDrawCalls, Pawn pawn)
     {
-        if (pawn.holdingOwner?.Owner is CompPawnStorage) iconDrawCalls.Add(new ColonistBarColonistDrawer.IconDrawCall(Icon_Storage, "PS_ActivityIconStored".Translate()));
+        if (pawn.holdingOwner?.Owner is CompPawnStorage)
+            iconDrawCalls.Add(new ColonistBarColonistDrawer.IconDrawCall(Icon_Storage, "PS_ActivityIconStored".Translate()));
     }
 
     [HarmonyTranspiler]
@@ -38,8 +40,11 @@ public static class ColonistBarColonistDrawerTranspiler
         foreach (CodeInstruction instruction in instructions)
         {
             yield return instruction;
-            if (instruction.opcode == OpCodes.Callvirt && instruction.operand is MethodInfo methodInfo &&
-                methodInfo == AccessTools.Method(typeof(List<ColonistBarColonistDrawer.IconDrawCall>), "Clear"))
+            if (
+                instruction.opcode == OpCodes.Callvirt
+                && instruction.operand is MethodInfo methodInfo
+                && methodInfo == AccessTools.Method(typeof(List<ColonistBarColonistDrawer.IconDrawCall>), "Clear")
+            )
             {
                 yield return new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(ColonistBarColonistDrawer), "tmpIconsToDraw"));
                 yield return new CodeInstruction(OpCodes.Ldarg_2);

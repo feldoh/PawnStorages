@@ -30,8 +30,10 @@ public class PSBuilding : Building
     {
         get
         {
-            if (alternativeGraphicInt != null) return alternativeGraphicInt;
-            if (!HasExtension || defExtension.extraGraphicData == null) return BaseContent.BadGraphic;
+            if (alternativeGraphicInt != null)
+                return alternativeGraphicInt;
+            if (!HasExtension || defExtension.extraGraphicData == null)
+                return BaseContent.BadGraphic;
 
             alternativeGraphicInt = defExtension.extraGraphicData.GraphicColoredFor(this);
 
@@ -43,8 +45,10 @@ public class PSBuilding : Building
     {
         get
         {
-            if (overlayGraphicInt != null) return overlayGraphicInt;
-            if (!HasExtension || defExtension.overlayGraphicData == null) return BaseContent.BadGraphic;
+            if (overlayGraphicInt != null)
+                return overlayGraphicInt;
+            if (!HasExtension || defExtension.overlayGraphicData == null)
+                return BaseContent.BadGraphic;
 
             overlayGraphicInt = defExtension.overlayGraphicData.GraphicColoredFor(this);
 
