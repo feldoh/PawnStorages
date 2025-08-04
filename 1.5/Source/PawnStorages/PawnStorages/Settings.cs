@@ -13,7 +13,7 @@ public class Settings : ModSettings
     public float BreedingScale = 2f;
     public int MaxPawnsInFarm = 16;
     public float MaxFarmStoredNutrition = 500f;
-    public int TicksToAbsorbNutrients = 50;
+    public int TicksToAbsorbNutrients = 500;
     public int AnimalTickInterval = 250;
     public int ProductionsPerDay = 1;
     public bool SuggestiveSilo = false;

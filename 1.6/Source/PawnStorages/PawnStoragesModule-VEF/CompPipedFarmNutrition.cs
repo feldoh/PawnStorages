@@ -13,14 +13,23 @@ public class CompPipedPawnStorageNutrition : CompPawnStorageNutrition
 
     public virtual CompResourceStorage ResourceStorage => _resourceStorage.Value;
     public PipeNet PipeNet => ResourceStorage?.PipeNet;
-    public override bool IsPiped => true;
-    public override float StoredNutrition => PipeNet?.Stored ?? 0;
-    public override float MaxNutrition => PipeNet?.AvailableCapacity ?? 0;
+    public override bool IsPiped => PipeNet != null;
+    public override float StoredNutrition => PipeNet?.Stored ?? base.StoredNutrition;
+    public override float MaxNutrition => PipeNet?.AvailableCapacity ?? base.MaxNutrition;
+    public override float MaxTargetNutrition => ResourceStorage?.AmountCanAccept ?? base.MaxTargetNutrition;
 
     public override void Initialize(CompProperties properties)
     {
         base.Initialize(properties);
         _resourceStorage = new Lazy<CompResourceStorage>(() => parent?.GetComp<CompResourceStorage>());
+    }
+
+    public override float RequiredNutritionForTargetLevel(float targetLevel)
+    {
+        if (ResourceStorage == null)
+            return base.RequiredNutritionForTargetLevel(targetLevel);
+        float requiredNutrition = targetLevel - ResourceStorage.AmountStored;
+        return Mathf.Max(0f, requiredNutrition);
     }
 
     public override bool AbsorbToFeedIfNeeded(Need_Food foodNeeds, float desiredFeed, out float amountFed)
@@ -33,39 +42,41 @@ public class CompPipedPawnStorageNutrition : CompPawnStorageNutrition
          */
         amountFed = 0;
         if (PipeNet == null || ResourceStorage == null)
-            return false;
-
-        // Try to absorb from the network if needed
-        if (desiredFeed > ResourceStorage.AmountStored)
-        {
-            // Try to pull what we need to make up the desire
-            float toPull = desiredFeed - ResourceStorage.AmountStored;
-            PipeNet.DrawAmongStorage(toPull, PipeNet.storages.Except(ResourceStorage).ToList());
-            AddNutritionToStorage(toPull);
-        }
+            return base.AbsorbToFeedIfNeeded(foodNeeds, desiredFeed, out amountFed);
 
         // Pull from storage, and update needs accordingly
         amountFed = Mathf.Min(ResourceStorage.AmountStored, desiredFeed);
         foodNeeds.CurLevel += amountFed;
         ResourceStorage.DrawResource(amountFed);
 
-        // If we've not filled desire - try to absorb from the hoppers.
+        // Try to absorb from the network if needed
         if (!Mathf.Approximately(amountFed, desiredFeed))
         {
-            // Calculate remaining nutrition needed after initial feeding
-            float newDesire = desiredFeed - amountFed;
-            // Try to get more nutrition from hoppers if needed
-            if (TryAbsorbNutritionFromSource(newDesire))
-            {
-                // Feed the pawn with additional nutrition pulled from hoppers
-                float nextAmountFed = Mathf.Min(ResourceStorage.AmountStored, newDesire);
-                foodNeeds.CurLevel += nextAmountFed;
-                ResourceStorage.DrawResource(nextAmountFed);
-            }
+            // Try to pull what we need to make up the desire
+            float toPull = Math.Min(desiredFeed - amountFed, PipeNet.Stored);
+            PipeNet.DrawAmongStorage(toPull, PipeNet.storages.ToList());
+            foodNeeds.CurLevel += toPull;
+            amountFed += toPull;
         }
 
-        // If we have enough to fulfil the desire, return true
-        return Mathf.Approximately(amountFed, desiredFeed);
+        // If we've filled desire return else try to absorb from the hoppers.
+        if (Mathf.Approximately(amountFed, desiredFeed))
+            return true;
+
+        // Calculate remaining nutrition needed after initial feeding
+        float newDesire = desiredFeed - amountFed;
+
+        // Try to get more nutrition from hoppers if needed
+        if (!TryAbsorbNutritionFromSource(newDesire))
+            return amountFed > 0;
+
+        // Feed the pawn with additional nutrition pulled from hoppers
+        float nextAmountFed = Mathf.Min(ResourceStorage.AmountStored, newDesire);
+        foodNeeds.CurLevel += nextAmountFed;
+        ResourceStorage.DrawResource(nextAmountFed);
+
+        // If we have absorbed something return true so we process it
+        return nextAmountFed > 0;
     }
 
     public override bool AddNutritionToStorage(float amount)
@@ -75,6 +86,10 @@ public class CompPipedPawnStorageNutrition : CompPawnStorageNutrition
          *  Returns true if any amount of nutrition was successfully added to the storage or distributed through the pipe network.
          *  Returns false if the specified amount is <= zero
          */
+
+        // If no storage or pipe network, use base method
+        if (ResourceStorage == null || PipeNet == null)
+            return base.AddNutritionToStorage(amount);
 
         // Return false if amount is zero or negative
         if (amount <= 0 || Mathf.Approximately(amount, 0))

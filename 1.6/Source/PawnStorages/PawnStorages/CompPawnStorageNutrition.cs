@@ -36,6 +36,7 @@ public class CompPawnStorageNutrition : ThingComp
     }
 
     public virtual float MaxNutrition => Props.MaxNutrition;
+    public virtual float MaxTargetNutrition => MaxNutrition;
 
     public CompProperties_PawnStorageNutrition Props => props as CompProperties_PawnStorageNutrition;
 
@@ -71,7 +72,7 @@ public class CompPawnStorageNutrition : ThingComp
         StoredNutrition -= available;
         foodNeeds.CurLevel += available;
         amountFed = available;
-        return Mathf.Approximately(amountFed, desiredFeed);
+        return amountFed > 0;
     }
 
     public virtual float ResolveStarvationIfPossibleAndNecessary(Need_Food foodNeeds, Pawn pawn) =>
@@ -92,7 +93,7 @@ public class CompPawnStorageNutrition : ThingComp
         // Guard against infinite loops due to floating point precision issues
         int maxIterGuard = 20;
 
-        // Keep feeding until needs are met or we run out of nutrition/iterations
+        // Keep feeding until needs are met, or we run out of nutrition/iterations
         while (neededFood > 0 && --maxIterGuard > 0 && AbsorbToFeedIfNeeded(foodNeeds, neededFood, out float amountFed) && amountFed > 0 && !Mathf.Approximately(amountFed, 0))
         {
             totalFeed += amountFed;
@@ -105,6 +106,12 @@ public class CompPawnStorageNutrition : ThingComp
         return totalFeed;
     }
 
+    public virtual float RequiredNutritionForTargetLevel(float targetLevel)
+    {
+        float requiredNutrition = targetLevel - StoredNutrition;
+        return Mathf.Max(0f, requiredNutrition);
+    }
+
     public virtual void AbsorbNutritionTick()
     {
         if (!parent.IsHashIntervalTick(Props.TicksToAbsorbNutrients) || !ParentAsNutritionStorageParent!.IsActive)
@@ -114,9 +121,11 @@ public class CompPawnStorageNutrition : ThingComp
 
         if (PawnStoragesMod.settings.SuggestiveSilo)
             parent.DirtyMapMesh(parent.Map);
-        if (StoredNutrition <= TargetNutritionLevel)
+
+        float nutritionToAbsorb = RequiredNutritionForTargetLevel(TargetNutritionLevel);
+        if (!Mathf.Approximately(nutritionToAbsorb, 0f))
         {
-            TryAbsorbNutritionFromSource(TargetNutritionLevel - StoredNutrition);
+            TryAbsorbNutritionFromSource(nutritionToAbsorb);
         }
     }
 
@@ -259,13 +268,14 @@ public class CompPawnStorageNutrition : ThingComp
         return nutrition > 0 && HasEnoughFeedstockInHoppers();
     }
 
-    public virtual float ProcessFeedAbsorption(Thing feedSource, float nutritionToAbsorb)
+    public virtual float ProcessFeedAbsorption(Thing feedSource, float nutritionToAbsorb, out float absorbedNutrition)
     {
         /*
          * Processes the absorption of specified nutrition from a given feed source. Determines the amount of nutrition
          * that can be absorbed from the provided feed source and updates its state accordingly. The remaining
-         * unabsorbed nutrition is returned.
+         * nutrition amount requested which couldn't be taken from the given source is returned.
          */
+        absorbedNutrition = 0;
         if (feedSource == null)
             return nutritionToAbsorb;
 
@@ -280,9 +290,10 @@ public class CompPawnStorageNutrition : ThingComp
             if (nutritionAbsorbed <= 0)
                 break;
 
+            absorbedNutrition += nutritionAbsorbed;
             remainingNutrition -= nutritionAbsorbed;
 
-            if (unitsToAbsorb > 1)
+            if (feedSource.stackCount > unitsToAbsorb)
             {
                 Thing thing = feedSource.SplitOff(unitsToAbsorb);
                 thing.Destroy();
@@ -311,15 +322,17 @@ public class CompPawnStorageNutrition : ThingComp
         if (requestedNutrition <= 0)
             return false;
 
+        Log.Message($"[{parent.LabelCap}] TryAbsorbNutritionFromSource: Requested Nutrition = {requestedNutrition}");
         if (!IsValidNutritionRequest(requestedNutrition))
             return false;
 
         Thing feedSource = FindFeedInAnyHopper();
         if (feedSource is null)
             return false;
+        Log.Message($"[{parent.LabelCap}] TryAbsorbNutritionFromSource: Found Feed Source = {feedSource.LabelCap}, Stack Count = {feedSource.stackCount}");
 
-        float remainingNutrition = ProcessFeedAbsorption(feedSource, requestedNutrition);
-        float absorbedNutrition = requestedNutrition - remainingNutrition;
+        ProcessFeedAbsorption(feedSource, requestedNutrition, out float absorbedNutrition);
+        Log.Message($"[{parent.LabelCap}] TryAbsorbNutritionFromSource: Absorbed Nutrition = {absorbedNutrition}, Remaining Requested = {requestedNutrition - absorbedNutrition}");
 
         return AddNutritionToStorage(absorbedNutrition);
     }
@@ -395,16 +408,13 @@ public class CompPawnStorageNutrition : ThingComp
 
     public override IEnumerable<Gizmo> CompGetGizmosExtra()
     {
-        if (!IsPiped)
+        yield return new Command_SetTargetNutritionLevel
         {
-            yield return new Command_SetTargetNutritionLevel
-            {
-                nutritionComp = this,
-                defaultLabel = "PS_CommandSetNutritionLevel".Translate(),
-                defaultDesc = "PS_CommandSetNutritionLevelDesc".Translate(),
-                icon = CompRefuelable.SetTargetFuelLevelCommand,
-            };
-        }
+            nutritionComp = this,
+            defaultLabel = "PS_CommandSetNutritionLevel".Translate(),
+            defaultDesc = "PS_CommandSetNutritionLevelDesc".Translate(),
+            icon = CompRefuelable.SetTargetFuelLevelCommand,
+        };
         if (!DebugSettings.ShowDevGizmos)
             yield break;
         yield return new Command_Action

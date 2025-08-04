@@ -53,8 +53,12 @@
             </li>
             <li Class="PawnStorages.Farm.Comps.CompProperties_FarmProducer">
             </li>
-            <li MayRequire="VanillaExpanded.VNutrientE" Class="PipeSystem.CompProperties_Resource">
+            <li MayRequire="VanillaExpanded.VNutrientE" Class="PipeSystem.CompProperties_ResourceStorage">
                 <pipeNet>VNPE_NutrientPasteNet</pipeNet>
+                <storageCapacity>50</storageCapacity>
+                <drawStorageBar>False</drawStorageBar>
+                <addStorageInfo>True</addStorageInfo>
+                <addTransferGizmo>True</addTransferGizmo>
             </li>
             <li Class="PawnStorages.CompProperties_Renamable" />
         </comps>
@@ -160,8 +164,12 @@
             </li>
             <li Class="PawnStorages.Farm.Comps.CompProperties_FarmBreeder">
             </li>
-            <li MayRequire="VanillaExpanded.VNutrientE" Class="PipeSystem.CompProperties_Resource">
+            <li MayRequire="VanillaExpanded.VNutrientE" Class="PipeSystem.CompProperties_ResourceStorage">
                 <pipeNet>VNPE_NutrientPasteNet</pipeNet>
+                <storageCapacity>50</storageCapacity>
+                <drawStorageBar>False</drawStorageBar>
+                <addStorageInfo>True</addStorageInfo>
+                <addTransferGizmo>True</addTransferGizmo>
             </li>
             <li Class="PawnStorages.CompProperties_Renamable" />
         </comps>

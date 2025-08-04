@@ -10,7 +10,7 @@ public class Command_SetTargetNutritionLevel : Command
     public override void ProcessInput(Event ev)
     {
         base.ProcessInput(ev);
-        int to = (int)nutritionComp.MaxNutrition;
+        int to = (int)nutritionComp.MaxTargetNutrition;
         Dialog_Slider dialogSlider =
             new(
                 x => "PS_NutritionLevel".Translate(x),
