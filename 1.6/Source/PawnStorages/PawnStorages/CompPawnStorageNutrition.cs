@@ -322,17 +322,22 @@ public class CompPawnStorageNutrition : ThingComp
         if (requestedNutrition <= 0)
             return false;
 
-        Log.Message($"[{parent.LabelCap}] TryAbsorbNutritionFromSource: Requested Nutrition = {requestedNutrition}");
+        if (PawnStoragesMod.settings.DebugLogging)
+            Log.Message($"[{parent.LabelCap}] TryAbsorbNutritionFromSource: Requested Nutrition = {requestedNutrition}");
         if (!IsValidNutritionRequest(requestedNutrition))
             return false;
 
         Thing feedSource = FindFeedInAnyHopper();
         if (feedSource is null)
             return false;
-        Log.Message($"[{parent.LabelCap}] TryAbsorbNutritionFromSource: Found Feed Source = {feedSource.LabelCap}, Stack Count = {feedSource.stackCount}");
+        if (PawnStoragesMod.settings.DebugLogging)
+            Log.Message($"[{parent.LabelCap}] TryAbsorbNutritionFromSource: Found Feed Source = {feedSource.LabelCap}, Stack Count = {feedSource.stackCount}");
 
         ProcessFeedAbsorption(feedSource, requestedNutrition, out float absorbedNutrition);
-        Log.Message($"[{parent.LabelCap}] TryAbsorbNutritionFromSource: Absorbed Nutrition = {absorbedNutrition}, Remaining Requested = {requestedNutrition - absorbedNutrition}");
+        if (PawnStoragesMod.settings.DebugLogging)
+            Log.Message(
+                $"[{parent.LabelCap}] TryAbsorbNutritionFromSource: Absorbed Nutrition = {absorbedNutrition}, Remaining Requested = {requestedNutrition - absorbedNutrition}"
+            );
 
         return AddNutritionToStorage(absorbedNutrition);
     }

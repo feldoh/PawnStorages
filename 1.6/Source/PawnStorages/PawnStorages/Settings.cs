@@ -18,6 +18,7 @@ public class Settings : ModSettings
     public int ProductionsPerDay = 1;
     public bool SuggestiveSilo = false;
     public bool RusticFarms = false;
+    public bool DebugLogging = false;
 
     public const float GapHeight = 8f;
 
@@ -27,6 +28,7 @@ public class Settings : ModSettings
         options.Begin(wrect);
 
         options.CheckboxLabeled("PS_Settings_AllowNeedsDrop".Translate(), ref AllowNeedsDrop);
+        options.CheckboxLabeled("PS_Settings_DebugLogging".Translate(), ref DebugLogging);
         if (ModsConfig.anomalyActive)
             options.CheckboxLabeled("PS_Settings_SpecialReleaseAll".Translate(), ref SpecialReleaseAll);
         options.Gap(GapHeight);
@@ -75,7 +77,12 @@ public class Settings : ModSettings
             BreedingScale = 2f;
             MaxPawnsInFarm = 16;
             MaxFarmStoredNutrition = 500f;
+            TicksToAbsorbNutrients = 50;
+            AnimalTickInterval = 250;
+            ProductionsPerDay = 1;
+            SuggestiveSilo = false;
             RusticFarms = false;
+            DebugLogging = false;
         }
 
         options.End();
@@ -99,5 +106,7 @@ public class Settings : ModSettings
         Scribe_Values.Look(ref ProductionsPerDay, "ProductionsPerDay", 1);
         Scribe_Values.Look(ref SuggestiveSilo, "SuggestiveSilo", false);
         Scribe_Values.Look(ref RusticFarms, "RusticFarms", false);
+        Scribe_Values.Look(ref DebugLogging, "DebugLogging", false);
+        Scribe_Values.Look(ref ForcedPawn, "ForcedPawn", "");
     }
 }
