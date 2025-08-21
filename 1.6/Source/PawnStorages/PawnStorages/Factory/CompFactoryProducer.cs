@@ -69,22 +69,23 @@ public class CompFactoryProducer : CompPawnStorageProducer
 
     public bool TryFinishBill(Bill bill, Pawn billForeman)
     {
-        List<Thing> chosenIngredients = SelectedIngredientsFor(bill)?.Select(pair => pair.Key.SplitOff(pair.Value)).ToList() ?? [];
-        if (chosenIngredients.Count == 0)
+        List<Thing> chosenIngredients = SelectedIngredientsFor(bill, out bool billHasIngredients)?.Select(pair => pair.Key.SplitOff(pair.Value)).ToList() ?? [];
+        if (chosenIngredients.Count == 0 && billHasIngredients)
         {
             if (TryPickNextBill() is { } newBill && storedWork >= newBill.GetWorkAmount())
             {
                 bill = newBill;
-                chosenIngredients = SelectedIngredientsFor(bill)?.Select(pair => pair.Key.SplitOff(pair.Value)).ToList() ?? [];
+                chosenIngredients = SelectedIngredientsFor(bill, out billHasIngredients)?.Select(pair => pair.Key.SplitOff(pair.Value)).ToList() ?? [];
             }
         }
 
-        if (chosenIngredients.Count == 0)
+        if (chosenIngredients.Count == 0 && billHasIngredients)
             return false;
 
         DaysProduce.AddRange(GenRecipe.MakeRecipeProducts(bill.recipe, billForeman, chosenIngredients, CalculateDominantIngredient(chosenIngredients, bill.recipe), ParentFactory));
         bill.Notify_IterationCompleted(billForeman, chosenIngredients);
-        ConsumeIngredients(chosenIngredients, bill.recipe, parent.Map);
+        if (billHasIngredients)
+            ConsumeIngredients(chosenIngredients, bill.recipe, parent.Map);
         return true;
     }
 
@@ -93,7 +94,7 @@ public class CompFactoryProducer : CompPawnStorageProducer
     public Pawn BillForeman(List<Pawn> possiblePawns = null) =>
         (possiblePawns?.Any() ?? false ? possiblePawns : ParentAsProductionParent.ProducingPawns)?.RandomElementWithFallback();
 
-    public Dictionary<Thing, int> SelectedIngredientsFor(Bill bill)
+    public Dictionary<Thing, int> SelectedIngredientsFor(Bill bill, out bool billHasIngredients)
     {
         List<IngredientCount> ingredientList = [];
         bill.MakeIngredientsListInProcessingOrder(ingredientList);
@@ -102,6 +103,10 @@ public class CompFactoryProducer : CompPawnStorageProducer
         Dictionary<IngredientCount, bool> done = [];
         foreach (IngredientCount ingredientCount in ingredientList)
             done.Add(ingredientCount, false);
+
+        billHasIngredients = ingredientList.Count > 0;
+        if (!billHasIngredients)
+            return reserved;
 
         foreach (IntVec3 cellsCardinalInBound in AdjCellsCardinalInBounds)
         {
@@ -151,7 +156,7 @@ public class CompFactoryProducer : CompPawnStorageProducer
 
     public Bill TryPickNextBill()
     {
-        CurrentBill = ParentFactory?.BillStack?.bills?.FirstOrDefault(b => b.ShouldDoNow() && SelectedIngredientsFor(b).Any());
+        CurrentBill = ParentFactory?.BillStack?.bills?.FirstOrDefault(b => b.ShouldDoNow() && (SelectedIngredientsFor(b, out bool hasIngredients).Any() || !hasIngredients));
         return CurrentBill;
     }
 

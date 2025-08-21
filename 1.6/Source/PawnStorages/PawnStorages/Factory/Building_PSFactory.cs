@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using HarmonyLib;
+using LudeonTK;
 using PawnStorages.Interfaces;
 using PawnStorages.TickedStorage;
 using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace PawnStorages.Factory;
@@ -97,6 +101,12 @@ public class Building_PSFactory : Building, IStoreSettingsParent, INutritionStor
             yield return gizmo;
         Designator_Build allowedFactoryHopperDesignator = BuildCopyCommandUtility.FindAllowedDesignator(PS_DefOf.PS_FactoryHopper);
         Designator_Build allowedHopperDesignator = BuildCopyCommandUtility.FindAllowedDesignator(ThingDefOf.Hopper);
+        yield return new Command_Action
+        {
+            defaultLabel = "PS_Factory_RecacheRecipes".Translate(),
+            action = RecacheRecipes,
+            icon = ContentFinder<Texture2D>.Get("UI/Buttons/PS_ArrowUp")
+        };
         if (allowedFactoryHopperDesignator != null)
             yield return allowedFactoryHopperDesignator;
         if (allowedHopperDesignator != null)
@@ -163,6 +173,10 @@ public class Building_PSFactory : Building, IStoreSettingsParent, INutritionStor
         ThingOwnerUtility.AppendThingHoldersFromThings(outChildren, pawnStorage.GetDirectlyHeldThings());
     }
 
+    public static List<RecipeDef> GetAllRecipes() => DefDatabase<RecipeDef>.AllDefsListForReading.Where(t => !t.IsSurgery && t.AvailableNow).ToList();
+
+    private void RecacheRecipes() => allRecipesCached = GetAllRecipes();
+
     public List<RecipeDef> AllRecipesUnfiltered
     {
         get
@@ -170,31 +184,26 @@ public class Building_PSFactory : Building, IStoreSettingsParent, INutritionStor
             if (allRecipesCached != null)
                 return allRecipesCached;
             allRecipesCached = [];
-            List<RecipeDef> defsListForReading = DefDatabase<RecipeDef>.AllDefsListForReading;
-            foreach (RecipeDef t in defsListForReading)
-            {
-                if (t.recipeUsers != null && !t.IsSurgery)
-                    allRecipesCached.Add(t);
-            }
+            RecacheRecipes();
 
             return allRecipesCached;
         }
     }
 
-    public ThingOwner GetDirectlyHeldThings()
+    public override void ReceiveCompSignal(string signal)
     {
-        return pawnStorage?.GetDirectlyHeldThings();
+        base.ReceiveCompSignal(signal);
+        if (signal == ResearchManager.ResearchCompletedSignal)
+        {
+            Task.Run(RecacheRecipes);
+        }
     }
 
-    public bool NeedsDrop()
-    {
-        return PawnStoragesMod.settings.AllowNeedsDrop && (pawnStorage == null || pawnStorage.Props.needsDrop);
-    }
+    public ThingOwner GetDirectlyHeldThings() => pawnStorage?.GetDirectlyHeldThings();
 
-    public virtual void Notify_PawnAdded(Pawn pawn)
-    {
-        compAssignable?.TryAssignPawn(pawn);
-    }
+    public bool NeedsDrop() => PawnStoragesMod.settings.AllowNeedsDrop && (pawnStorage == null || pawnStorage.Props.needsDrop);
+
+    public virtual void Notify_PawnAdded(Pawn pawn) => compAssignable?.TryAssignPawn(pawn);
 
     public virtual void Notify_PawnRemoved(Pawn pawn) { }
 

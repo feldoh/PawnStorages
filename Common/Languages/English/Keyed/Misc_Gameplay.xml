@@ -100,6 +100,8 @@
     <PS_FarmTab_Fullness>Progress: {0} - {1}</PS_FarmTab_Fullness>
     <PS_FarmTab_FullnessTime>Time to produce: {0}</PS_FarmTab_FullnessTime>
 
+    <PS_Factory_RecacheRecipes>Refresh Recipes</PS_Factory_RecacheRecipes>
+
     <PS_NutritionLevel>Target nutrition: {0}</PS_NutritionLevel>
     <PS_CommandSetNutritionLevel>Set Target nutrition</PS_CommandSetNutritionLevel>
     <PS_CommandSetNutritionLevelDesc>Set the target fuel level. The farm will only take in nutrition from hoppers up to the target fuel level.</PS_CommandSetNutritionLevelDesc>

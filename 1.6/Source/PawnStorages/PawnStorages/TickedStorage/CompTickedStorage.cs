@@ -71,7 +71,7 @@ public class CompTickedStorage : CompPawnStorage
             HealthUtility.AdjustSeverity(pawn, HediffDefOf.Malnutrition, -adjustedMalnutritionSeverityPerInterval);
     }
 
-    public void TickHediffs(Pawn pawn)
+    public void TickHediffs(Pawn pawn, bool intervalTick = false)
     {
         Pawn_HealthTracker health = pawn.health;
 
@@ -79,13 +79,17 @@ public class CompTickedStorage : CompPawnStorage
             return;
         Pawn_HealthTracker.tmpRemovedHediffs.Clear();
         Pawn_HealthTracker.tmpHediffs.Clear();
-        Pawn_HealthTracker.tmpHediffs.AddRange((IEnumerable<Hediff>)health.hediffSet.hediffs);
+        Pawn_HealthTracker.tmpHediffs.AddRange(health.hediffSet.hediffs);
         foreach (Hediff tmpHediff in Pawn_HealthTracker.tmpHediffs.Where(tmpHediff => !Pawn_HealthTracker.tmpRemovedHediffs.Contains(tmpHediff)))
         {
             try
             {
                 tmpHediff.Tick();
+                if (intervalTick)
+                    tmpHediff.TickInterval(Props.tickInterval);
                 tmpHediff.PostTick();
+                if (intervalTick)
+                    tmpHediff.PostTickInterval(Props.tickInterval);
             }
             catch (Exception ex1)
             {
@@ -107,6 +111,7 @@ public class CompTickedStorage : CompPawnStorage
     public override void CompTick()
     {
         base.CompTick();
+        bool isHashIntervalTick = parent.IsHashIntervalTick(Props.tickInterval);
 
         // Looks like we'd need to emulate each hediff individually to appropriately emulate this,
         // So take the hit and just do per-tick
@@ -114,11 +119,11 @@ public class CompTickedStorage : CompPawnStorage
         {
             foreach (Pawn pawn in StoredPawns)
             {
-                TickHediffs(pawn);
+                TickHediffs(pawn, isHashIntervalTick);
             }
         }
 
-        if (!parent.IsHashIntervalTick(Props.tickInterval))
+        if (!isHashIntervalTick)
         {
             return;
         }
