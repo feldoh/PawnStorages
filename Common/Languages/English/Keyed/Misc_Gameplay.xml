@@ -32,6 +32,7 @@
 	<PS_Settings_ForceNextPawnStatue>Force Next Pawn in Statue by ID e.g. Human393</PS_Settings_ForceNextPawnStatue>
 	<PS_Settings_Category>Homebound - Pawn Storages</PS_Settings_Category>
 	<PS_Settings_Advanced>Advanced Tools</PS_Settings_Advanced>
+	<PS_Settings_DebugLogging>Debug Logging</PS_Settings_DebugLogging>
 
 	<PS_Storage_Use_Slaves>For slaves</PS_Storage_Use_Slaves>
 	<PS_Storage_Use_Desc>Whether this storage should be used by colonists, prisoners or slaves.</PS_Storage_Use_Desc>
