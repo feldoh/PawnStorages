@@ -17,6 +17,8 @@
 	<PS_Filled>(filled)</PS_Filled>
 	<PS_StoredCapacity>Stored: {0} / {1}</PS_StoredCapacity>
 
+    <PS_Home_Tooltip>Schedule going back to storage (e.g. a statue platform)</PS_Home_Tooltip>
+
 	<PS_StoredPawns>Stored Colonists:</PS_StoredPawns>
 	<PS_StoredAnimals>Stored Animals:</PS_StoredAnimals>
 
