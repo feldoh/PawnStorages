@@ -1,14 +1,14 @@
 <p>
-  <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3119559485" alt="Steam Workshop Link">
-  <img src="https://img.shields.io/static/v1?label=Steam&message=Workshop&color=blue&logo=steam&link=https://steamcommunity.com/sharedfiles/filedetails/?id=3119559485"/>
+  <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3119559485">
+  <img alt="Steam Workshop Link" src="https://img.shields.io/static/v1?label=Steam&message=Workshop&color=blue&logo=steam&link=https://steamcommunity.com/sharedfiles/filedetails/?id=3119559485"/>
   </a>
 </p>
 
 # Homebound - A Rimsential Mod
 
-![Mod Version](https://img.shields.io/badge/Mod_Version-1.11.0-blue.svg)
-![RimWorld Version](https://img.shields.io/badge/Built_for_RimWorld-1.5-blue.svg)
-![Harmony Version](https://img.shields.io/badge/Powered_by_Harmony-2.3.3-blue.svg)
+![Mod Version](https://img.shields.io/badge/Mod_Version-1.11.1-blue.svg)
+![RimWorld Version](https://img.shields.io/badge/Built_for_RimWorld-1.6-blue.svg)
+![Harmony Version](https://img.shields.io/badge/Powered_by_Harmony-2.3.4-blue.svg)
 ![GitHub Downloads](https://img.shields.io/github/downloads/feldoh/PawnStorages/total?colorB=blue&label=GitHub+Downloads)
 ![Steam Downloads](https://img.shields.io/steam/downloads/3119559485?colorB=blue&label=Steam+Downloads)
 
@@ -31,7 +31,7 @@ Homebound - An experimental mod offering a variety of ways to tuck pawns away wh
 ## FAQ
 >Isn't this a bit unbalanced?
 
-It is, which is why it's marked as an experimental mod. We want to bring great new ways to play to Rimworld and we believe allowing for larger colonies as well as creative pawn storage solutions is a good start.
+It is, which is why it's marked as an experimental mod. We want to bring great new ways to play to Rimworld, and we believe allowing for larger colonies as well as creative pawn storage solutions is a good start.
 
 Create issues with your feedback and ideas!
 
@@ -44,7 +44,7 @@ Create issues with your feedback and ideas!
 * DetVisor
 
 ## Building and Releasing
-You do not need to build the project to use it however building the release configuration will create a zip file for nice distribution.
+You do not need to build the project to use it, however, building the release configuration will create a zip file for nice distribution.
 
 ## Disclaimer
 >Portions of the materials used to create this content/mod are trademarks and/or copyrighted works of Ludeon Studios Inc. All rights reserved by Ludeon. This content/mod is not official and is not endorsed by Ludeon.
