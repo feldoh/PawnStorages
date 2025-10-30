@@ -170,9 +170,6 @@ namespace PawnStorages.Farm.Comps
                 if (BreedingProgress[type.Key] < 1f)
                     continue;
 
-                if (ParentAsBreederParent.BreedablePawns.Count >= PawnStoragesMod.settings.MaxPawnsInFarm)
-                    break;
-
                 BreedingProgress[type.Key] = 0f;
                 Pawn newPawn = PawnGenerator.GeneratePawn(
                     new PawnGenerationRequest(type.Key, Faction.OfPlayer, allowDowned: true, forceNoIdeo: true, developmentalStages: DevelopmentalStage.Newborn)
