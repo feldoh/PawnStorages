@@ -3,10 +3,11 @@ using HarmonyLib;
 using KCSG;
 using RimWorld;
 using Verse;
+using StructureLayoutDef = KCSG.StructureLayoutDef;
 
 namespace PawnStorages.VEF.HarmonyPatches;
 
-[HarmonyPatch(typeof(SymbolUtils), "Generate")]
+[HarmonyPatch(typeof(SymbolUtils), "Generate", typeof(SymbolDef), typeof(StructureLayoutDef), typeof(Map), typeof(IntVec3), typeof(Faction), typeof(ThingDef))]
 public static class GenerateBuildingAt_Patch
 {
     [HarmonyPrefix]
