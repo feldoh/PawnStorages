@@ -126,7 +126,7 @@ namespace PawnStorages.Farm.Comps
                         FarmAnimalCharacteristics = new FarmAnimalCharacteristics(group.Key.Adult, group.Key.gender),
                         Pawns = GetOrPopulateAutoSlaughterCullOrder()[type.Key].IsAscending(group.Key.Adult, group.Key.gender)
                             ? group.OrderBy(p => p.ageTracker.ageBiologicalTicksInt)
-                            : group.OrderByDescending(p => p.ageTracker.ageBiologicalTicksInt)
+                            : group.OrderByDescending(p => p.ageTracker.ageBiologicalTicksInt),
                     })
                     .OrderBy(g => g.FarmAnimalCharacteristics)
                     .ToList();
@@ -211,7 +211,7 @@ namespace PawnStorages.Farm.Comps
                         BreedingProgress[thing] = 1f;
                     }
                 },
-                icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll")
+                icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll"),
             };
         }
     }

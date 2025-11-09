@@ -23,7 +23,7 @@ public partial class CompFarmBreeder
                 true when Gender == Gender.Female => config.maxFemales,
                 false when Gender == Gender.Male => config.maxMalesYoung,
                 false when Gender == Gender.Female => config.maxFemalesYoung,
-                _ => config.maxTotal
+                _ => config.maxTotal,
             };
         }
 
@@ -53,7 +53,7 @@ public partial class CompFarmBreeder
                 {
                     Gender.Male when other.Gender == Gender.Female => -1,
                     Gender.Female when other.Gender == Gender.Male => 1,
-                    _ => 0
+                    _ => 0,
                 };
             }
 

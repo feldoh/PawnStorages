@@ -188,7 +188,7 @@ public class CompFactoryProducer : CompPawnStorageProducer
                 shouldBeActive = !shouldBeActive;
             },
             icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll"),
-            isActive = () => shouldBeActive
+            isActive = () => shouldBeActive,
         };
     }
 }

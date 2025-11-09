@@ -1,7 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <Project Sdk="Microsoft.NET.Sdk" InitialTargets="">
-
     <PropertyGroup>
         <RootNamespace>PawnStorages</RootNamespace>
         <AssemblyName>PawnStorages</AssemblyName>
@@ -10,16 +8,15 @@
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <OutputPath>../../../Assemblies/</OutputPath>
     </PropertyGroup>
-
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
         <DefineConstants>TRACE</DefineConstants>
         <WarningLevel>4</WarningLevel>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks> <!-- Unsafe is required for publicising! -->
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <!-- Unsafe is required for publicising! -->
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <Optimize>true</Optimize>
         <DebugType>none</DebugType>
     </PropertyGroup>
-
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <DefineConstants>TRACE;DEBUG</DefineConstants>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -28,7 +25,6 @@
         <DebugSymbols>true</DebugSymbols>
         <DebugType>portable</DebugType>
     </PropertyGroup>
-
     <ItemGroup>
         <Reference Include="Assembly-CSharp">
             <HintPath Condition="Exists('../../../../../RimWorldWin64_Data')">../../../../../RimWorldWin64_Data/Managed/Assembly-CSharp.dll</HintPath>
@@ -51,18 +47,20 @@
             <Private>False</Private>
         </Reference>
     </ItemGroup>
-
-    <ItemGroup Condition="'@(Reference->WithMetadataValue('Identity', 'Assembly-CSharp')->Metadata('HintPath')->Exists())' == ''">
+    <ItemGroup Condition="'@(Reference-&gt;WithMetadataValue('Identity', 'Assembly-CSharp')-&gt;Metadata('HintPath')-&gt;Exists())' == ''">
         <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6-*" />
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="CSharpier.MsBuild" Version="1.1.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Krafs.Publicizer" Version="2.1.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Lib.Harmony" Version="*" ExcludeAssets="runtime" />
     </ItemGroup>
-
     <ItemGroup>
         <Compile Update="Properties\Settings.Designer.cs">
             <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -70,7 +68,6 @@
             <DependentUpon>Settings.settings</DependentUpon>
         </Compile>
     </ItemGroup>
-
     <ItemGroup>
         <None Update="Properties\Settings.settings">
             <Generator>SettingsSingleFileGenerator</Generator>
@@ -80,22 +77,10 @@
     <ItemGroup>
         <Publicize Include="Assembly-CSharp" />
     </ItemGroup>
-
     <Target Name="CleanAssemblies" AfterTargets="Clean">
         <RemoveDir Directories="$(OutputPath)" Condition="Exists('$(OutputPath)')" />
     </Target>
     <Target Name="PreCleanAssemblies">
         <RemoveDir Directories="$(OutputPath)" Condition="Exists('$(OutputPath)')" />
-    </Target>
-
-    <!-- Add A step to the build to run csharpier on build -->
-    <Target Name="CheckCsharpier" BeforeTargets="Build">
-        <Exec Command="dotnet csharpier --version" IgnoreExitCode="true">
-            <Output TaskParameter="ExitCode" PropertyName="ExitCode"/>
-        </Exec>
-    </Target>
-
-    <Target Name="FormatCode" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Release' And '$(ExitCode)' == '0' " DependsOnTargets="CheckCsharpier">
-        <Exec Command="dotnet csharpier ." />
     </Target>
 </Project>

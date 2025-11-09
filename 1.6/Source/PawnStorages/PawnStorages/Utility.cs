@@ -164,13 +164,11 @@ public static class Utility
         return typeof(CompEggLayer).IsAssignableFrom(c.compClass) || typeof(CompHasGatherableBodyResource).IsAssignableFrom(c.compClass);
     }
 
-    public static Lazy<List<PawnKindDef>> AllAnimalKinds =
-        new(
-            () =>
-                DefDatabase<PawnKindDef>
-                    .AllDefs.Where(d => d.race != null && d.race.race.Animal && d.race.GetStatValueAbstract(StatDefOf.Wildness) < 1 && !d.race.race.Dryad && !d.race.IsCorpse)
-                    .ToList()
-        );
+    public static Lazy<List<PawnKindDef>> AllAnimalKinds = new(() =>
+        DefDatabase<PawnKindDef>
+            .AllDefs.Where(d => d.race != null && d.race.race.Animal && d.race.GetStatValueAbstract(StatDefOf.Wildness) < 1 && !d.race.race.Dryad && !d.race.IsCorpse)
+            .ToList()
+    );
 
     public static bool ValidateThingDef(ThingDef td, bool IsProducer)
     {

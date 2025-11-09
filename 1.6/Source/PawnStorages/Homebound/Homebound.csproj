@@ -14,16 +14,16 @@
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' " />
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' " />
-
     <ItemGroup>
         <ProjectReference Include="../PawnStorages/PawnStorages.csproj" />
         <ProjectReference Include="../PawnStoragesModule-VEF/PawnStoragesModule-VanillaExpandedFramework.csproj" />
         <!-- <ProjectReference Include="..\PawnStoragesModule-SimpleWarrants\PawnStoragesModule-SimpleWarrants.csproj" /> -->
     </ItemGroup>
-
     <ItemGroup>
-        <ReleaseFiles Include="../../../../*.xml;../../../../*.md;../../../../LICENSE;../../../../1.*/**"
-                      Exclude="../../../../1.*/Source/**;../../../../1.*/Assemblies/**;../../../../Compatibility/**">
+        <ReleaseFiles
+            Include="../../../../*.xml;../../../../*.md;../../../../LICENSE;../../../../1.*/**"
+            Exclude="../../../../1.*/Source/**;../../../../1.*/Assemblies/**;../../../../Compatibility/**"
+        >
             <Link>Files/%(RecursiveDir)%(Filename)%(Extension)</Link>
         </ReleaseFiles>
         <AboutFiles Include="../../../../About/**;">
@@ -39,41 +39,38 @@
             <Link>Files/%(RecursiveDir)%(Filename)%(Extension)</Link>
         </GitMeta>
         <CompatibilityFiles Include="../../../../Compatibility/**">
-          <Link>Files/Compatibility/%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <Link>Files/Compatibility/%(RecursiveDir)%(Filename)%(Extension)</Link>
         </CompatibilityFiles>
         <None Include="../../../../.editorconfig" />
     </ItemGroup>
-
-    <Target Name="CheckCsharpier" BeforeTargets="Build">
-        <Exec Command="dotnet csharpier --version" IgnoreExitCode="true">
-            <Output TaskParameter="ExitCode" PropertyName="ExitCode"/>
-        </Exec>
-    </Target>
-
-    <!-- Add A step to the build to run csharpier on build -->
-    <Target Name="FormatCode" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Release' And '$(ExitCode)' == '0' " DependsOnTargets="CheckCsharpier">
-        <Exec Command="dotnet csharpier ." />
-    </Target>
-
+    <ItemGroup>
+        <PackageReference Include="CSharpier.MsBuild" Version="1.1.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
     <Target Name="CleanRelease" AfterTargets="Clean">
         <RemoveDir Directories="$(ReleasePath)" Condition="Exists('$(ReleasePath)')" />
         <Delete Files="$(ZipFilePath)" Condition="Exists('$(ZipFilePath)')" />
     </Target>
-
     <Target Name="PostBuild" AfterTargets="Build" DependsOnTargets="CleanRelease">
         <MakeDir Directories="$(ReleasePath)" />
-        <Copy SourceFiles="@(ReleaseFiles)" DestinationFiles="@(ReleaseFiles->'$(ReleasePath)/%(RecursiveDir)%(Filename)%(Extension)')" />
-        <Copy SourceFiles="@(ReleaseAssemblies)" DestinationFiles="@(ReleaseAssemblies->'$(ReleasePath)/%(RecursiveDir)%(Filename)%(Extension)')" />
+        <Copy SourceFiles="@(ReleaseFiles)" DestinationFiles="@(ReleaseFiles-&gt;'$(ReleasePath)/%(RecursiveDir)%(Filename)%(Extension)')" />
+        <Copy SourceFiles="@(ReleaseAssemblies)" DestinationFiles="@(ReleaseAssemblies-&gt;'$(ReleasePath)/%(RecursiveDir)%(Filename)%(Extension)')" />
         <Copy SourceFiles="@(AboutFiles)" DestinationFolder="$(ReleasePath)/About" />
-        <Copy SourceFiles="@(CommonFiles)" DestinationFiles="@(CommonFiles->'$(ReleasePath)/Common/%(RecursiveDir)%(Filename)%(Extension)')" />
-        <Copy SourceFiles="@(CompatibilityFiles)" DestinationFiles="@(CompatibilityFiles->'$(ReleasePath)/Compatibility/%(RecursiveDir)%(Filename)%(Extension)')" />
+        <Copy SourceFiles="@(CommonFiles)" DestinationFiles="@(CommonFiles-&gt;'$(ReleasePath)/Common/%(RecursiveDir)%(Filename)%(Extension)')" />
+        <Copy SourceFiles="@(CompatibilityFiles)" DestinationFiles="@(CompatibilityFiles-&gt;'$(ReleasePath)/Compatibility/%(RecursiveDir)%(Filename)%(Extension)')" />
         <ZipDirectory Condition=" '$(Configuration)' == 'Release' " DestinationFile="$(ZipFilePath)" SourceDirectory="$(ReleasePath)" Overwrite="true" />
-
         <ItemGroup>
             <ReleaseFolder Include="../../../../Release/**" />
             <ReleaseFolder Condition=" '$(Configuration)' == 'Debug' " Include="../../../../1.*/Assemblies/*.pdb;../../../../Compatibility/**/*.pdb" />
         </ItemGroup>
-        <RemoveDir Condition="Exists('$(SteamModsPath)') And !Exists('$(SteamModsPath)/PawnStorages')" Directories="$(SteamModsPath)/$(ModName)" ContinueOnError="true"/>
-        <Copy Condition="Exists('$(SteamModsPath)') And !Exists('$(SteamModsPath)/PawnStorages')" SourceFiles="@(ReleaseFolder)" DestinationFiles="@(ReleaseFolder->'$(SteamModsPath)/$(ModName)/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+        <RemoveDir Condition="Exists('$(SteamModsPath)') And !Exists('$(SteamModsPath)/PawnStorages')" Directories="$(SteamModsPath)/$(ModName)" ContinueOnError="true" />
+        <Copy
+            Condition="Exists('$(SteamModsPath)') And !Exists('$(SteamModsPath)/PawnStorages')"
+            SourceFiles="@(ReleaseFolder)"
+            DestinationFiles="@(ReleaseFolder-&gt;'$(SteamModsPath)/$(ModName)/%(RecursiveDir)%(Filename)%(Extension)')"
+            SkipUnchangedFiles="true"
+        />
     </Target>
 </Project>

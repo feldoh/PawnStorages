@@ -24,11 +24,9 @@ public class Tradeable_StoredPawn : Tradeable
     }
 
     public override string TipDescription =>
-        AnyPawn == null
-            ? base.TipDescription
-            : !HasAnyThing
-                ? ""
-                : $"{AnyThing.def.label}-{AnyPawn.MainDesc(true)}\n\n{AnyPawn.DescriptionDetailed}";
+        AnyPawn == null ? base.TipDescription
+        : !HasAnyThing ? ""
+        : $"{AnyThing.def.label}-{AnyPawn.MainDesc(true)}\n\n{AnyPawn.DescriptionDetailed}";
 
     private Pawn AnyPawn
     {

@@ -47,7 +47,7 @@ public class CompPawnStorage : ThingComp, IThingHolder
             BedOwnerType.Colonist => pawn.IsColonist,
             BedOwnerType.Slave => pawn.IsSlave,
             BedOwnerType.Prisoner => pawn.IsPrisoner || couldMakePrisoner,
-            _ => true
+            _ => true,
         } && (compAssignable == null || compAssignable.AssignedPawns.Contains(pawn) || compAssignable.HasFreeSlot);
 
     public void TryAssignPawn(Pawn pawn) => compAssignable?.TryAssignPawn(pawn);
@@ -452,7 +452,7 @@ public class CompPawnStorage : ThingComp, IThingHolder
                         parent.Map.mapDrawer.MapMeshDirty(parent.Position, MapMeshFlagDefOf.Things);
                     }
                 },
-                icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll")
+                icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll"),
             };
 
             if (
@@ -480,7 +480,7 @@ public class CompPawnStorage : ThingComp, IThingHolder
                             }
                         }
                     },
-                    icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll")
+                    icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll"),
                 };
                 if (PawnStoragesMod.settings.SpecialReleaseAll && ModsConfig.anomalyActive)
                 {
@@ -516,7 +516,7 @@ public class CompPawnStorage : ThingComp, IThingHolder
                             EffecterDefOf.Skip_EntryNoDelay.Spawn(p, parent.Map).Cleanup();
                             p.mindState.mentalStateHandler.TryStartMentalState(MentalStateDefOf.Berserk, forced: true);
                         },
-                        icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll")
+                        icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll"),
                     };
                 }
             }
@@ -528,7 +528,7 @@ public class CompPawnStorage : ThingComp, IThingHolder
                 defaultLabel = "PS_EnableScheduling".Translate(),
                 toggleAction = () => schedulingEnabled = !schedulingEnabled,
                 isActive = () => schedulingEnabled,
-                icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll")
+                icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll"),
             };
 
         if (Props.canBeRotated)
@@ -542,7 +542,7 @@ public class CompPawnStorage : ThingComp, IThingHolder
                     parent.Map.mapDrawer.MapMeshDirty(parent.Position, (ulong)MapMeshFlagDefOf.Things);
                 },
                 isActive = () => true,
-                icon = ContentFinder<Texture2D>.Get("UI/Buttons/PS_Rotate")
+                icon = ContentFinder<Texture2D>.Get("UI/Buttons/PS_Rotate"),
             };
 
         if (Props.allowNonColonist && compAssignable != null)
@@ -575,7 +575,7 @@ public class CompPawnStorage : ThingComp, IThingHolder
                         )
                     );
                 },
-                icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll")
+                icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll"),
             };
     }
 

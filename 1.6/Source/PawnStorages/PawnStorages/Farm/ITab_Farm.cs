@@ -124,12 +124,11 @@ public class ThingDefLabelCapComparer : IComparer<ThingDef>
             // Handle null cases first
             null when y == null => 0,
             null => -1,
-            _
-                => y == null
-                    ? 1
-                    :
-                    // Compare based on LabelCap
-                    string.Compare(x.LabelCap, y.LabelCap, StringComparison.InvariantCultureIgnoreCase)
+            _ => y == null
+                ? 1
+                :
+                // Compare based on LabelCap
+                string.Compare(x.LabelCap, y.LabelCap, StringComparison.InvariantCultureIgnoreCase),
         };
     }
 
