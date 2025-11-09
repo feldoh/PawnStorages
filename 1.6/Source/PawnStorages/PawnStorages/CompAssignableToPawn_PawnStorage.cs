@@ -20,17 +20,16 @@ public class CompAssignableToPawn_PawnStorage : CompAssignableToPawn
                 ? []
                 : OwnerType switch
                 {
-                    BedOwnerType.Colonist
-                        => parent.Map?.mapPawns is { } pawns
-                            ? Enumerable
-                                .Empty<Pawn>()
-                                .ConcatIfNotNull(pawns.SpawnedPawnsInFaction(Faction.OfPlayer).Where(p => !(p.IsSlave || p.IsPrisoner)))
-                                .Where(p => !Props.toolUsersOnly || (p.RaceProps?.ToolUser ?? false))
-                                .OrderByDescending(p => CanAssignTo(p).Accepted)
-                            : [],
+                    BedOwnerType.Colonist => parent.Map?.mapPawns is { } pawns
+                        ? Enumerable
+                            .Empty<Pawn>()
+                            .ConcatIfNotNull(pawns.SpawnedPawnsInFaction(Faction.OfPlayer).Where(p => !(p.IsSlave || p.IsPrisoner)))
+                            .Where(p => !Props.toolUsersOnly || (p.RaceProps?.ToolUser ?? false))
+                            .OrderByDescending(p => CanAssignTo(p).Accepted)
+                        : [],
                     BedOwnerType.Prisoner => parent.Map.mapPawns.PrisonersOfColony.OrderByDescending(p => CanAssignTo(p).Accepted),
                     BedOwnerType.Slave => parent.Map.mapPawns.SlavesOfColonySpawned.OrderByDescending(p => CanAssignTo(p).Accepted),
-                    _ => []
+                    _ => [],
                 };
         }
     }

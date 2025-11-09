@@ -20,12 +20,11 @@ public class Verb_LaunchCaptureSphere : Verb_LaunchProjectile
         }
     }
 
-    protected TargetingParameters targetParamsFilled =
-        new()
-        {
-            canTargetLocations = true,
-            canTargetSelf = false,
-            canTargetPawns = true,
-        };
+    protected TargetingParameters targetParamsFilled = new()
+    {
+        canTargetLocations = true,
+        canTargetSelf = false,
+        canTargetPawns = true,
+    };
     public override TargetingParameters targetParams => (PawnStorage.GetDirectlyHeldThings()?.Count ?? 0) > 0 ? targetParamsFilled : verbProps.targetParams;
 }

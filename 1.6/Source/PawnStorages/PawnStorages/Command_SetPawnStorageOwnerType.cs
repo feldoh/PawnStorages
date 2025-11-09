@@ -46,7 +46,7 @@ public class Command_SetPawnStorageOwnerType : Command
                 () => assignable.OwnerType = BedOwnerType.Prisoner,
                 Command_SetBedOwnerType.ForPrisonersTex,
                 Color.white
-            )
+            ),
         ];
         if (ModsConfig.IdeologyActive)
             options.Add(new("PS_Storage_Use_Slaves".Translate(), () => assignable.OwnerType = BedOwnerType.Prisoner, Command_SetBedOwnerType.ForSlavesTex, Color.white));

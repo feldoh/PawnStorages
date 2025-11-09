@@ -139,7 +139,7 @@ namespace PawnStorages.Farm.Comps
                         }
                     }
                 },
-                icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll")
+                icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll"),
             };
         }
     }

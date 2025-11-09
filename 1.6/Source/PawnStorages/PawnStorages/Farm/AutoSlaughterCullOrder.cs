@@ -18,7 +18,7 @@ public class AutoSlaughterCullOrder : IExposable
             true when gender == Gender.Female => AdultFemaleAscending,
             false when gender == Gender.Male => ChildMaleAscending,
             false when gender == Gender.Female => ChildFemaleAscending,
-            _ => AllAscending
+            _ => AllAscending,
         };
     }
 

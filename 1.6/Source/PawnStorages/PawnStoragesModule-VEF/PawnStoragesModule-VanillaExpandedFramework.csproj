@@ -91,15 +91,13 @@
     <Target Name="PreCleanAssemblies" BeforeTargets="CoreCompile">
         <RemoveDir Directories="$(OutputPath)" Condition="Exists('$(OutputPath)')" />
     </Target>
-
     <!-- Add A step to the build to run csharpier on build -->
     <Target Name="CheckCsharpier" BeforeTargets="Build">
-        <Exec Command="dotnet csharpier --version" IgnoreExitCode="true">
-            <Output TaskParameter="ExitCode" PropertyName="ExitCode"/>
+        <Exec Command="csharpier --version" IgnoreExitCode="true">
+            <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
         </Exec>
     </Target>
-
     <Target Name="FormatCode" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Release' And '$(ExitCode)' == '0' " DependsOnTargets="CheckCsharpier">
-        <Exec Command="dotnet csharpier ." />
+        <Exec Command="csharpier format ." />
     </Target>
 </Project>

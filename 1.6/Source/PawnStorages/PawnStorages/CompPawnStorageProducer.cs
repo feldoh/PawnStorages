@@ -29,7 +29,7 @@ public class CompPawnStorageProducer : ThingComp, IActive
             },
             icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll"),
             disabled = DaysProduce.Count <= 0,
-            disabledReason = "PS_NothingToProduce".Translate()
+            disabledReason = "PS_NothingToProduce".Translate(),
         };
     }
 

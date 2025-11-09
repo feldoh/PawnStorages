@@ -51,7 +51,7 @@ namespace PawnStorages.Farm.Comps
                     {
                         ReleaseContents(parent.Map);
                     },
-                    icon = ContentFinder<Texture2D>.Get("UI/Buttons/PS_Release")
+                    icon = ContentFinder<Texture2D>.Get("UI/Buttons/PS_Release"),
                 };
                 yield return new Command_Action
                 {
@@ -60,7 +60,7 @@ namespace PawnStorages.Farm.Comps
                     {
                         EjectContents(parent.Map);
                     },
-                    icon = ContentFinder<Texture2D>.Get("UI/Buttons/PS_Eject")
+                    icon = ContentFinder<Texture2D>.Get("UI/Buttons/PS_Eject"),
                 };
             }
 
@@ -70,7 +70,7 @@ namespace PawnStorages.Farm.Comps
                 {
                     defaultLabel = "Produce",
                     action = TryProduce,
-                    icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll")
+                    icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll"),
                 };
             }
         }

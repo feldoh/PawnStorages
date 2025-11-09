@@ -105,7 +105,7 @@ public class Building_PSFactory : Building, IStoreSettingsParent, INutritionStor
         {
             defaultLabel = "PS_Factory_RecacheRecipes".Translate(),
             action = RecacheRecipes,
-            icon = ContentFinder<Texture2D>.Get("UI/Buttons/PS_ArrowUp")
+            icon = ContentFinder<Texture2D>.Get("UI/Buttons/PS_ArrowUp"),
         };
         if (allowedFactoryHopperDesignator != null)
             yield return allowedFactoryHopperDesignator;
