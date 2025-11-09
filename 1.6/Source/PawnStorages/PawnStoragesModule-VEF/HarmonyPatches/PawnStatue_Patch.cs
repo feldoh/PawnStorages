@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using HarmonyLib;
 using KCSG;
 using RimWorld;
@@ -7,9 +10,21 @@ using StructureLayoutDef = KCSG.StructureLayoutDef;
 
 namespace PawnStorages.VEF.HarmonyPatches;
 
-[HarmonyPatch(typeof(SymbolUtils), "Generate", typeof(SymbolDef), typeof(StructureLayoutDef), typeof(Map), typeof(IntVec3), typeof(Faction), typeof(ThingDef))]
+[HarmonyPatch]
 public static class GenerateBuildingAt_Patch
 {
+    /**
+     * There are two Generate methods, one with an ICollection which is newer and one without.
+     * If the one with a collection is there, we want to patch that as that if the bottom of the call chain otherwise patch the old one
+     */
+    [HarmonyTargetMethod]
+    public static MethodInfo TargetMethod()
+    {
+        Type[] paramTypes = [typeof(SymbolDef), typeof(StructureLayoutDef), typeof(Map), typeof(IntVec3), typeof(Faction), typeof(ThingDef)];
+        MethodInfo newGenerateMethod = AccessTools.Method(typeof(SymbolUtils), "Generate", paramTypes.Append(typeof(ICollection<Thing>)).ToArray());
+        return newGenerateMethod != null ? newGenerateMethod : AccessTools.Method(typeof(SymbolUtils), "Generate", paramTypes);
+    }
+
     [HarmonyPrefix]
     public static bool Generate(Map map, SymbolDef symbol, IntVec3 cell, Faction faction)
     {
@@ -21,8 +36,7 @@ public static class GenerateBuildingAt_Patch
         if (storageItem == null)
             return true;
         storageItem.InitializeComps();
-        var holder = storageItem as IThingHolder;
-        if (holder == null)
+        if (storageItem is not IThingHolder holder)
             return true;
 
         CompPawnStorage storageComp = storageItem.GetInnerIfMinified()?.TryGetComp<CompPawnStorage>();
