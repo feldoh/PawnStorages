@@ -17,6 +17,7 @@
         <thingCategories>
             <li>BuildingsProduction</li>
         </thingCategories>
+        <designatorDropdown>PS_Farmstorage_dropdown</designatorDropdown>
         <tickerType>Normal</tickerType>
         <altitudeLayer>Building</altitudeLayer>
         <passability>PassThroughOnly</passability>
@@ -123,6 +124,7 @@
         <thingCategories>
             <li>BuildingsProduction</li>
         </thingCategories>
+        <designatorDropdown>PS_Farmstorage_dropdown</designatorDropdown>
         <tickerType>Normal</tickerType>
         <altitudeLayer>Building</altitudeLayer>
         <passability>PassThroughOnly</passability>
@@ -234,6 +236,7 @@
             </damageData>
             <color>(139, 69, 19)</color>
         </graphicData>
+        <designatorDropdown>PS_Hopper_dropdown</designatorDropdown>
         <altitudeLayer>Building</altitudeLayer>
         <passability>PassThroughOnly</passability>
         <fillPercent>0.5</fillPercent>
