@@ -1,12 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Defs>
-
-  <DesignatorDropdownGroupDef>
-    <defName>PS_Farmstorage_dropdown</defName>
-  </DesignatorDropdownGroupDef>
-  <DesignatorDropdownGroupDef>
-    <defName>PS_Hopper_dropdown</defName>
-  </DesignatorDropdownGroupDef>
-
+    <DesignatorDropdownGroupDef>
+        <defName>PS_Farmstorage_dropdown</defName>
+    </DesignatorDropdownGroupDef>
+    <DesignatorDropdownGroupDef>
+        <defName>PS_Hopper_dropdown</defName>
+    </DesignatorDropdownGroupDef>
 </Defs>
