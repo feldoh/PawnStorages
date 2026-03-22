@@ -75,40 +75,36 @@ namespace PawnStorages.Farm.Comps
             }
         }
 
-        public bool GetProduct(Pawn animal, out ThingDef resource, out int amount)
-        {
-            resource = null;
-            amount = 0;
-
-            //Milkable or shearable
-            CompHasGatherableBodyResource bodyResource = animal.TryGetComp<CompHasGatherableBodyResource>();
-            if (bodyResource is { Active: true })
-            {
-                resource = bodyResource.ResourceDef;
-                amount = bodyResource.ResourceAmount;
-                return true;
-            }
-
-            //EggLayer
-            CompEggLayer eggLayer = animal.TryGetComp<CompEggLayer>();
-            if (eggLayer is not { Active: true })
-                return false;
-            resource = eggLayer.Props.eggUnfertilizedDef;
-            amount = eggLayer.Props.eggCountRange.RandomInRange;
-            return true;
-        }
-
         public void TryProduce()
         {
             foreach (Pawn pawn in innerContainer)
             {
-                if (!GetProduct(pawn, out ThingDef thingDef, out int amount))
-                    continue;
-                while (amount > 0)
+                foreach (CompHasGatherableBodyResource bodyResource in pawn.GetComps<CompHasGatherableBodyResource>())
                 {
-                    int toSpawn = Mathf.Clamp(amount, 1, thingDef.stackLimit);
-                    amount -= toSpawn;
-                    Thing thingStack = ThingMaker.MakeThing(thingDef);
+                    if (!bodyResource.Active)
+                        continue;
+                    int amount = bodyResource.ResourceAmount;
+                    ThingDef thingDef = bodyResource.ResourceDef;
+                    while (amount > 0)
+                    {
+                        int toSpawn = Mathf.Clamp(amount, 1, thingDef.stackLimit);
+                        amount -= toSpawn;
+                        Thing thingStack = ThingMaker.MakeThing(thingDef);
+                        thingStack.stackCount = toSpawn;
+                        GenPlace.TryPlaceThing(thingStack, parent.Position, parent.Map, ThingPlaceMode.Near);
+                    }
+                }
+
+                CompEggLayer eggLayer = pawn.TryGetComp<CompEggLayer>();
+                if (eggLayer is not { Active: true })
+                    continue;
+                ThingDef eggDef = eggLayer.Props.eggUnfertilizedDef;
+                int eggAmount = eggLayer.Props.eggCountRange.RandomInRange;
+                while (eggAmount > 0)
+                {
+                    int toSpawn = Mathf.Clamp(eggAmount, 1, eggDef.stackLimit);
+                    eggAmount -= toSpawn;
+                    Thing thingStack = ThingMaker.MakeThing(eggDef);
                     thingStack.stackCount = toSpawn;
                     GenPlace.TryPlaceThing(thingStack, parent.Position, parent.Map, ThingPlaceMode.Near);
                 }

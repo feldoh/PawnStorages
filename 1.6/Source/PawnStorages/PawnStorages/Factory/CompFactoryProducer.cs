@@ -140,6 +140,8 @@ public class CompFactoryProducer : CompPawnStorageProducer
 
     public static Thing CalculateDominantIngredient(List<Thing> ingredients, RecipeDef recipeDef)
     {
+        if (ingredients.Count == 0)
+            return null; // Looks suspicious, but this is what base-game does. Relies on ingredientless recipes not being madeFromStuff
         if (recipeDef.productHasIngredientStuff)
             return ingredients[0];
         return recipeDef.products.Any(x => x.thingDef.MadeFromStuff) || recipeDef.unfinishedThingDef is { MadeFromStuff: true }
