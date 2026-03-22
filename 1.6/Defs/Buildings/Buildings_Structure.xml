@@ -39,7 +39,7 @@
                 <convertOption>true</convertOption>
                 <idleResearch>true</idleResearch>
                 <canBeScheduled>true</canBeScheduled>
-                <pawnRestIncreaseTick>0.00003</pawnRestIncreaseTick>
+                <pawnRestIncreaseTick>0.000057</pawnRestIncreaseTick>
             </li>
             <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
                 <drawAssignmentOverlay>false</drawAssignmentOverlay>
@@ -97,7 +97,7 @@
                 <convertOption>true</convertOption>
                 <idleResearch>true</idleResearch>
                 <canBeScheduled>true</canBeScheduled>
-                <pawnRestIncreaseTick>0.00003</pawnRestIncreaseTick>
+                <pawnRestIncreaseTick>0.000057</pawnRestIncreaseTick>
             </li>
             <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
                 <drawAssignmentOverlay>false</drawAssignmentOverlay>

@@ -28,6 +28,7 @@
 	<PS_EnableScheduling>Enable scheduling</PS_EnableScheduling>
 
 	<PS_Settings_AllowNeedsDrop>Allow needs to drop at home</PS_Settings_AllowNeedsDrop>
+	<PS_Settings_Sleep_Rate_Multiplier>Sleep rate multiplier (relative to a bed): {0}</PS_Settings_Sleep_Rate_Multiplier>
 	<PS_Settings_SpecialReleaseAll>Show special release all button</PS_Settings_SpecialReleaseAll>
 	<PS_Settings_ForceNextPawnStatue>Force Next Pawn in Statue by ID e.g. Human393</PS_Settings_ForceNextPawnStatue>
 	<PS_Settings_Category>Homebound - Pawn Storages</PS_Settings_Category>

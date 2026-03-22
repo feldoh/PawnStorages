@@ -250,7 +250,7 @@ public class CompPawnStorage : ThingComp, IThingHolder
         if (storedAtTick < 0)
             pawnStoringTick.Add(pawn.thingIDNumber, storedAtTick = Find.TickManager.TicksGame);
         int ticksStored = Find.TickManager.TicksGame - storedAtTick;
-        float restLevel = restNeed.CurLevel + Props.pawnRestIncreaseTick * ticksStored;
+        float restLevel = restNeed.CurLevel + Props.pawnRestIncreaseTick * PawnStoragesMod.settings.SleepRateMultiplier * ticksStored;
         if (pawn.timetable?.CurrentAssignment == TimeAssignmentDefOf.Anything && restLevel < Need_Rest.DefaultNaturalWakeThreshold)
             return false;
         return restLevel > Need_Rest.CanWakeThreshold;
@@ -276,7 +276,7 @@ public class CompPawnStorage : ThingComp, IThingHolder
         if (Props.pawnRestIncreaseTick != 0 && pawn.needs?.rest is { } restNeed)
         {
             restNeed.lastRestTick = Find.TickManager.TicksGame;
-            restNeed.CurLevel += Props.pawnRestIncreaseTick * ticksStored;
+            restNeed.CurLevel += Props.pawnRestIncreaseTick * PawnStoragesMod.settings.SleepRateMultiplier * ticksStored;
             int periodsStored = Math.Max(ticksStored / NEEDS_INTERVAL, 1);
             IEnumerable<Hediff_Injury> hds = pawn.health.tmpHediffInjuries.TakeRandom(Math.Min(pawn.health.tmpHediffInjuries.Count, periodsStored)).ToList();
             if (hds.Any())
