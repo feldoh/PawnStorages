@@ -131,4 +131,9 @@
     <PS_RenameDialog_Apply>Apply</PS_RenameDialog_Apply>
 
     <PS_PipeSystem_NotConnected>Not connected to {0}.</PS_PipeSystem_NotConnected>
+
+    <PS_AddBill_Title>Add Bill</PS_AddBill_Title>
+    <PS_BillLimitReached>Bill limit reached (maximum 15 bills per factory).</PS_BillLimitReached>
+    <PS_AddBill_NoResults>(no matching recipes)</PS_AddBill_NoResults>
+    <PS_AddBill_BillCount>{0} bills queued</PS_AddBill_BillCount>
 </LanguageData>

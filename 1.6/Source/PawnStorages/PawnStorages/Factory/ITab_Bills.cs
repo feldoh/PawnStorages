@@ -50,14 +50,6 @@ public class ITab_Bills : ITab
                 if (Mouse.IsOver(rect))
                     TooltipHandler.TipRegion(rect, "ClipboardBillNotAvailableHere".Translate() + ": " + BillUtility.Clipboard.LabelCap);
             }
-            else if (SelFactory.BillStack.Count >= 15)
-            {
-                GUI.color = Color.gray;
-                Widgets.DrawTextureFitted(rect, TexButton.Paste, 1f);
-                GUI.color = Color.white;
-                if (Mouse.IsOver(rect))
-                    TooltipHandler.TipRegion(rect, "PasteBillTip".Translate() + " (" + "PasteBillTip_LimitReached".Translate() + "): " + BillUtility.Clipboard.LabelCap);
-            }
             else
             {
                 if (Widgets.ButtonImageFitted(rect, TexButton.Paste, Color.white))
@@ -73,33 +65,24 @@ public class ITab_Bills : ITab
             }
         }
 
+        int windowCountBefore = Find.WindowStack.Count;
         mouseoverBill = SelFactory.BillStack.DoListing(new Rect(0.0f, 0.0f, WinSize.x, WinSize.y).ContractedBy(10f), RecipeOptionsMaker, ref scrollPosition, ref viewHeight);
+
+        // DoListing opened a FloatMenu from our dummy option — remove it, our dialog is already open
+        if (Find.WindowStack.Count <= windowCountBefore)
+            return;
+
+        Window last = Find.WindowStack.Windows[Find.WindowStack.Count - 1];
+        if (last is Verse.FloatMenu)
+            Find.WindowStack.TryRemove(last, false);
         return;
 
         List<FloatMenuOption> RecipeOptionsMaker()
         {
-            List<FloatMenuOption> list = SelFactory
-                .AllRecipesUnfiltered.Where(recipeDef => recipeDef.AvailableNow)
-                .Select(recipe => new FloatMenuOption(
-                    recipe.LabelCap,
-                    delegate
-                    {
-                        Bill bill2 = recipe.MakeNewBill();
-                        SelFactory.BillStack.AddBill(bill2);
-                        if (recipe.conceptLearned != null)
-                            PlayerKnowledgeDatabase.KnowledgeDemonstrated(recipe.conceptLearned, KnowledgeAmount.Total);
-                        if (TutorSystem.TutorialMode)
-                            TutorSystem.Notify_Event((EventPack)"AddBill-" + recipe.LabelCap);
-                    },
-                    MenuOptionPriority.Default,
-                    null,
-                    null,
-                    29f,
-                    billOptionRect => Widgets.InfoCardButton(billOptionRect.x + 5f, billOptionRect.y + (billOptionRect.height - 24f) / 2f, recipe),
-                    null
-                ))
-                .ToList();
-            return list.Any() ? list : [new FloatMenuOption("NoneBrackets".Translate(), null, MenuOptionPriority.Default, null, null, 0f, null, null)];
+            if (!Find.WindowStack.Windows.Any(w => w is Dialog_AddBill))
+                Find.WindowStack.Add(new Dialog_AddBill(SelFactory));
+            // Return a single dummy option — DoListing requires a non-null non-empty list
+            return [new FloatMenuOption("", null)];
         }
     }
 
