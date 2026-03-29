@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <!-- Mech Dock: wall-integrated mech charging door -->
+    <ThingDef MayRequire="Ludeon.RimWorld.Biotech" ParentName="DoorBase">
+        <defName>PS_MechDock</defName>
+        <label>mech dock</label>
+        <description>A powered wall dock designed to house and charge a single mechanoid. The mech will automatically enter to recharge when it has no work, and exit when work is available and its charge is sufficient.</description>
+        <thingClass>PawnStorages.Building_PawnDoor</thingClass>
+        <altitudeLayer>BuildingOnTop</altitudeLayer>
+        <passability>Standable</passability>
+        <pathCost>0</pathCost>
+        <rotatable>true</rotatable>
+        <clearBuildingArea>false</clearBuildingArea>
+        <fillPercent>0.50</fillPercent>
+        <holdsRoof>false</holdsRoof>
+        <building>
+            <isEdifice>false</isEdifice>
+        </building>
+        <statBases>
+            <WorkToBuild>1200</WorkToBuild>
+            <MaxHitPoints>200</MaxHitPoints>
+            <Flammability>0.5</Flammability>
+        </statBases>
+        <graphicData>
+            <texPath>Things/Building/PawnHatch/PawnDoor_Open</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <damageData>
+                <enabled>false</enabled>
+            </damageData>
+        </graphicData>
+        <uiIconPath>Things/Building/Door/DoorSimple_MenuIcon</uiIconPath>
+        <costList>
+            <Steel>100</Steel>
+            <Plasteel>25</Plasteel>
+            <ComponentIndustrial>4</ComponentIndustrial>
+        </costList>
+        <designationCategory>Production</designationCategory>
+        <comps>
+            <li Class="PawnStorages.Mech.CompProperties_MechStorage">
+                <needsDrop>false</needsDrop>
+                <maxStoredPawns>1</maxStoredPawns>
+                <releaseOption>true</releaseOption>
+                <releaseAllOption>true</releaseAllOption>
+                <convertOption>true</convertOption>
+                <canBeScheduled>true</canBeScheduled>
+                <mechEnterThreshold>0.3</mechEnterThreshold>
+                <mechMinExitThreshold>0.5</mechMinExitThreshold>
+                <mechCheckWorkInterval>500</mechCheckWorkInterval>
+                <mechChargeRate>0.0002</mechChargeRate>
+            </li>
+            <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
+                <drawAssignmentOverlay>false</drawAssignmentOverlay>
+                <compClass>PawnStorages.CompAssignableToPawn_PawnStorage</compClass>
+                <maxAssignedPawnsCount>1</maxAssignedPawnsCount>
+                <colonyMechsOnly>true</colonyMechsOnly>
+                <showGizmo>true</showGizmo>
+            </li>
+            <li Class="CompProperties_Power">
+                <compClass>CompPowerTrader</compClass>
+                <basePowerConsumption>200</basePowerConsumption>
+                <shortCircuitInRain>false</shortCircuitInRain>
+            </li>
+            <li Class="CompProperties_Flickable" />
+        </comps>
+        <placeWorkers>
+            <li>PawnStorages.PlaceWorker_WallDoor</li>
+        </placeWorkers>
+        <modExtensions>
+            <li Class="PawnStorages.PSExtension">
+                <extraGraphicData>
+                    <texPath>Things/Building/PawnHatch/PawnDoor_Closed</texPath>
+                    <graphicClass>Graphic_Single</graphicClass>
+                    <damageData>
+                        <enabled>false</enabled>
+                    </damageData>
+                </extraGraphicData>
+            </li>
+        </modExtensions>
+    </ThingDef>
+
+    <!-- Mech Bay: standalone mech charging station -->
+    <ThingDef MayRequire="Ludeon.RimWorld.Biotech" ParentName="BuildingBase">
+        <defName>PS_MechBay</defName>
+        <label>mech bay</label>
+        <description>A standalone powered bay that houses and charges a single mechanoid. The mech will automatically enter to recharge when it has no work, and exit when work is available and its charge is sufficient.</description>
+        <thingClass>PawnStorages.Building_PawnStorage</thingClass>
+        <graphicData>
+            <texPath>Things/Building/PawnHatch/PawnDoor_Open</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <drawSize>(2,2)</drawSize>
+        </graphicData>
+        <drawerType>MapMeshAndRealTime</drawerType>
+        <size>(2,2)</size>
+        <tickerType>Normal</tickerType>
+        <altitudeLayer>Building</altitudeLayer>
+        <passability>PassThroughOnly</passability>
+        <pathCost>50</pathCost>
+        <blockWind>false</blockWind>
+        <rotatable>true</rotatable>
+        <fillPercent>0.5</fillPercent>
+        <statBases>
+            <WorkToBuild>1800</WorkToBuild>
+            <MaxHitPoints>300</MaxHitPoints>
+            <Flammability>0.5</Flammability>
+        </statBases>
+        <costList>
+            <Steel>150</Steel>
+            <Plasteel>50</Plasteel>
+            <ComponentIndustrial>6</ComponentIndustrial>
+        </costList>
+        <designationCategory>Production</designationCategory>
+        <comps>
+            <li Class="PawnStorages.Mech.CompProperties_MechStorage">
+                <needsDrop>false</needsDrop>
+                <maxStoredPawns>1</maxStoredPawns>
+                <releaseOption>true</releaseOption>
+                <releaseAllOption>true</releaseAllOption>
+                <convertOption>true</convertOption>
+                <canBeScheduled>true</canBeScheduled>
+                <mechEnterThreshold>0.3</mechEnterThreshold>
+                <mechMinExitThreshold>0.5</mechMinExitThreshold>
+                <mechCheckWorkInterval>500</mechCheckWorkInterval>
+                <mechChargeRate>0.0002</mechChargeRate>
+            </li>
+            <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
+                <drawAssignmentOverlay>false</drawAssignmentOverlay>
+                <compClass>PawnStorages.CompAssignableToPawn_PawnStorage</compClass>
+                <maxAssignedPawnsCount>1</maxAssignedPawnsCount>
+                <colonyMechsOnly>true</colonyMechsOnly>
+                <showGizmo>true</showGizmo>
+            </li>
+            <li Class="CompProperties_Power">
+                <compClass>CompPowerTrader</compClass>
+                <basePowerConsumption>200</basePowerConsumption>
+                <shortCircuitInRain>false</shortCircuitInRain>
+            </li>
+            <li Class="CompProperties_Flickable" />
+        </comps>
+    </ThingDef>
+
+</Defs>
