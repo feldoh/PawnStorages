@@ -23,7 +23,12 @@
 
 	<PS_MechCharging>{0}: {1}</PS_MechCharging>
 	<PS_Settings_MechCheckWorkInterval>Mech work check interval (ticks): {0}</PS_Settings_MechCheckWorkInterval>
+	<PS_Settings_MechChargeRate>Mech charge rate (energy/day): {0}</PS_Settings_MechChargeRate>
+	<PS_Settings_MechRepairRate>Mech repair rate (HP/day): {0}</PS_Settings_MechRepairRate>
+	<PS_Settings_MechRepairPartTicks>Time to restore missing part (days): {0}</PS_Settings_MechRepairPartTicks>
 	<PS_MechNoPower>No power - mechs will not charge.</PS_MechNoPower>
+	<PS_MechRepairing>{0}: repairing</PS_MechRepairing>
+	<PS_MechDamaged>{0}: damaged (needs power to repair)</PS_MechDamaged>
 
 	<PS_ReleaseReportA>Releasing {0} from {1} at {2}</PS_ReleaseReportA>
 	<PS_ReleaseReportB>Releasing all colonists from {0} at {1}</PS_ReleaseReportB>

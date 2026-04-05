@@ -49,19 +49,21 @@ public class CompMechStorage : CompPawnStorage
             return energy.CurLevel;
 
         int ticksStored = Find.TickManager.TicksGame - storedAtTick;
-        return Mathf.Min(energy.MaxLevel, energy.CurLevel + Props.mechChargeRate * ticksStored);
+        return Mathf.Min(energy.MaxLevel, energy.CurLevel + PawnStoragesMod.settings.MechChargeRate * ticksStored);
     }
 
     /// <summary>
-    /// When power is lost, immediately apply any accumulated charge to stored mechs
-    /// and reset their storedAtTick. This prevents unpowered time from counting as
-    /// charging time in the deferred projection math.
+    /// Handles power state changes for stored mechs:
+    /// - PowerTurnedOff: apply accumulated charge immediately and reset baseline,
+    ///   so unpowered time doesn't count as charging.
+    /// - PowerTurnedOn: reset baseline to now, so the unpowered gap between
+    ///   power-off and power-on isn't counted as charging time.
     /// </summary>
     public override void ReceiveCompSignal(string signal)
     {
         base.ReceiveCompSignal(signal);
 
-        if (signal != "PowerTurnedOff")
+        if (signal != "PowerTurnedOff" && signal != "PowerTurnedOn")
             return;
         if (!ModsConfig.BiotechActive)
             return;
@@ -75,20 +77,80 @@ public class CompMechStorage : CompPawnStorage
             if (!mechStoringTick.TryGetValue(pawn.thingIDNumber, out int storedAtTick))
                 continue;
 
-            int ticksCharged = now - storedAtTick;
-            if (ticksCharged <= 0)
-                continue;
+            if (signal == "PowerTurnedOff")
+            {
+                int ticksCharged = now - storedAtTick;
+                if (ticksCharged > 0)
+                {
+                    // Apply charge first (repair costs energy)
+                    var energy = pawn.needs?.TryGetNeed<Need_MechEnergy>();
+                    if (energy != null)
+                        energy.CurLevel = Mathf.Min(energy.MaxLevel, energy.CurLevel + PawnStoragesMod.settings.MechChargeRate * ticksCharged);
 
-            var energy = pawn.needs?.TryGetNeed<Need_MechEnergy>();
-            if (energy == null)
-                continue;
+                    // Apply repair for powered duration
+                    ApplyRepair(pawn, ticksCharged);
+                }
+            }
 
-            energy.CurLevel = Mathf.Min(energy.MaxLevel, energy.CurLevel + Props.mechChargeRate * ticksCharged);
-            // Reset baseline so unpowered time doesn't count
+            // Both cases: reset baseline to now
             mechStoringTick[pawn.thingIDNumber] = now;
         }
     }
 
+    /// <summary>
+    /// Apply repairs for the given number of powered ticks.
+    /// Injuries heal at MechRepairRate HP/tick. Missing parts and weapons each
+    /// take MechRepairPartTicks of powered time to restore.
+    /// Deducts MechEnergyLossPerHP from energy per HP healed (vanilla balance).
+    /// </summary>
+    private void ApplyRepair(Pawn pawn, int ticksStored)
+    {
+        if (ticksStored <= 0) return;
+        if (PawnStoragesMod.settings.MechRepairRate <= 0f) return;
+        if (pawn.TryGetComp<CompMechRepairable>() == null) return;
+
+        var energy = pawn.needs?.TryGetNeed<Need_MechEnergy>();
+        float energyCostPerHP = pawn.GetStatValue(StatDefOf.MechEnergyLossPerHP);
+        float repairHP = ticksStored * PawnStoragesMod.settings.MechRepairRate;
+        int ticksRemaining = ticksStored;
+        int partTicks = PawnStoragesMod.settings.MechRepairPartTicks;
+
+        while (MechRepairUtility.CanRepair(pawn))
+        {
+            Hediff hediff = MechRepairUtility.GetHediffToHeal(pawn);
+            if (hediff is Hediff_Injury injury)
+            {
+                if (repairHP <= 0f) break;
+                float healAmount = Mathf.Min(injury.Severity, repairHP);
+                float energyCost = healAmount * energyCostPerHP;
+                if (energy != null && energy.CurLevel < energyCost) break;
+
+                injury.Heal(healAmount);
+                repairHP -= healAmount;
+                if (energy != null) energy.CurLevel -= energyCost;
+            }
+            else if (hediff is Hediff_MissingPart)
+            {
+                if (ticksRemaining < partTicks) break;
+                pawn.health.RemoveHediff(hediff);
+                ticksRemaining -= partTicks;
+            }
+            else if (MechRepairUtility.IsMissingWeapon(pawn))
+            {
+                if (ticksRemaining < partTicks) break;
+                MechRepairUtility.GenerateWeapon(pawn);
+                ticksRemaining -= partTicks;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Apply charge and repair for the stored duration. Called on pawn release.
+    /// </summary>
     public override void ApplyNeedsForStoredPeriodFor(Pawn pawn)
     {
         base.ApplyNeedsForStoredPeriodFor(pawn);
@@ -107,11 +169,13 @@ public class CompMechStorage : CompPawnStorage
         if (ticksStored <= 0)
             return;
 
+        // Apply charge first (repair costs energy, so charge must come first)
         var energy = pawn.needs?.TryGetNeed<Need_MechEnergy>();
-        if (energy == null)
-            return;
+        if (energy != null)
+            energy.CurLevel = Mathf.Min(energy.MaxLevel, energy.CurLevel + PawnStoragesMod.settings.MechChargeRate * ticksStored);
 
-        energy.CurLevel = Mathf.Min(energy.MaxLevel, energy.CurLevel + Props.mechChargeRate * ticksStored);
+        // Apply deferred repair
+        ApplyRepair(pawn, ticksStored);
     }
 
     public override void CompTick()
@@ -159,6 +223,9 @@ public class CompMechStorage : CompPawnStorage
         if (!ModsConfig.BiotechActive)
             return sb.ToString().TrimStart().TrimEnd();
 
+        var powerTrader = parent.TryGetComp<CompPowerTrader>();
+        bool powered = powerTrader?.PowerOn == true;
+
         foreach (Pawn pawn in innerContainer)
         {
             if (!pawn.IsColonyMech)
@@ -168,10 +235,17 @@ public class CompMechStorage : CompPawnStorage
                 continue;
             float projectedPct = GetProjectedEnergyLevel(pawn) / energy.MaxLevel;
             sb.AppendLine("PS_MechCharging".Translate(pawn.LabelShort, projectedPct.ToStringPercent()));
+
+            if (MechRepairUtility.CanRepair(pawn))
+            {
+                if (powered)
+                    sb.AppendLine("PS_MechRepairing".Translate(pawn.LabelShort));
+                else
+                    sb.AppendLine("PS_MechDamaged".Translate(pawn.LabelShort));
+            }
         }
 
-        var powerTrader = parent.TryGetComp<CompPowerTrader>();
-        if (powerTrader?.PowerOn == false && innerContainer.Any<Pawn>())
+        if (!powered && innerContainer.Any<Pawn>())
             sb.AppendLine("PS_MechNoPower".Translate());
 
         return sb.ToString().TrimStart().TrimEnd();

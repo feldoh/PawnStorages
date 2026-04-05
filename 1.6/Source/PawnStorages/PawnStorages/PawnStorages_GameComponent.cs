@@ -1,16 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using PawnStorages.Farm.Comps;
-using RimWorld;
 using Verse;
-using Verse.AI;
 
 namespace PawnStorages;
 
 public class PawnStorages_GameComponent : GameComponent
 {
-    private static HashSet<CompAssignableToPawn_PawnStorage> _CompAssignables = [];
-
     public static bool AssignablesDirty = false;
 
     public static HashSet<CompAssignableToPawn_PawnStorage> CompAssignables
@@ -18,20 +13,20 @@ public class PawnStorages_GameComponent : GameComponent
         get
         {
             if (!AssignablesDirty)
-                return _CompAssignables;
+                return field;
 
-            _CompAssignables.Clear();
+            field.Clear();
             foreach (CompAssignableToPawn_PawnStorage comp in Find.CurrentMap.spawnedThings.Select(thing => thing.TryGetComp<CompAssignableToPawn_PawnStorage>()))
             {
                 if (comp != null)
-                    _CompAssignables.Add(comp);
+                    field.Add(comp);
             }
 
             AssignablesDirty = false;
 
-            return _CompAssignables;
+            return field;
         }
-    }
+    } = [];
 
     public static CompAssignableToPawn_PawnStorage GetAssignedStorage(Pawn pawn) => CompAssignables.FirstOrDefault(x => x.AssignedPawns.Contains(pawn));
 

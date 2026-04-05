@@ -38,7 +38,7 @@
         <GitMeta Include="../../../../.git*">
             <Link>Files/%(RecursiveDir)%(Filename)%(Extension)</Link>
         </GitMeta>
-        <CompatibilityFiles Include="../../../../Compatibility/**">
+        <CompatibilityFiles Include="../../../../Compatibility/**" Exclude="../../../../Compatibility/**/*.pdb">
             <Link>Files/Compatibility/%(RecursiveDir)%(Filename)%(Extension)</Link>
         </CompatibilityFiles>
         <None Include="../../../../.editorconfig" />

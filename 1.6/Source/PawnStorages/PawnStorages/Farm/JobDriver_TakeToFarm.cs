@@ -39,13 +39,6 @@ public class JobDriver_TakeToFarm : JobDriver
             .FailOnSomeonePhysicallyInteracting(TargetIndex.A);
         yield return goToTakee;
         Toil startCarrying = Toils_Haul.StartCarryThing(TakeeIndex);
-        startCarrying.AddFinishAction(
-            delegate
-            {
-                if (job.def == PS_DefOf.PS_CaptureEntityInPawnStorage || job.def == PS_DefOf.PS_CaptureAnimalInPawnStorage)
-                    return;
-            }
-        );
         startCarrying.debugName = "startCarrying";
         Toil goToStorage = Toils_Goto.GotoThing(StorageIndex, PathEndMode.Touch).FailOn(() => !pawn.IsCarryingPawn(Takee));
         goToStorage.FailOnDespawnedNullOrForbidden(StorageIndex);

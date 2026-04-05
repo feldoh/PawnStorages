@@ -207,7 +207,7 @@ public class Projectile_Capturing : Projectile
     {
         RunEffector();
         ball = (ThingWithComps)GenSpawn.Spawn(equipmentDef, HitThing.Position, ThingMap, WipeMode.VanishOrMoveAside);
-        if (!ball.TryGetComp<CompPawnStorage>(out CompPawnStorage comp))
+        if (!ball.TryGetComp(out CompPawnStorage comp))
             return false;
         if (comp?.CanAssign(pawn, true) ?? false)
         {

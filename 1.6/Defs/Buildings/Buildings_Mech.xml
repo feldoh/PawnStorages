@@ -6,7 +6,7 @@
     <ThingDef MayRequire="Ludeon.RimWorld.Biotech" ParentName="DoorBase">
         <defName>PS_MechDock</defName>
         <label>mech dock</label>
-        <description>A powered wall dock designed to house and charge a single mechanoid. The mech will automatically enter to recharge when it has no work, and exit when work is available and its charge is sufficient.</description>
+        <description>A powered wall dock designed to house, charge, and repair a single mechanoid. The mech will automatically enter to recharge when it has no work, and exit when work is available and its charge is sufficient. Damaged mechs are slowly repaired while stored.</description>
         <thingClass>PawnStorages.Building_PawnDoor</thingClass>
         <altitudeLayer>BuildingOnTop</altitudeLayer>
         <passability>Standable</passability>
@@ -46,7 +46,6 @@
                 <canBeScheduled>true</canBeScheduled>
                 <mechEnterThreshold>0.3</mechEnterThreshold>
                 <mechMinExitThreshold>0.5</mechMinExitThreshold>
-                <mechChargeRate>0.00083333</mechChargeRate>
             </li>
             <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
                 <drawAssignmentOverlay>false</drawAssignmentOverlay>
@@ -82,7 +81,7 @@
     <ThingDef MayRequire="Ludeon.RimWorld.Biotech" ParentName="BuildingBase">
         <defName>PS_MechCharger</defName>
         <label>mech charger</label>
-        <description>A compact powered station that houses and charges a single mechanoid. The mech will automatically enter to recharge when it has no work, and exit when work is available and its charge is sufficient.</description>
+        <description>A compact powered station that houses, charges, and repairs a single mechanoid. The mech will automatically enter to recharge when it has no work, and exit when work is available and its charge is sufficient. Damaged mechs are slowly repaired while stored.</description>
         <thingClass>PawnStorages.Building_PawnStorage</thingClass>
         <graphicData>
             <texPath>Things/Building/PawnHatch/PawnHatch_Open</texPath>
@@ -116,7 +115,6 @@
                 <canBeScheduled>true</canBeScheduled>
                 <mechEnterThreshold>0.3</mechEnterThreshold>
                 <mechMinExitThreshold>0.5</mechMinExitThreshold>
-                <mechChargeRate>0.00083333</mechChargeRate>
             </li>
             <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
                 <drawAssignmentOverlay>false</drawAssignmentOverlay>
@@ -146,7 +144,7 @@
     <ThingDef MayRequire="Ludeon.RimWorld.Biotech" ParentName="BuildingBase">
         <defName>PS_MechBay</defName>
         <label>mech bay</label>
-        <description>A large powered bay that can house and charge up to eight mechanoids simultaneously. The mechs will automatically enter to recharge when they have no work, and exit when work is available and their charge is sufficient.</description>
+        <description>A large powered bay that can house, charge, and repair up to eight mechanoids simultaneously. The mechs will automatically enter to recharge when they have no work, and exit when work is available and their charge is sufficient. Damaged mechs are slowly repaired while stored.</description>
         <thingClass>PawnStorages.Building_PawnStorage</thingClass>
         <graphicData>
             <texPath>Things/Building/PawnHatch/PawnHatch_Open</texPath>
@@ -182,7 +180,6 @@
                 <canBeScheduled>true</canBeScheduled>
                 <mechEnterThreshold>0.3</mechEnterThreshold>
                 <mechMinExitThreshold>0.5</mechMinExitThreshold>
-                <mechChargeRate>0.00083333</mechChargeRate>
             </li>
             <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
                 <drawAssignmentOverlay>false</drawAssignmentOverlay>
