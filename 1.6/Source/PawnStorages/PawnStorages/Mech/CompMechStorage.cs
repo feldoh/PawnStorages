@@ -9,7 +9,6 @@ namespace PawnStorages.Mech;
 
 public class CompMechStorage : CompPawnStorage
 {
-    // Separate tick tracking for mech energy charging (base class dict is private)
     private Dictionary<int, int> mechStoringTick = new();
 
     public new CompProperties_MechStorage Props => props as CompProperties_MechStorage;
@@ -34,13 +33,32 @@ public class CompMechStorage : CompPawnStorage
             mechStoringTick.SetOrAdd(pawn.thingIDNumber, Find.TickManager.TicksGame);
     }
 
+    /// <summary>
+    /// Returns the energy level this mech would have if released right now,
+    /// accounting for charge accumulated while stored. Cheap math, no per-tick cost.
+    /// </summary>
+    public float GetProjectedEnergyLevel(Pawn pawn)
+    {
+        var energy = pawn.needs?.TryGetNeed<Need_MechEnergy>();
+        if (energy == null) return 0f;
+
+        if (!mechStoringTick.TryGetValue(pawn.thingIDNumber, out int storedAtTick))
+            return energy.CurLevel;
+
+        var powerTrader = parent.TryGetComp<CompPowerTrader>();
+        if (powerTrader?.PowerOn != true)
+            return energy.CurLevel;
+
+        int ticksStored = Find.TickManager.TicksGame - storedAtTick;
+        return Mathf.Min(energy.MaxLevel, energy.CurLevel + Props.mechChargeRate * ticksStored);
+    }
+
     public override void ApplyNeedsForStoredPeriodFor(Pawn pawn)
     {
         base.ApplyNeedsForStoredPeriodFor(pawn);
 
         if (!ModsConfig.BiotechActive || !pawn.IsColonyMech)
             return;
-
         if (!mechStoringTick.TryGetValue(pawn.thingIDNumber, out int storedAtTick))
             return;
         mechStoringTick.Remove(pawn.thingIDNumber);
@@ -68,7 +86,11 @@ public class CompMechStorage : CompPawnStorage
             return;
         if (!schedulingEnabled || compAssignable == null)
             return;
-        if (!parent.IsHashIntervalTick(Props.mechCheckWorkInterval))
+        if (!parent.IsHashIntervalTick(PawnStoragesMod.settings.MechCheckWorkInterval))
+            return;
+
+        var tracker = parent.Map?.GetComponent<MechWorkTracker>();
+        if (tracker == null)
             return;
 
         foreach (Pawn pawn in compAssignable.AssignedPawns.ToList())
@@ -77,25 +99,19 @@ public class CompMechStorage : CompPawnStorage
                 continue;
 
             var energy = pawn.needs?.TryGetNeed<Need_MechEnergy>();
-            if (energy == null || energy.CurLevelPercentage < Props.mechMinExitThreshold)
+            if (energy == null)
                 continue;
 
-            if (HasWorkAvailable())
+            float projectedPct = GetProjectedEnergyLevel(pawn) / energy.MaxLevel;
+            if (projectedPct < Props.mechMinExitThreshold)
+                continue;
+
+            bool hasWork = tracker.HasWorkForMech(pawn);
+            if (PawnStoragesMod.settings.DebugLogging)
+                Log.Message($"[CompMechStorage] {pawn.LabelShort}: projectedPct={projectedPct:P1}, hasWork={hasWork}, releasing={hasWork}");
+            if (hasWork)
                 ReleasePawn(pawn, parent.Position, parent.Map);
         }
-    }
-
-    // Cheap broad check: are there things that might need doing on this map?
-    private bool HasWorkAvailable()
-    {
-        Map map = parent.Map;
-        if (map == null) return false;
-
-        if (map.listerHaulables.ThingsPotentiallyNeedingHauling().Count > 0) return true;
-        if (map.designationManager.AnySpawnedDesignationOfDef(DesignationDefOf.Mine)) return true;
-        if (map.designationManager.AnySpawnedDesignationOfDef(DesignationDefOf.Deconstruct)) return true;
-        if (map.listerBuildingsRepairable.RepairableBuildings(Faction.OfPlayer).Any()) return true;
-        return false;
     }
 
     public override string PawnTypeLabel => "PS_StoredMechs".Translate();
@@ -112,7 +128,8 @@ public class CompMechStorage : CompPawnStorage
             if (!pawn.IsColonyMech) continue;
             var energy = pawn.needs?.TryGetNeed<Need_MechEnergy>();
             if (energy == null) continue;
-            sb.AppendLine("PS_MechCharging".Translate(pawn.LabelShort, energy.CurLevelPercentage.ToStringPercent()));
+            float projectedPct = GetProjectedEnergyLevel(pawn) / energy.MaxLevel;
+            sb.AppendLine("PS_MechCharging".Translate(pawn.LabelShort, projectedPct.ToStringPercent()));
         }
 
         var powerTrader = parent.TryGetComp<CompPowerTrader>();

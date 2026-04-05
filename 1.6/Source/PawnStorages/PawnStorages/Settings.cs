@@ -20,6 +20,7 @@ public class Settings : ModSettings
     public bool SuggestiveSilo = false;
     public bool RusticFarms = false;
     public bool DebugLogging = false;
+    public int MechCheckWorkInterval = 500;
 
     public const float GapHeight = 8f;
 
@@ -69,6 +70,13 @@ public class Settings : ModSettings
         options.Label("PS_Settings_Farm_ProductionsPerDay".Translate(ProductionsPerDay));
         options.IntAdjuster(ref ProductionsPerDay, 1, 1);
         options.Gap(GapHeight);
+        if (ModsConfig.BiotechActive)
+        {
+            options.Label("PS_Settings_MechCheckWorkInterval".Translate(MechCheckWorkInterval));
+            options.IntAdjuster(ref MechCheckWorkInterval, 50, 50);
+            if (MechCheckWorkInterval < 50) MechCheckWorkInterval = 50;
+            options.Gap(GapHeight);
+        }
 
         options.Gap(GapHeight);
         if (options.ButtonText("PS_Reset".Translate()))
@@ -88,6 +96,7 @@ public class Settings : ModSettings
             SuggestiveSilo = false;
             RusticFarms = false;
             DebugLogging = false;
+            MechCheckWorkInterval = 500;
         }
 
         options.End();
@@ -113,6 +122,7 @@ public class Settings : ModSettings
         Scribe_Values.Look(ref SuggestiveSilo, "SuggestiveSilo", false);
         Scribe_Values.Look(ref RusticFarms, "RusticFarms", false);
         Scribe_Values.Look(ref DebugLogging, "DebugLogging", false);
+        Scribe_Values.Look(ref MechCheckWorkInterval, "MechCheckWorkInterval", 500);
         Scribe_Values.Look(ref ForcedPawn, "ForcedPawn", "");
     }
 }

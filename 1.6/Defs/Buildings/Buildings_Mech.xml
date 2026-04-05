@@ -32,11 +32,10 @@
         </graphicData>
         <uiIconPath>Things/Building/Door/DoorSimple_MenuIcon</uiIconPath>
         <costList>
-            <Steel>100</Steel>
-            <Plasteel>25</Plasteel>
-            <ComponentIndustrial>4</ComponentIndustrial>
+            <Steel>125</Steel>
+            <ComponentIndustrial>1</ComponentIndustrial>
         </costList>
-        <designationCategory>Production</designationCategory>
+        <designationCategory>Biotech</designationCategory>
         <comps>
             <li Class="PawnStorages.Mech.CompProperties_MechStorage">
                 <needsDrop>false</needsDrop>
@@ -47,8 +46,7 @@
                 <canBeScheduled>true</canBeScheduled>
                 <mechEnterThreshold>0.3</mechEnterThreshold>
                 <mechMinExitThreshold>0.5</mechMinExitThreshold>
-                <mechCheckWorkInterval>500</mechCheckWorkInterval>
-                <mechChargeRate>0.0002</mechChargeRate>
+                <mechChargeRate>0.00083333</mechChargeRate>
             </li>
             <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
                 <drawAssignmentOverlay>false</drawAssignmentOverlay>
@@ -80,19 +78,17 @@
         </modExtensions>
     </ThingDef>
 
-    <!-- Mech Bay: standalone mech charging station -->
+    <!-- Mech Charger: 1x1 single mech charging station -->
     <ThingDef MayRequire="Ludeon.RimWorld.Biotech" ParentName="BuildingBase">
-        <defName>PS_MechBay</defName>
-        <label>mech bay</label>
-        <description>A standalone powered bay that houses and charges a single mechanoid. The mech will automatically enter to recharge when it has no work, and exit when work is available and its charge is sufficient.</description>
+        <defName>PS_MechCharger</defName>
+        <label>mech charger</label>
+        <description>A compact powered station that houses and charges a single mechanoid. The mech will automatically enter to recharge when it has no work, and exit when work is available and its charge is sufficient.</description>
         <thingClass>PawnStorages.Building_PawnStorage</thingClass>
         <graphicData>
-            <texPath>Things/Building/PawnHatch/PawnDoor_Open</texPath>
+            <texPath>Things/Building/PawnHatch/PawnHatch_Open</texPath>
             <graphicClass>Graphic_Single</graphicClass>
-            <drawSize>(2,2)</drawSize>
         </graphicData>
         <drawerType>MapMeshAndRealTime</drawerType>
-        <size>(2,2)</size>
         <tickerType>Normal</tickerType>
         <altitudeLayer>Building</altitudeLayer>
         <passability>PassThroughOnly</passability>
@@ -101,16 +97,15 @@
         <rotatable>true</rotatable>
         <fillPercent>0.5</fillPercent>
         <statBases>
-            <WorkToBuild>1800</WorkToBuild>
-            <MaxHitPoints>300</MaxHitPoints>
+            <WorkToBuild>1200</WorkToBuild>
+            <MaxHitPoints>200</MaxHitPoints>
             <Flammability>0.5</Flammability>
         </statBases>
         <costList>
-            <Steel>150</Steel>
-            <Plasteel>50</Plasteel>
-            <ComponentIndustrial>6</ComponentIndustrial>
+            <Steel>125</Steel>
+            <ComponentIndustrial>1</ComponentIndustrial>
         </costList>
-        <designationCategory>Production</designationCategory>
+        <designationCategory>Biotech</designationCategory>
         <comps>
             <li Class="PawnStorages.Mech.CompProperties_MechStorage">
                 <needsDrop>false</needsDrop>
@@ -121,8 +116,7 @@
                 <canBeScheduled>true</canBeScheduled>
                 <mechEnterThreshold>0.3</mechEnterThreshold>
                 <mechMinExitThreshold>0.5</mechMinExitThreshold>
-                <mechCheckWorkInterval>500</mechCheckWorkInterval>
-                <mechChargeRate>0.0002</mechChargeRate>
+                <mechChargeRate>0.00083333</mechChargeRate>
             </li>
             <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
                 <drawAssignmentOverlay>false</drawAssignmentOverlay>
@@ -138,6 +132,81 @@
             </li>
             <li Class="CompProperties_Flickable" />
         </comps>
+        <modExtensions>
+            <li Class="PawnStorages.PSExtension">
+                <extraGraphicData>
+                    <texPath>Things/Building/PawnHatch/PawnHatch_Closed</texPath>
+                    <graphicClass>Graphic_Single</graphicClass>
+                </extraGraphicData>
+            </li>
+        </modExtensions>
+    </ThingDef>
+
+    <!-- Mech Bay: 2x2 multi-mech charging station -->
+    <ThingDef MayRequire="Ludeon.RimWorld.Biotech" ParentName="BuildingBase">
+        <defName>PS_MechBay</defName>
+        <label>mech bay</label>
+        <description>A large powered bay that can house and charge up to eight mechanoids simultaneously. The mechs will automatically enter to recharge when they have no work, and exit when work is available and their charge is sufficient.</description>
+        <thingClass>PawnStorages.Building_PawnStorage</thingClass>
+        <graphicData>
+            <texPath>Things/Building/PawnHatch/PawnHatch_Open</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <drawSize>(2,2)</drawSize>
+        </graphicData>
+        <drawerType>MapMeshAndRealTime</drawerType>
+        <size>(2,2)</size>
+        <tickerType>Normal</tickerType>
+        <altitudeLayer>Building</altitudeLayer>
+        <passability>PassThroughOnly</passability>
+        <pathCost>50</pathCost>
+        <blockWind>false</blockWind>
+        <rotatable>true</rotatable>
+        <fillPercent>0.5</fillPercent>
+        <statBases>
+            <WorkToBuild>2400</WorkToBuild>
+            <MaxHitPoints>400</MaxHitPoints>
+            <Flammability>0.5</Flammability>
+        </statBases>
+        <costList>
+            <Steel>250</Steel>
+            <ComponentIndustrial>2</ComponentIndustrial>
+        </costList>
+        <designationCategory>Biotech</designationCategory>
+        <comps>
+            <li Class="PawnStorages.Mech.CompProperties_MechStorage">
+                <needsDrop>false</needsDrop>
+                <maxStoredPawns>8</maxStoredPawns>
+                <releaseOption>true</releaseOption>
+                <releaseAllOption>true</releaseAllOption>
+                <convertOption>true</convertOption>
+                <canBeScheduled>true</canBeScheduled>
+                <mechEnterThreshold>0.3</mechEnterThreshold>
+                <mechMinExitThreshold>0.5</mechMinExitThreshold>
+                <mechChargeRate>0.00083333</mechChargeRate>
+            </li>
+            <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
+                <drawAssignmentOverlay>false</drawAssignmentOverlay>
+                <compClass>PawnStorages.CompAssignableToPawn_PawnStorage</compClass>
+                <maxAssignedPawnsCount>8</maxAssignedPawnsCount>
+                <colonyMechsOnly>true</colonyMechsOnly>
+                <showGizmo>true</showGizmo>
+            </li>
+            <li Class="CompProperties_Power">
+                <compClass>CompPowerTrader</compClass>
+                <basePowerConsumption>400</basePowerConsumption>
+                <shortCircuitInRain>false</shortCircuitInRain>
+            </li>
+            <li Class="CompProperties_Flickable" />
+        </comps>
+        <modExtensions>
+            <li Class="PawnStorages.PSExtension">
+                <extraGraphicData>
+                    <texPath>Things/Building/PawnHatch/PawnHatch_Closed</texPath>
+                    <graphicClass>Graphic_Single</graphicClass>
+                    <drawSize>(2,2)</drawSize>
+                </extraGraphicData>
+            </li>
+        </modExtensions>
     </ThingDef>
 
 </Defs>
