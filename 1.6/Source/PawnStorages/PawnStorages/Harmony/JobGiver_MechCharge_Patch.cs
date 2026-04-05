@@ -23,6 +23,11 @@ public static class JobGiver_GetEnergy_Charger_Patch
         if (assignedStorage?.parent?.TryGetComp<CompMechStorage>() is not { } mechStorage)
             return true;
 
+        // Don't redirect to an unpowered storage — let it find a vanilla charger
+        var powerTrader = mechStorage.parent.TryGetComp<CompPowerTrader>();
+        if (powerTrader?.PowerOn != true)
+            return true;
+
         // Only redirect if the mech's energy is below the enter threshold
         var energy = pawn.needs?.TryGetNeed<Need_MechEnergy>();
         if (energy == null || energy.CurLevelPercentage >= mechStorage.Props.mechEnterThreshold)

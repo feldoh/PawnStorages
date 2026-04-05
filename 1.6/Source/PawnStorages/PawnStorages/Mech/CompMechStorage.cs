@@ -14,9 +14,7 @@ public class CompMechStorage : CompPawnStorage
     public new CompProperties_MechStorage Props => props as CompProperties_MechStorage;
 
     public override bool CanAssign(Pawn pawn, bool couldMakePrisoner) =>
-        ModsConfig.BiotechActive
-        && pawn.IsColonyMech
-        && (compAssignable == null || compAssignable.AssignedPawns.Contains(pawn) || compAssignable.HasFreeSlot);
+        ModsConfig.BiotechActive && pawn.IsColonyMech && (compAssignable == null || compAssignable.AssignedPawns.Contains(pawn) || compAssignable.HasFreeSlot);
 
     public override void PostExposeData()
     {
@@ -40,7 +38,8 @@ public class CompMechStorage : CompPawnStorage
     public float GetProjectedEnergyLevel(Pawn pawn)
     {
         var energy = pawn.needs?.TryGetNeed<Need_MechEnergy>();
-        if (energy == null) return 0f;
+        if (energy == null)
+            return 0f;
 
         if (!mechStoringTick.TryGetValue(pawn.thingIDNumber, out int storedAtTick))
             return energy.CurLevel;
@@ -51,6 +50,43 @@ public class CompMechStorage : CompPawnStorage
 
         int ticksStored = Find.TickManager.TicksGame - storedAtTick;
         return Mathf.Min(energy.MaxLevel, energy.CurLevel + Props.mechChargeRate * ticksStored);
+    }
+
+    /// <summary>
+    /// When power is lost, immediately apply any accumulated charge to stored mechs
+    /// and reset their storedAtTick. This prevents unpowered time from counting as
+    /// charging time in the deferred projection math.
+    /// </summary>
+    public override void ReceiveCompSignal(string signal)
+    {
+        base.ReceiveCompSignal(signal);
+
+        if (signal != "PowerTurnedOff")
+            return;
+        if (!ModsConfig.BiotechActive)
+            return;
+
+        int now = Find.TickManager.TicksGame;
+
+        foreach (Pawn pawn in innerContainer)
+        {
+            if (!pawn.IsColonyMech)
+                continue;
+            if (!mechStoringTick.TryGetValue(pawn.thingIDNumber, out int storedAtTick))
+                continue;
+
+            int ticksCharged = now - storedAtTick;
+            if (ticksCharged <= 0)
+                continue;
+
+            var energy = pawn.needs?.TryGetNeed<Need_MechEnergy>();
+            if (energy == null)
+                continue;
+
+            energy.CurLevel = Mathf.Min(energy.MaxLevel, energy.CurLevel + Props.mechChargeRate * ticksCharged);
+            // Reset baseline so unpowered time doesn't count
+            mechStoringTick[pawn.thingIDNumber] = now;
+        }
     }
 
     public override void ApplyNeedsForStoredPeriodFor(Pawn pawn)
@@ -86,7 +122,7 @@ public class CompMechStorage : CompPawnStorage
             return;
         if (!schedulingEnabled || compAssignable == null)
             return;
-        if (!parent.IsHashIntervalTick(PawnStoragesMod.settings.MechCheckWorkInterval))
+        if (!parent.IsHashIntervalTick(Mathf.Max(100, PawnStoragesMod.settings.MechCheckWorkInterval)))
             return;
 
         var tracker = parent.Map?.GetComponent<MechWorkTracker>();
@@ -125,9 +161,11 @@ public class CompMechStorage : CompPawnStorage
 
         foreach (Pawn pawn in innerContainer)
         {
-            if (!pawn.IsColonyMech) continue;
+            if (!pawn.IsColonyMech)
+                continue;
             var energy = pawn.needs?.TryGetNeed<Need_MechEnergy>();
-            if (energy == null) continue;
+            if (energy == null)
+                continue;
             float projectedPct = GetProjectedEnergyLevel(pawn) / energy.MaxLevel;
             sb.AppendLine("PS_MechCharging".Translate(pawn.LabelShort, projectedPct.ToStringPercent()));
         }

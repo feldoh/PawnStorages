@@ -164,10 +164,10 @@ public class Building_PSFactory : Building, IStoreSettingsParent, INutritionStor
 
     public List<Pawn> AllHealthyPawns => StoredPawns.Select(p => p).Where(pawn => !pawn.health.Dead && !pawn.health.Downed).ToList();
 
-    public List<Pawn> ProducingPawns => !IsProducer ? [] : StoredPawns
-        .Where(pawn => !pawn.health.Dead && !pawn.health.Downed
-            && (pawn.ageTracker.Adult || (ModsConfig.BiotechActive && pawn.IsColonyMech)))
-        .ToList();
+    public List<Pawn> ProducingPawns =>
+        !IsProducer
+            ? []
+            : StoredPawns.Where(pawn => !pawn.health.Dead && !pawn.health.Downed && (pawn.ageTracker.Adult || (ModsConfig.BiotechActive && pawn.IsColonyMech))).ToList();
 
     public int BuildingTickInterval => 250;
 

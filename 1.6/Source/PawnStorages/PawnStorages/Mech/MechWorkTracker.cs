@@ -42,18 +42,22 @@ public class MechWorkTracker : MapComponent
         }
     }
 
-    public MechWorkTracker(Map map) : base(map) { }
+    public MechWorkTracker(Map map)
+        : base(map) { }
 
     private static void BuildStaticCaches()
     {
-        if (workersByWorkType != null) return;
+        if (workersByWorkType != null)
+            return;
 
         workersByWorkType = new Dictionary<WorkTypeDef, List<WorkGiverEntry>>();
 
         foreach (WorkGiverDef def in DefDatabase<WorkGiverDef>.AllDefs)
         {
-            if (def.workType == null) continue;
-            if (def.Worker is not WorkGiver_Scanner scanner) continue;
+            if (def.workType == null)
+                continue;
+            if (def.Worker is not WorkGiver_Scanner scanner)
+                continue;
 
             if (!workersByWorkType.TryGetValue(def.workType, out List<WorkGiverEntry> list))
             {
@@ -71,13 +75,16 @@ public class MechWorkTracker : MapComponent
     /// </summary>
     public bool HasWorkForMech(Pawn mech)
     {
-        if (!ModsConfig.BiotechActive) return false;
-        if (!mech.RaceProps.IsMechanoid) return false;
+        if (!ModsConfig.BiotechActive)
+            return false;
+        if (!mech.RaceProps.IsMechanoid)
+            return false;
 
         BuildStaticCaches();
 
         List<WorkTypeDef> mechWorkTypes = mech.RaceProps.mechEnabledWorkTypes;
-        if (mechWorkTypes.NullOrEmpty()) return false;
+        if (mechWorkTypes.NullOrEmpty())
+            return false;
 
         bool debug = PawnStoragesMod.settings.DebugLogging;
 
@@ -101,8 +108,7 @@ public class MechWorkTracker : MapComponent
 
                     // Fast pre-filter: if this WorkGiver has a concrete ThingRequest and
                     // zero matching things exist on the map, skip it entirely
-                    if (entry.Request.group != ThingRequestGroup.Undefined
-                        && map.listerThings.ThingsMatching(entry.Request).Count == 0)
+                    if (entry.Request.group != ThingRequestGroup.Undefined && map.listerThings.ThingsMatching(entry.Request).Count == 0)
                         continue;
 
                     // Authoritative check: ShouldSkip is what the game uses to gate work

@@ -73,8 +73,9 @@ public class Settings : ModSettings
         if (ModsConfig.BiotechActive)
         {
             options.Label("PS_Settings_MechCheckWorkInterval".Translate(MechCheckWorkInterval));
-            options.IntAdjuster(ref MechCheckWorkInterval, 50, 50);
-            if (MechCheckWorkInterval < 50) MechCheckWorkInterval = 50;
+            options.IntAdjuster(ref MechCheckWorkInterval, 50, 100);
+            if (MechCheckWorkInterval < 100)
+                MechCheckWorkInterval = 100;
             options.Gap(GapHeight);
         }
 
