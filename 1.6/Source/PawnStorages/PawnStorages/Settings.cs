@@ -21,10 +21,13 @@ public class Settings : ModSettings
     public bool RusticFarms = false;
     public bool DebugLogging = false;
     public int MechCheckWorkInterval = 500;
+
     // Vanilla: 0.00083333f/tick = 50 energy/day
     public float MechChargeRate = 0.00083333f;
+
     // 1 HP per 120 ticks, matching vanilla mechanitor repair speed
     public float MechRepairRate = 0.00833f;
+
     // Ticks of powered storage time to restore a missing body part
     // Default 72000 = ~1.2 in-game days
     public int MechRepairPartTicks = 72000;
