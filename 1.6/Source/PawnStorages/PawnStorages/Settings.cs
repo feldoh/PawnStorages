@@ -20,6 +20,17 @@ public class Settings : ModSettings
     public bool SuggestiveSilo = false;
     public bool RusticFarms = false;
     public bool DebugLogging = false;
+    public int MechCheckWorkInterval = 500;
+
+    // Vanilla: 0.00083333f/tick = 50 energy/day
+    public float MechChargeRate = 0.00083333f;
+
+    // 1 HP per 120 ticks, matching vanilla mechanitor repair speed
+    public float MechRepairRate = 0.00833f;
+
+    // Ticks of powered storage time to restore a missing body part
+    // Default 72000 = ~1.2 in-game days
+    public int MechRepairPartTicks = 72000;
 
     public const float GapHeight = 8f;
 
@@ -69,6 +80,23 @@ public class Settings : ModSettings
         options.Label("PS_Settings_Farm_ProductionsPerDay".Translate(ProductionsPerDay));
         options.IntAdjuster(ref ProductionsPerDay, 1, 1);
         options.Gap(GapHeight);
+        if (ModsConfig.BiotechActive)
+        {
+            options.Label("PS_Settings_MechCheckWorkInterval".Translate(MechCheckWorkInterval));
+            options.IntAdjuster(ref MechCheckWorkInterval, 50, 100);
+            if (MechCheckWorkInterval < 100)
+                MechCheckWorkInterval = 100;
+            options.Gap(GapHeight);
+            options.Label("PS_Settings_MechChargeRate".Translate((MechChargeRate * 60000f).ToString("F1")));
+            MechChargeRate = options.Slider(MechChargeRate, 0f, 0.005f);
+            options.Gap(GapHeight);
+            options.Label("PS_Settings_MechRepairRate".Translate((MechRepairRate * 60000f).ToString("F1")));
+            MechRepairRate = options.Slider(MechRepairRate, 0f, 0.05f);
+            options.Gap(GapHeight);
+            options.Label("PS_Settings_MechRepairPartTicks".Translate((MechRepairPartTicks / 60000f).ToString("F1")));
+            MechRepairPartTicks = Mathf.Max(1, Mathf.RoundToInt(options.Slider(MechRepairPartTicks, 6000, 300000)));
+            options.Gap(GapHeight);
+        }
 
         options.Gap(GapHeight);
         if (options.ButtonText("PS_Reset".Translate()))
@@ -88,6 +116,10 @@ public class Settings : ModSettings
             SuggestiveSilo = false;
             RusticFarms = false;
             DebugLogging = false;
+            MechCheckWorkInterval = 500;
+            MechChargeRate = 0.00083333f;
+            MechRepairRate = 0.00833f;
+            MechRepairPartTicks = 72000;
         }
 
         options.End();
@@ -113,6 +145,10 @@ public class Settings : ModSettings
         Scribe_Values.Look(ref SuggestiveSilo, "SuggestiveSilo", false);
         Scribe_Values.Look(ref RusticFarms, "RusticFarms", false);
         Scribe_Values.Look(ref DebugLogging, "DebugLogging", false);
+        Scribe_Values.Look(ref MechCheckWorkInterval, "MechCheckWorkInterval", 500);
+        Scribe_Values.Look(ref MechChargeRate, "MechChargeRate", 0.00083333f);
+        Scribe_Values.Look(ref MechRepairRate, "MechRepairRate", 0.00833f);
+        Scribe_Values.Look(ref MechRepairPartTicks, "MechRepairPartTicks", 72000);
         Scribe_Values.Look(ref ForcedPawn, "ForcedPawn", "");
     }
 }

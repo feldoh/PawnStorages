@@ -1,12 +1,11 @@
 ﻿using RimWorld;
-using UnityEngine;
-using Verse;
 
 namespace PawnStorages
 {
     public class CompProperties_PSAssignableToPawn : CompProperties_AssignableToPawn
     {
         public bool colonyAnimalsOnly = false;
+        public bool colonyMechsOnly = false;
         public bool toolUsersOnly = false;
         public bool disallowEntityStoringCommand = false;
         public bool showGizmo = true;

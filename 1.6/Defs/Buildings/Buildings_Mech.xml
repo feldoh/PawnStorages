@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <!-- Mech Dock: wall-integrated mech charging door -->
+    <ThingDef MayRequire="Ludeon.RimWorld.Biotech" ParentName="DoorBase">
+        <defName>PS_MechDock</defName>
+        <label>mech dock</label>
+        <description>A powered wall dock designed to house, charge, and repair a single mechanoid. The mech will automatically enter to recharge when it has no work, and exit when work is available and its charge is sufficient. Damaged mechs are slowly repaired while stored.</description>
+        <thingClass>PawnStorages.Building_PawnDoor</thingClass>
+        <altitudeLayer>BuildingOnTop</altitudeLayer>
+        <passability>Standable</passability>
+        <pathCost>0</pathCost>
+        <rotatable>true</rotatable>
+        <clearBuildingArea>false</clearBuildingArea>
+        <fillPercent>0.50</fillPercent>
+        <holdsRoof>false</holdsRoof>
+        <building>
+            <isEdifice>false</isEdifice>
+        </building>
+        <statBases>
+            <WorkToBuild>1200</WorkToBuild>
+            <MaxHitPoints>200</MaxHitPoints>
+            <Flammability>0.5</Flammability>
+        </statBases>
+        <graphicData>
+            <texPath>Things/Building/PawnHatch/PawnDoor_Open</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <damageData>
+                <enabled>false</enabled>
+            </damageData>
+        </graphicData>
+        <uiIconPath>Things/Building/Door/DoorSimple_MenuIcon</uiIconPath>
+        <costList>
+            <Steel>125</Steel>
+            <ComponentIndustrial>1</ComponentIndustrial>
+        </costList>
+        <designationCategory>Biotech</designationCategory>
+        <comps>
+            <li Class="PawnStorages.Mech.CompProperties_MechStorage">
+                <needsDrop>false</needsDrop>
+                <maxStoredPawns>1</maxStoredPawns>
+                <releaseOption>true</releaseOption>
+                <releaseAllOption>true</releaseAllOption>
+                <convertOption>true</convertOption>
+                <canBeScheduled>true</canBeScheduled>
+            </li>
+            <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
+                <drawAssignmentOverlay>false</drawAssignmentOverlay>
+                <compClass>PawnStorages.CompAssignableToPawn_PawnStorage</compClass>
+                <maxAssignedPawnsCount>1</maxAssignedPawnsCount>
+                <colonyMechsOnly>true</colonyMechsOnly>
+                <showGizmo>true</showGizmo>
+            </li>
+            <li Class="CompProperties_Power">
+                <compClass>CompPowerTrader</compClass>
+                <basePowerConsumption>200</basePowerConsumption>
+                <shortCircuitInRain>false</shortCircuitInRain>
+            </li>
+            <li Class="CompProperties_Flickable" />
+        </comps>
+        <placeWorkers>
+            <li>PawnStorages.PlaceWorker_WallDoor</li>
+        </placeWorkers>
+        <modExtensions>
+            <li Class="PawnStorages.PSExtension">
+                <extraGraphicData>
+                    <texPath>Things/Building/PawnHatch/PawnDoor_Closed</texPath>
+                    <graphicClass>Graphic_Single</graphicClass>
+                    <damageData>
+                        <enabled>false</enabled>
+                    </damageData>
+                </extraGraphicData>
+            </li>
+        </modExtensions>
+    </ThingDef>
+
+    <!-- Mech Charger: 1x1 single mech charging station -->
+    <ThingDef MayRequire="Ludeon.RimWorld.Biotech" ParentName="BuildingBase">
+        <defName>PS_MechCharger</defName>
+        <label>mech charger</label>
+        <description>A compact powered station that houses, charges, and repairs a single mechanoid. The mech will automatically enter to recharge when it has no work, and exit when work is available and its charge is sufficient. Damaged mechs are slowly repaired while stored.</description>
+        <thingClass>PawnStorages.Building_PawnStorage</thingClass>
+        <graphicData>
+            <texPath>Things/Building/PawnHatch/PawnHatch_Open</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+        </graphicData>
+        <drawerType>MapMeshAndRealTime</drawerType>
+        <tickerType>Normal</tickerType>
+        <altitudeLayer>Building</altitudeLayer>
+        <passability>PassThroughOnly</passability>
+        <pathCost>50</pathCost>
+        <blockWind>false</blockWind>
+        <rotatable>true</rotatable>
+        <fillPercent>0.5</fillPercent>
+        <statBases>
+            <WorkToBuild>1200</WorkToBuild>
+            <MaxHitPoints>200</MaxHitPoints>
+            <Flammability>0.5</Flammability>
+        </statBases>
+        <costList>
+            <Steel>125</Steel>
+            <ComponentIndustrial>1</ComponentIndustrial>
+        </costList>
+        <designationCategory>Biotech</designationCategory>
+        <comps>
+            <li Class="PawnStorages.Mech.CompProperties_MechStorage">
+                <needsDrop>false</needsDrop>
+                <maxStoredPawns>1</maxStoredPawns>
+                <releaseOption>true</releaseOption>
+                <releaseAllOption>true</releaseAllOption>
+                <convertOption>true</convertOption>
+                <canBeScheduled>true</canBeScheduled>
+            </li>
+            <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
+                <drawAssignmentOverlay>false</drawAssignmentOverlay>
+                <compClass>PawnStorages.CompAssignableToPawn_PawnStorage</compClass>
+                <maxAssignedPawnsCount>1</maxAssignedPawnsCount>
+                <colonyMechsOnly>true</colonyMechsOnly>
+                <showGizmo>true</showGizmo>
+            </li>
+            <li Class="CompProperties_Power">
+                <compClass>CompPowerTrader</compClass>
+                <basePowerConsumption>200</basePowerConsumption>
+                <shortCircuitInRain>false</shortCircuitInRain>
+            </li>
+            <li Class="CompProperties_Flickable" />
+        </comps>
+        <modExtensions>
+            <li Class="PawnStorages.PSExtension">
+                <extraGraphicData>
+                    <texPath>Things/Building/PawnHatch/PawnHatch_Closed</texPath>
+                    <graphicClass>Graphic_Single</graphicClass>
+                </extraGraphicData>
+            </li>
+        </modExtensions>
+    </ThingDef>
+
+    <!-- Mech Bay: 2x2 multi-mech charging station -->
+    <ThingDef MayRequire="Ludeon.RimWorld.Biotech" ParentName="BuildingBase">
+        <defName>PS_MechBay</defName>
+        <label>mech bay</label>
+        <description>A large powered bay that can house, charge, and repair up to eight mechanoids simultaneously. The mechs will automatically enter to recharge when they have no work, and exit when work is available and their charge is sufficient. Damaged mechs are slowly repaired while stored.</description>
+        <thingClass>PawnStorages.Building_PawnStorage</thingClass>
+        <graphicData>
+            <texPath>Things/Building/PawnHatch/PawnHatch_Open</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <drawSize>(2,2)</drawSize>
+        </graphicData>
+        <drawerType>MapMeshAndRealTime</drawerType>
+        <size>(2,2)</size>
+        <tickerType>Normal</tickerType>
+        <altitudeLayer>Building</altitudeLayer>
+        <passability>PassThroughOnly</passability>
+        <pathCost>50</pathCost>
+        <blockWind>false</blockWind>
+        <rotatable>true</rotatable>
+        <fillPercent>0.5</fillPercent>
+        <statBases>
+            <WorkToBuild>2400</WorkToBuild>
+            <MaxHitPoints>400</MaxHitPoints>
+            <Flammability>0.5</Flammability>
+        </statBases>
+        <costList>
+            <Steel>250</Steel>
+            <ComponentIndustrial>2</ComponentIndustrial>
+        </costList>
+        <designationCategory>Biotech</designationCategory>
+        <comps>
+            <li Class="PawnStorages.Mech.CompProperties_MechStorage">
+                <needsDrop>false</needsDrop>
+                <maxStoredPawns>8</maxStoredPawns>
+                <releaseOption>true</releaseOption>
+                <releaseAllOption>true</releaseAllOption>
+                <convertOption>true</convertOption>
+                <canBeScheduled>true</canBeScheduled>
+            </li>
+            <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
+                <drawAssignmentOverlay>false</drawAssignmentOverlay>
+                <compClass>PawnStorages.CompAssignableToPawn_PawnStorage</compClass>
+                <maxAssignedPawnsCount>8</maxAssignedPawnsCount>
+                <colonyMechsOnly>true</colonyMechsOnly>
+                <showGizmo>true</showGizmo>
+            </li>
+            <li Class="CompProperties_Power">
+                <compClass>CompPowerTrader</compClass>
+                <basePowerConsumption>400</basePowerConsumption>
+                <shortCircuitInRain>false</shortCircuitInRain>
+            </li>
+            <li Class="CompProperties_Flickable" />
+        </comps>
+        <modExtensions>
+            <li Class="PawnStorages.PSExtension">
+                <extraGraphicData>
+                    <texPath>Things/Building/PawnHatch/PawnHatch_Closed</texPath>
+                    <graphicClass>Graphic_Single</graphicClass>
+                    <drawSize>(2,2)</drawSize>
+                </extraGraphicData>
+            </li>
+        </modExtensions>
+    </ThingDef>
+
+</Defs>
