@@ -27,6 +27,8 @@
 	<PS_Settings_MechRepairRate>Mech repair rate (HP/day): {0}</PS_Settings_MechRepairRate>
 	<PS_Settings_MechRepairPartTicks>Time to restore missing part (days): {0}</PS_Settings_MechRepairPartTicks>
 	<PS_MechNoPower>No power - mechs will not charge.</PS_MechNoPower>
+	<PS_MechExitThreshold>Min exit charge</PS_MechExitThreshold>
+	<PS_MechExitThresholdTooltip>Mechs will not leave for work until their projected charge reaches this level. Combat mechs will always exit during raids regardless of charge.</PS_MechExitThresholdTooltip>
 	<PS_MechRepairing>{0}: repairing</PS_MechRepairing>
 	<PS_MechDamaged>{0}: damaged (needs power to repair)</PS_MechDamaged>
 

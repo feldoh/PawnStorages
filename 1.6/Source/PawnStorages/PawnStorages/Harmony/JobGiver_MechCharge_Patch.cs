@@ -19,18 +19,21 @@ public static class JobGiver_GetEnergy_Charger_Patch
         if (!ModsConfig.BiotechActive || !pawn.IsColonyMech)
             return true;
 
+        // Don't redirect combat mechs to storage during active combat
+        if (CompMechStorage.IsCombatMech(pawn) && CompMechStorage.IsMapInCombat(pawn.MapHeld))
+            return true;
+
         CompAssignableToPawn_PawnStorage assignedStorage = PawnStorages_GameComponent.GetAssignedStorage(pawn);
         if (assignedStorage?.parent?.TryGetComp<CompMechStorage>() is not { } mechStorage)
             return true;
 
-        // Don't redirect to an unpowered storage — let it find a vanilla charger
-        var powerTrader = mechStorage.parent.TryGetComp<CompPowerTrader>();
-        if (powerTrader?.PowerOn != true)
+        // Only auto-enter when scheduling is enabled
+        if (!mechStorage.schedulingEnabled)
             return true;
 
-        // Only redirect if the mech's energy is below the enter threshold
-        var energy = pawn.needs?.TryGetNeed<Need_MechEnergy>();
-        if (energy == null || energy.CurLevelPercentage >= mechStorage.Props.mechEnterThreshold)
+        // Don't redirect to an unpowered or full storage — let it find a vanilla charger
+        CompPowerTrader powerTrader = mechStorage.parent.TryGetComp<CompPowerTrader>();
+        if (powerTrader?.PowerOn != true || !mechStorage.CanStore)
             return true;
 
         Job job = mechStorage.EnterJob(pawn);
@@ -59,13 +62,23 @@ public static class JobGiver_WanderColony_MechCharge_Patch
         if (!ModsConfig.BiotechActive || !pawn.IsColonyMech)
             return;
 
+        // Don't redirect combat mechs to storage during active combat
+        if (CompMechStorage.IsCombatMech(pawn) && CompMechStorage.IsMapInCombat(pawn.MapHeld))
+            return;
+
         CompAssignableToPawn_PawnStorage assignedStorage = PawnStorages_GameComponent.GetAssignedStorage(pawn);
         if (assignedStorage?.parent?.TryGetComp<CompMechStorage>() is not { } mechStorage)
             return;
 
-        // Only redirect if the storage is powered (no point going home to an unpowered dock)
-        var powerTrader = mechStorage.parent.TryGetComp<CompPowerTrader>();
+        // Only auto-enter when scheduling is enabled
+        if (!mechStorage.schedulingEnabled)
+            return;
+
+        // Only redirect if the storage is powered and has space
+        CompPowerTrader powerTrader = mechStorage.parent.TryGetComp<CompPowerTrader>();
         if (powerTrader?.PowerOn != true)
+            return;
+        if (!mechStorage.CanStore)
             return;
 
         Job job = mechStorage.EnterJob(pawn);

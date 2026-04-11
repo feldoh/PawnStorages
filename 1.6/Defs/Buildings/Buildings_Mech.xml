@@ -44,8 +44,6 @@
                 <releaseAllOption>true</releaseAllOption>
                 <convertOption>true</convertOption>
                 <canBeScheduled>true</canBeScheduled>
-                <mechEnterThreshold>0.3</mechEnterThreshold>
-                <mechMinExitThreshold>0.5</mechMinExitThreshold>
             </li>
             <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
                 <drawAssignmentOverlay>false</drawAssignmentOverlay>
@@ -113,8 +111,6 @@
                 <releaseAllOption>true</releaseAllOption>
                 <convertOption>true</convertOption>
                 <canBeScheduled>true</canBeScheduled>
-                <mechEnterThreshold>0.3</mechEnterThreshold>
-                <mechMinExitThreshold>0.5</mechMinExitThreshold>
             </li>
             <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
                 <drawAssignmentOverlay>false</drawAssignmentOverlay>
@@ -178,8 +174,6 @@
                 <releaseAllOption>true</releaseAllOption>
                 <convertOption>true</convertOption>
                 <canBeScheduled>true</canBeScheduled>
-                <mechEnterThreshold>0.3</mechEnterThreshold>
-                <mechMinExitThreshold>0.5</mechMinExitThreshold>
             </li>
             <li Class="PawnStorages.CompProperties_PSAssignableToPawn">
                 <drawAssignmentOverlay>false</drawAssignmentOverlay>
