@@ -12,5 +12,8 @@ public class PawnStorages_GameComponent : GameComponent
 
     public static CompAssignableToPawn_PawnStorage GetAssignedStorage(Pawn pawn) => CompAssignables.FirstOrDefault(x => x.AssignedPawns.Contains(pawn));
 
-    public PawnStorages_GameComponent(Game game) { }
+    public PawnStorages_GameComponent(Game game)
+    {
+        CompAssignables.Clear();
+    }
 }

@@ -94,7 +94,7 @@ public class Settings : ModSettings
             MechRepairRate = options.Slider(MechRepairRate, 0f, 0.05f);
             options.Gap(GapHeight);
             options.Label("PS_Settings_MechRepairPartTicks".Translate((MechRepairPartTicks / 60000f).ToString("F1")));
-            MechRepairPartTicks = Mathf.RoundToInt(options.Slider(MechRepairPartTicks, 6000, 300000));
+            MechRepairPartTicks = Mathf.Max(1, Mathf.RoundToInt(options.Slider(MechRepairPartTicks, 6000, 300000)));
             options.Gap(GapHeight);
         }
 

@@ -116,7 +116,7 @@ public class CompMechStorage : CompPawnStorage
         var energy = pawn.needs?.TryGetNeed<Need_MechEnergy>();
         float energyCostPerHP = pawn.GetStatValue(StatDefOf.MechEnergyLossPerHP);
         float ticksRemaining = ticksStored;
-        int partTicks = PawnStoragesMod.settings.MechRepairPartTicks;
+        int partTicks = Mathf.Max(1, PawnStoragesMod.settings.MechRepairPartTicks);
 
         while (ticksRemaining > 0f && MechRepairUtility.CanRepair(pawn))
         {
