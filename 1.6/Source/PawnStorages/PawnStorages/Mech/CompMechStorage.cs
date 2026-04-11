@@ -65,7 +65,7 @@ public class CompMechStorage : CompPawnStorage
     /// <summary>
     /// Handles power state changes for stored mechs:
     /// - PowerTurnedOff: apply accumulated charge immediately and reset baseline, so unpowered time doesn't count as charging.
-    /// - PowerTurnedOn: reset baseline to now, so the unpowered gap betweennpower-off and power-on isn't counted as charging time.
+    /// - PowerTurnedOn: reset baseline to now, so the unpowered gap between power-off and power-on isn't counted as charging time.
     /// </summary>
     public override void ReceiveCompSignal(string signal)
     {

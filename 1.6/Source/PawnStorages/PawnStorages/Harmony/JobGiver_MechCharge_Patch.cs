@@ -31,9 +31,13 @@ public static class JobGiver_GetEnergy_Charger_Patch
         if (!mechStorage.schedulingEnabled)
             return true;
 
-        // Don't redirect to an unpowered or full storage — let it find a vanilla charger
+        // Verify storage is usable: spawned, same map, powered, has space, reachable
+        if (!mechStorage.parent.Spawned || mechStorage.parent.Map != pawn.MapHeld)
+            return true;
         CompPowerTrader powerTrader = mechStorage.parent.TryGetComp<CompPowerTrader>();
         if (powerTrader?.PowerOn != true || !mechStorage.CanStore)
+            return true;
+        if (mechStorage.parent.IsForbidden(pawn) || !pawn.CanReach(mechStorage.parent, PathEndMode.Touch, Danger.Deadly))
             return true;
 
         Job job = mechStorage.EnterJob(pawn);
@@ -74,11 +78,13 @@ public static class JobGiver_WanderColony_MechCharge_Patch
         if (!mechStorage.schedulingEnabled)
             return;
 
-        // Only redirect if the storage is powered and has space
-        CompPowerTrader powerTrader = mechStorage.parent.TryGetComp<CompPowerTrader>();
-        if (powerTrader?.PowerOn != true)
+        // Verify storage is usable: spawned, same map, powered, has space, reachable
+        if (!mechStorage.parent.Spawned || mechStorage.parent.Map != pawn.MapHeld)
             return;
-        if (!mechStorage.CanStore)
+        CompPowerTrader powerTrader = mechStorage.parent.TryGetComp<CompPowerTrader>();
+        if (powerTrader?.PowerOn != true || !mechStorage.CanStore)
+            return;
+        if (mechStorage.parent.IsForbidden(pawn) || !pawn.CanReach(mechStorage.parent, PathEndMode.Touch, Danger.Deadly))
             return;
 
         Job job = mechStorage.EnterJob(pawn);

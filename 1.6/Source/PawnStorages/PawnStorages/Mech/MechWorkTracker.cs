@@ -9,7 +9,8 @@ namespace PawnStorages.Mech;
 /// Uses the game's own WorkGiver system so modded mechs with custom work types
 /// are handled automatically.
 ///
-/// For each of the mech's race-level WorkTypeDefs (RaceProps.mechEnabledWorkTypes), iterates the associated
+/// For each of the mech's race-level WorkTypeDefs (RaceProps.mechEnabledWorkTypes — these are
+/// fixed per mech kind, not configurable per individual), iterates the associated
 /// WorkGiver_Scanners and calls ShouldSkip(pawn) — the same cheap gate the
 /// game uses internally. If any WorkGiver says "don't skip", work is available.
 ///
