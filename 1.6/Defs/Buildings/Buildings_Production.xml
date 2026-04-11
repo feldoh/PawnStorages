@@ -149,6 +149,9 @@
         <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
         <designationCategory>Misc</designationCategory>
         <surfaceType>Item</surfaceType>
+        <researchPrerequisites>
+            <li>PS_Crystallization</li>
+        </researchPrerequisites>
     </ThingDef>
 
 </Defs>
