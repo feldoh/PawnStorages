@@ -120,11 +120,17 @@ namespace PawnStorages.Farm.Comps
                     continue;
                 }
 
+                Dictionary<PawnKindDef, AutoSlaughterCullOrder> cullOrders = GetOrPopulateAutoSlaughterCullOrder();
+                if (!cullOrders.ContainsKey(type.Key))
+                {
+                    cullOrders.Add(type.Key, new AutoSlaughterCullOrder());
+                }
+
                 var groupedByAgeAndGender = type.GroupBy(p => new { p.ageTracker.Adult, p.gender })
                     .Select(group => new
                     {
                         FarmAnimalCharacteristics = new FarmAnimalCharacteristics(group.Key.Adult, group.Key.gender),
-                        Pawns = GetOrPopulateAutoSlaughterCullOrder()[type.Key].IsAscending(group.Key.Adult, group.Key.gender)
+                        Pawns = cullOrders[type.Key].IsAscending(group.Key.Adult, group.Key.gender)
                             ? group.OrderBy(p => p.ageTracker.ageBiologicalTicksInt)
                             : group.OrderByDescending(p => p.ageTracker.ageBiologicalTicksInt),
                     })

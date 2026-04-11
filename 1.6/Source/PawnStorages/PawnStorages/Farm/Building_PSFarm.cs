@@ -18,7 +18,7 @@ public class Building_PSFarm : Building, IStoreSettingsParent, INutritionStorage
     public CompFarmProducer FarmProducer;
     private StorageSettings allowedNutritionSettings;
 
-    protected Dictionary<ThingDef, bool> allowedThings;
+    protected Dictionary<ThingDef, bool> allowedThings = new Dictionary<ThingDef, bool>();
 
     public Dictionary<ThingDef, bool> AllowedThings => allowedThings;
     public HashSet<ThingDef> AllowedThingDefs => [.. allowedThings.Keys];
