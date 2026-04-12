@@ -135,6 +135,36 @@ public class CompFactoryProducer : CompPawnStorageProducer
             }
         }
 
+        // Fallback: check connected storage if not all ingredients found
+        if (done.Any(pair => !pair.Value))
+        {
+            HashSet<SlotGroup> slotGroups = Utility.FindConnectedSlotGroups(parent);
+            foreach (SlotGroup slotGroup in slotGroups)
+            {
+                foreach (Thing thing in slotGroup.HeldThings)
+                {
+                    foreach (IngredientCount ingredientCount in ingredientList)
+                    {
+                        if (done[ingredientCount] || !ingredientCount.filter.Allows(thing))
+                            continue;
+                        int countSoFarForIngredient = countSoFar.GetWithFallback(ingredientCount, 0);
+                        int required = ingredientCount.CountRequiredOfFor(thing.def, bill.recipe);
+                        required -= countSoFarForIngredient;
+                        if (required > 0)
+                        {
+                            int reservedSoFar = reserved.GetWithFallback(thing, 0);
+                            int reservable = thing.stackCount - reservedSoFar;
+                            int toReserve = Math.Min(required, reservable);
+                            if (toReserve >= required)
+                                done[ingredientCount] = true;
+                            reserved.SetOrAdd(thing, toReserve + reservedSoFar);
+                            countSoFar.SetOrAdd(ingredientCount, countSoFarForIngredient + toReserve);
+                        }
+                    }
+                }
+            }
+        }
+
         return done.Any(pair => !pair.Value) ? [] : reserved;
     }
 
