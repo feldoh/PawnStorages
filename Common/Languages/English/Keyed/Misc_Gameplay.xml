@@ -136,4 +136,6 @@
     <PS_BillLimitReached>Bill limit reached (maximum 15 bills per factory).</PS_BillLimitReached>
     <PS_AddBill_NoResults>(no matching recipes)</PS_AddBill_NoResults>
     <PS_AddBill_BillCount>{0} bills queued</PS_AddBill_BillCount>
+    <PS_HopperFrozen>Frozen (preserving contents)</PS_HopperFrozen>
+    <PS_HopperCoolerNoPower>Cooler: no power (contents may spoil)</PS_HopperCoolerNoPower>
 </LanguageData>
