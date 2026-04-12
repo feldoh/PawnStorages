@@ -95,6 +95,16 @@ public class Building_PSFactory : Building, IStoreSettingsParent, INutritionStor
         }
     }
 
+    public override void DrawExtraSelectionOverlays()
+    {
+        base.DrawExtraSelectionOverlays();
+        CompFactoryProducer producer = GetComp<CompFactoryProducer>();
+        if (producer != null && producer.OutputCells.Count > 0)
+        {
+            GenDraw.DrawFieldEdges(producer.OutputCells, Color.cyan);
+        }
+    }
+
     public override IEnumerable<Gizmo> GetGizmos()
     {
         foreach (Gizmo gizmo in base.GetGizmos())

@@ -136,4 +136,8 @@
     <PS_BillLimitReached>Bill limit reached (maximum 15 bills per factory).</PS_BillLimitReached>
     <PS_AddBill_NoResults>(no matching recipes)</PS_AddBill_NoResults>
     <PS_AddBill_BillCount>{0} bills queued</PS_AddBill_BillCount>
+    <PS_SetOutputCell>Set output cell</PS_SetOutputCell>
+    <PS_SetOutputCellDesc>Select a cell adjacent to the building where products will be placed. Multiple output cells can be set.</PS_SetOutputCellDesc>
+    <PS_ClearOutputCells>Clear output cells</PS_ClearOutputCells>
+    <PS_ClearOutputCellsDesc>Remove all output cell assignments. Products will be placed on top of the building.</PS_ClearOutputCellsDesc>
 </LanguageData>
