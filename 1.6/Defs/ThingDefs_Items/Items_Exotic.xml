@@ -162,31 +162,7 @@
     </ThingDef>
 
 
-    <ThingDef ParentName="BaseMakeableGrenade">
-        <defName>PS_CaptureSphere</defName>
-        <label>capture sphere</label>
-        <description>A capture sphere capable of capturing and releasing pawns at range. It will only capture non-faction pawns if they're downed.</description>
-        <recipeMaker>
-            <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
-            <workSkill>Crafting</workSkill>
-            <skillRequirements>
-                <Crafting>8</Crafting>
-            </skillRequirements>
-            <unfinishedThingDef>UnfinishedWeapon</unfinishedThingDef>
-            <effectWorking>Smith</effectWorking>
-            <soundWorking>Recipe_Machining</soundWorking>
-            <recipeUsers>
-                <li>TableMachining</li>
-            </recipeUsers>
-            <defaultIngredientFilter>
-                <categories>
-                    <li>Root</li>
-                </categories>
-                <thingDefs>
-                    <li>Jade</li>
-                </thingDefs>
-            </defaultIngredientFilter>
-        </recipeMaker>
+    <ThingDef Name="PS_CaptureSphereBase" ParentName="BaseMakeableGrenade" Abstract="True">
         <tickerType>Normal</tickerType>
         <graphicData>
             <texPath>Things/Item/Special/PS_CaptureBall</texPath>
@@ -202,12 +178,7 @@
         <statBases>
             <Mass>1</Mass>
             <RangedWeapon_Cooldown>2.66</RangedWeapon_Cooldown>
-            <WorkToMake>12000</WorkToMake>
         </statBases>
-        <costList>
-            <Jade>1</Jade>
-            <Steel>20</Steel>
-        </costList>
         <weaponTags Inherit="False">
             <li>PS_Throwable_CaptureItem</li>
         </weaponTags>
@@ -235,6 +206,42 @@
                 <rangedFireRulepack>Combat_RangedFire_Thrown</rangedFireRulepack>
             </li>
         </verbs>
+        <recipeMaker>
+            <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+            <workSkill>Crafting</workSkill>
+            <skillRequirements>
+                <Crafting>8</Crafting>
+            </skillRequirements>
+            <unfinishedThingDef>UnfinishedWeapon</unfinishedThingDef>
+            <effectWorking>Smith</effectWorking>
+            <soundWorking>Recipe_Machining</soundWorking>
+            <recipeUsers>
+                <li>TableMachining</li>
+            </recipeUsers>
+            <defaultIngredientFilter>
+                <categories>
+                    <li>Root</li>
+                </categories>
+                <thingDefs>
+                    <li>Jade</li>
+                </thingDefs>
+            </defaultIngredientFilter>
+        </recipeMaker>
+    </ThingDef>
+
+    <ThingDef ParentName="PS_CaptureSphereBase">
+        <defName>PS_CaptureSphereBasic</defName>
+        <label>basic capture sphere</label>
+        <description>A simple sphere that can capture weakened creatures. Has a low chance of capturing standing targets, scaling with their combat prowess.</description>
+        <statBases>
+            <Mass>1</Mass>
+            <RangedWeapon_Cooldown>2.66</RangedWeapon_Cooldown>
+            <MarketValue>30</MarketValue>
+            <WorkToMake>6000</WorkToMake>
+        </statBases>
+        <costList>
+            <Steel>10</Steel>
+        </costList>
         <comps>
             <li Class="PawnStorages.CompProperties_PawnStorage">
                 <compClass>PawnStorages.CompPawnStorage</compClass>
@@ -250,6 +257,75 @@
                 <useCharges>true</useCharges>
                 <destroyOnZeroCharges>true</destroyOnZeroCharges>
                 <useFromInventory>true</useFromInventory>
+                <captureChance>0.3</captureChance>
+            </li>
+        </comps>
+    </ThingDef>
+
+    <ThingDef ParentName="PS_CaptureSphereBase">
+        <defName>PS_CaptureSphereImproved</defName>
+        <label>improved capture sphere</label>
+        <description>An enhanced sphere with better capture mechanisms. Has a moderate chance of capturing standing targets.</description>
+        <statBases>
+            <Mass>1</Mass>
+            <RangedWeapon_Cooldown>2.66</RangedWeapon_Cooldown>
+            <MarketValue>60</MarketValue>
+            <WorkToMake>9000</WorkToMake>
+        </statBases>
+        <costList>
+            <Steel>15</Steel>
+            <Jade>1</Jade>
+        </costList>
+        <comps>
+            <li Class="PawnStorages.CompProperties_PawnStorage">
+                <compClass>PawnStorages.CompPawnStorage</compClass>
+                <needsDrop>false</needsDrop>
+                <maxStoredPawns>1</maxStoredPawns>
+                <releaseOption>true</releaseOption>
+                <convertOption>true</convertOption>
+                <appendOfName>true</appendOfName>
+                <lightEffect>true</lightEffect>
+                <releaseEffect>Skip_Entry</releaseEffect>
+                <storeEffect>Skip_Entry</storeEffect>
+                <charges>1</charges>
+                <useCharges>true</useCharges>
+                <destroyOnZeroCharges>true</destroyOnZeroCharges>
+                <useFromInventory>true</useFromInventory>
+                <captureChance>0.6</captureChance>
+            </li>
+        </comps>
+    </ThingDef>
+
+    <ThingDef ParentName="PS_CaptureSphereBase">
+        <defName>PS_CaptureSphere</defName>
+        <label>master capture sphere</label>
+        <description>A masterwork capture sphere capable of capturing and releasing pawns at range. Guarantees capture of any target, downed or standing.</description>
+        <statBases>
+            <Mass>1</Mass>
+            <RangedWeapon_Cooldown>2.66</RangedWeapon_Cooldown>
+            <WorkToMake>15000</WorkToMake>
+        </statBases>
+        <costList>
+            <Steel>20</Steel>
+            <Jade>1</Jade>
+            <ComponentIndustrial>1</ComponentIndustrial>
+        </costList>
+        <comps>
+            <li Class="PawnStorages.CompProperties_PawnStorage">
+                <compClass>PawnStorages.CompPawnStorage</compClass>
+                <needsDrop>false</needsDrop>
+                <maxStoredPawns>1</maxStoredPawns>
+                <releaseOption>true</releaseOption>
+                <convertOption>true</convertOption>
+                <appendOfName>true</appendOfName>
+                <lightEffect>true</lightEffect>
+                <releaseEffect>Skip_Entry</releaseEffect>
+                <storeEffect>Skip_Entry</storeEffect>
+                <charges>1</charges>
+                <useCharges>true</useCharges>
+                <destroyOnZeroCharges>true</destroyOnZeroCharges>
+                <useFromInventory>true</useFromInventory>
+                <captureChance>1.0</captureChance>
             </li>
         </comps>
     </ThingDef>
