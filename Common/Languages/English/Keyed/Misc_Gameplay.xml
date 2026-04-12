@@ -136,4 +136,7 @@
     <PS_BillLimitReached>Bill limit reached (maximum 15 bills per factory).</PS_BillLimitReached>
     <PS_AddBill_NoResults>(no matching recipes)</PS_AddBill_NoResults>
     <PS_AddBill_BillCount>{0} bills queued</PS_AddBill_BillCount>
+
+    <PS_AnimalCapturedTamed>{0} has been captured and tamed!</PS_AnimalCapturedTamed>
+    <PS_PawnCapturedEnslaved>{0} has been captured and enslaved!</PS_PawnCapturedEnslaved>
 </LanguageData>
