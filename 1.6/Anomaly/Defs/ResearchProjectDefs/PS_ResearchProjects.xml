@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+    <ResearchProjectDef>
+        <defName>PS_AllStudy</defName>
+        <label>essence extraction</label>
+        <description>Study the anomalous entity known as 'All' to understand how to safely extract the unsettling essence from the peculiar stands.</description>
+        <baseCost>1000</baseCost>
+        <techLevel>Spacer</techLevel>
+        <tab>Anomaly</tab>
+        <discoveredLetterTitle>Study available: Essence extraction</discoveredLetterTitle>
+        <discoveredLetterText>The entity 'All' has been discovered lurking within your peculiar stands. Your researchers can now study the phenomenon to learn how to extract its essence safely.</discoveredLetterText>
+    </ResearchProjectDef>
+
+</Defs>

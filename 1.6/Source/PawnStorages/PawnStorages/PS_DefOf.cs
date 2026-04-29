@@ -6,6 +6,16 @@ namespace PawnStorages;
 [DefOf]
 public static class PS_DefOf
 {
+    // Anomaly
+    [MayRequire("Ludeon.RimWorld.Anomaly")]
+    public static EntityCodexEntryDef PS_AllCodexEntry;
+
+    [MayRequire("Ludeon.RimWorld.Anomaly")]
+    public static QuestScriptDef PS_AllExtractionQuest;
+
+    [MayRequire("Ludeon.RimWorld.Anomaly")]
+    public static ResearchProjectDef PS_AllStudy;
+
     //Jobs
     public static JobDef PS_Enter;
     public static JobDef PS_Release;

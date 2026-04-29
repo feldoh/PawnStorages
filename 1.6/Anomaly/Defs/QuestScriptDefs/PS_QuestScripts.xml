@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+    <QuestScriptDef>
+        <defName>PS_AllExtractionQuest</defName>
+        <root Class="PawnStorages.Anomaly.QuestNode_Root_AllExtraction" />
+        <defaultChallengeRating>3</defaultChallengeRating>
+        <autoAccept>true</autoAccept>
+        <nameMustBeUnique>true</nameMustBeUnique>
+        <isRootSpecial>true</isRootSpecial>
+        <canGiveRoyalFavor>false</canGiveRoyalFavor>
+    </QuestScriptDef>
+
+</Defs>

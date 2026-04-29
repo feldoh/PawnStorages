@@ -7,7 +7,6 @@ public class Settings : ModSettings
 {
     public bool AllowNeedsDrop = true;
     public float SleepRateMultiplier = 0.9f;
-    public bool SpecialReleaseAll = false;
     public string ForcedPawn = "";
     public bool ShowStoredPawnsInBar = false;
     public float ProductionScale = 0.5f;
@@ -44,8 +43,6 @@ public class Settings : ModSettings
         options.Label("PS_Settings_Sleep_Rate_Multiplier".Translate(SleepRateMultiplier.ToString("0.00")));
         SleepRateMultiplier = options.Slider(SleepRateMultiplier, 0f, 2f);
         options.CheckboxLabeled("PS_Settings_DebugLogging".Translate(), ref DebugLogging);
-        if (ModsConfig.anomalyActive)
-            options.CheckboxLabeled("PS_Settings_SpecialReleaseAll".Translate(), ref SpecialReleaseAll);
         options.Gap(GapHeight);
         options.Label("PS_Settings_Advanced".Translate());
         ForcedPawn = options.TextEntryLabeled("PS_Settings_ForceNextPawnStatue".Translate(), ForcedPawn);
@@ -103,7 +100,6 @@ public class Settings : ModSettings
         {
             AllowNeedsDrop = true;
             SleepRateMultiplier = 0.9f;
-            SpecialReleaseAll = false;
             ForcedPawn = "";
             ShowStoredPawnsInBar = false;
             ProductionScale = 0.5f;
@@ -125,17 +121,10 @@ public class Settings : ModSettings
         options.End();
     }
 
-    public void AllReleased()
-    {
-        SpecialReleaseAll = false;
-        Write();
-    }
-
     public override void ExposeData()
     {
         Scribe_Values.Look(ref AllowNeedsDrop, "AllowNeedsDrop", true);
         Scribe_Values.Look(ref SleepRateMultiplier, "SleepRateMultiplier", 0.9f);
-        Scribe_Values.Look(ref SpecialReleaseAll, "SpecialReleaseAll", false);
         Scribe_Values.Look(ref ShowStoredPawnsInBar, "ShowStoredPawnsInBar", false);
         Scribe_Values.Look(ref ProductionScale, "ProductionScale", 0.5f);
         Scribe_Values.Look(ref BreedingScale, "BreedingScale", 2);

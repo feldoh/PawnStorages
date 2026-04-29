@@ -24,6 +24,7 @@
     <v1.6>
         <li>Common</li>
         <li>1.6</li>
+        <li IfModActive="Ludeon.RimWorld.Anomaly">1.6/Anomaly</li>
         <li IfModActive="oskarpotocki.vanillafactionsexpanded.core">Compatibility/oskarpotocki.vanillafactionsexpanded.core/1.6</li>
         <li IfModActive="oskarpotocki.vanillafactionsexpanded.core_steam">Compatibility/oskarpotocki.vanillafactionsexpanded.core/1.6</li>
         <!-- <li IfModActive="OskarPotocki.VFE.Deserters">Compatibility/OskarPotocki.VFE.Deserters/1.6</li> -->

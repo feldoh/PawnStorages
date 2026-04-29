@@ -2,9 +2,7 @@
 <LanguageData>
 
 	<PS_ReleaseAll>Release all</PS_ReleaseAll>
-	<PS_All>Release all</PS_All>
 	<PS_ReleaseAllSelected>Release all selected</PS_ReleaseAllSelected>
-	<PS_ReleaseAll_Anomaly_Message>'ALL' Has been released</PS_ReleaseAll_Anomaly_Message>
 	<PS_Release>Release {0}</PS_Release>
     <PS_NoRelease>Unable to release {0}</PS_NoRelease>
 	<PS_NoStationForRelease>No working {0} available to release {1}</PS_NoStationForRelease>
@@ -41,7 +39,6 @@
 
 	<PS_Settings_AllowNeedsDrop>Allow needs to drop at home</PS_Settings_AllowNeedsDrop>
 	<PS_Settings_Sleep_Rate_Multiplier>Sleep rate multiplier (relative to a bed): {0}</PS_Settings_Sleep_Rate_Multiplier>
-	<PS_Settings_SpecialReleaseAll>Show special release all button</PS_Settings_SpecialReleaseAll>
 	<PS_Settings_ForceNextPawnStatue>Force Next Pawn in Statue by ID e.g. Human393</PS_Settings_ForceNextPawnStatue>
 	<PS_Settings_Category>Homebound - Pawn Storages</PS_Settings_Category>
 	<PS_Settings_Advanced>Advanced Tools</PS_Settings_Advanced>

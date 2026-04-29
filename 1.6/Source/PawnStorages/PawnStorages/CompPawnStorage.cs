@@ -482,39 +482,23 @@ public class CompPawnStorage : ThingComp, IThingHolder
                     },
                     icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll"),
                 };
-                if (PawnStoragesMod.settings.SpecialReleaseAll && ModsConfig.anomalyActive)
+                // Anomaly extraction gizmo — appears after "All" has been researched
+                if (
+                    ModsConfig.AnomalyActive
+                    && Current.Game?.GetComponent<Anomaly.AllFeature_GameComponent>()
+                        is { Stage: Anomaly.AllDiscoveryStage.AllResearched } allComp
+                    && innerContainer.Any<Pawn>()
+                )
                 {
                     yield return new Command_Action
                     {
-                        defaultLabel = Translator.PseudoTranslated("PS_ReleaseAll".Translate()),
+                        defaultLabel = Anomaly.AllTextStyling.Eldritchify(
+                            "PS_Anomaly_ExtractEssence".Translate()
+                        ),
+                        defaultDesc = "PS_Anomaly_ExtractEssenceDesc".Translate(),
                         action = delegate
                         {
-                            Pawn p;
-                            if (ModsConfig.IsActive("taggerung.grignrhappensby"))
-                            {
-                                p = PawnGenerator.GeneratePawn(DefDatabase<PawnKindDef>.GetNamed("Taggerung_ShardOfGrignr"), Faction.OfHoraxCult);
-                                p.Name = new NameTriple("Grignr", "PS_All".Translate(), "Grignrson");
-                            }
-                            else
-                            {
-                                p = PawnGenerator.GeneratePawn(PawnKindDefOf.Ghoul, Faction.OfHoraxCult);
-                                p.Name = new NameSingle("PS_All".Translate());
-                            }
-
-                            p.health.AddHediff(HediffDefOf.Inhumanized);
-                            p.health.AddHediff(HediffDefOf.ShardHolder);
-                            GenSpawn.Spawn(p, parent.Position, parent.Map);
-                            Messages.Message(Translator.PseudoTranslated("PS_ReleaseAll_Anomaly_Message".Translate()), new LookTargets(p), MessageTypeDefOf.ThreatBig, false);
-                            PawnStoragesMod.settings.AllReleased();
-
-                            GridShapeMaker
-                                .IrregularLump(parent.Position, parent.Map, 5)
-                                .InRandomOrder()
-                                .Where(cell => cell.InBounds(parent.Map))
-                                .Do(intVec3 => parent.Map.terrainGrid.SetTerrain(intVec3, TerrainDefOf.Voidmetal));
-
-                            EffecterDefOf.Skip_EntryNoDelay.Spawn(p, parent.Map).Cleanup();
-                            p.mindState.mentalStateHandler.TryStartMentalState(MentalStateDefOf.Berserk, forced: true);
+                            allComp.StartExtractionQuest(parent.Position, parent.Map);
                         },
                         icon = ContentFinder<Texture2D>.Get("UI/Buttons/ReleaseAll"),
                     };

@@ -112,6 +112,7 @@
                 <needsDrop>false</needsDrop>
                 <maxStoredPawns>1</maxStoredPawns>
                 <releaseOption>true</releaseOption>
+                <releaseAllOption>true</releaseAllOption>
                 <convertOption>true</convertOption>
                 <appendOfName>true</appendOfName>
                 <lightEffect>true</lightEffect>
@@ -241,6 +242,7 @@
                 <needsDrop>false</needsDrop>
                 <maxStoredPawns>1</maxStoredPawns>
                 <releaseOption>true</releaseOption>
+                <releaseAllOption>true</releaseAllOption>
                 <convertOption>true</convertOption>
                 <appendOfName>true</appendOfName>
                 <lightEffect>true</lightEffect>

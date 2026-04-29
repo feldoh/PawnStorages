@@ -14,7 +14,7 @@ public class FloatMenuOptionProvider_Capture : FloatMenuOptionProvider
 
     public override bool TargetPawnValid(Pawn pawn, FloatMenuContext context)
     {
-        return base.TargetPawnValid(pawn, context) && !pawn.RaceProps.Humanlike;
+        return base.TargetPawnValid(pawn, context) && (pawn.Downed || !pawn.HostileTo(context.FirstSelectedPawn));
     }
 
     public override IEnumerable<FloatMenuOption> GetOptionsFor(Pawn clickedPawn, FloatMenuContext context)

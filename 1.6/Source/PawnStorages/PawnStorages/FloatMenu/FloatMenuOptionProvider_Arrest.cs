@@ -85,8 +85,8 @@ public class FloatMenuOptionProvider_Arrest : FloatMenuOptionProvider
         }
 
         foreach (
-            CompPawnStorage comp in clickedPawn
-                .inventory.GetDirectlyHeldThings()
+            CompPawnStorage comp in context
+                .FirstSelectedPawn.inventory.GetDirectlyHeldThings()
                 .Select(item => item.TryGetComp<CompPawnStorage>() is { } ps && ps.Props.useFromInventory && !ps.IsFull ? ps : null)
                 .Where(ps => ps != null)
                 .GroupBy(s => s.parent.def)

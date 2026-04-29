@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+    <EntityCodexEntryDef>
+        <defName>PS_AllCodexEntry</defName>
+        <label>All</label>
+        <description>An unsettling presence that lurks within the peculiar stands. It appears as a ghoulish figure, difficult to look at directly, as if peering through a weakness in the fabric of reality.\n\nThe entity calls itself 'All', though whether this is a name or a statement of intent remains unclear. Its very existence seems tied to the strange energy of the stands — the more that are gathered together, the stronger its hold on this plane becomes.\n\nResearchers who have studied this phenomenon report feelings of deep unease, and an overwhelming sense that they are being watched from somewhere just beyond perception.</description>
+        <category>Entities</category>
+        <discoveredResearchProjects>
+            <li>PS_AllStudy</li>
+        </discoveredResearchProjects>
+    </EntityCodexEntryDef>
+
+</Defs>

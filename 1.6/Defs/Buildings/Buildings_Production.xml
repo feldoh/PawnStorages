@@ -117,7 +117,7 @@
     <ThingDef ParentName="BenchBase">
         <defName>PS_Crystallizer</defName>
         <label>crystallizer</label>
-        <description>N/A</description>
+        <description>A mystical platform used to imbue a mysterious gem with the physical essence of a pawn, sealing them within the stone. The same platform is required to release a crystallised pawn back into the world.</description>
         <thingClass>Building</thingClass>
         <altitudeLayer>Building</altitudeLayer>
         <passability>Standable</passability>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+
+    <!-- Discovery stages -->
+    <PS_Anomaly_Stage1_LetterLabel>Something unsettling</PS_Anomaly_Stage1_LetterLabel>
+    <PS_Anomaly_Stage1_LetterText>{PAWN_nameFull} noticed that one of your statues seems to be difficult to look at, almost as if there was another entity installed in it, invisible through a weakness in the fabric of reality.</PS_Anomaly_Stage1_LetterText>
+
+    <PS_Anomaly_Stage2_LetterLabel>A growing presence</PS_Anomaly_Stage2_LetterLabel>
+    <PS_Anomaly_Stage2_LetterText>{PAWN_nameFull} sensed it too — another stand radiating the same unsettling energy. If it were left near at least two other occupied stands, the essence might be encouraged to materialise.</PS_Anomaly_Stage2_LetterText>
+
+    <PS_Anomaly_Stage3_Message>'All' has materialised</PS_Anomaly_Stage3_Message>
+
+    <!-- Research complete -->
+    <PS_Anomaly_Researched_LetterLabel>Essence understood</PS_Anomaly_Researched_LetterLabel>
+    <PS_Anomaly_Researched_LetterText>Your researchers have completed their study of the anomalous entity. 'All' has faded back into the stands, but the knowledge gained has revealed how to extract the unsettling essence from any occupied stand.</PS_Anomaly_Researched_LetterText>
+
+    <!-- Extraction -->
+    <PS_Anomaly_ExtractEssence>Extract the Unsettling Essence</PS_Anomaly_ExtractEssence>
+    <PS_Anomaly_ExtractEssenceDesc>Extract the anomalous entity from this stand, manifesting it in physical form. This will summon both the entity known as 'All' and its dark counterpart 'Nothing'.</PS_Anomaly_ExtractEssenceDesc>
+    <PS_Anomaly_Extraction_Message>The essence splits — 'All' and 'Nothing' have been released</PS_Anomaly_Extraction_Message>
+
+    <!-- Quest -->
+    <PS_Anomaly_QuestDescription>The unsettling essence has been extracted from the peculiar stands, splitting into two entities: the friendly 'All' and the hostile 'Nothing'. Destroy 'Nothing' before it escapes to convince 'All' to join your colony permanently.</PS_Anomaly_QuestDescription>
+
+    <PS_Anomaly_QuestSuccess_LetterLabel>'All' offers to join</PS_Anomaly_QuestSuccess_LetterLabel>
+    <PS_Anomaly_QuestSuccess_LetterText>With 'Nothing' destroyed, 'All' turns to your colonists with something resembling gratitude. The entity offers to stay.</PS_Anomaly_QuestSuccess_LetterText>
+
+    <PS_Anomaly_QuestFail_LetterLabel>'All' has departed</PS_Anomaly_QuestFail_LetterLabel>
+    <PS_Anomaly_QuestFail_LetterText>'Nothing' escaped the map. Without its counterpart destroyed, 'All' fades from existence, drawn back into the void between the stands.</PS_Anomaly_QuestFail_LetterText>
+
+    <!-- Pawn names -->
+    <PS_Anomaly_AllName>All</PS_Anomaly_AllName>
+    <PS_Anomaly_NothingName>Nothing</PS_Anomaly_NothingName>
+
+</LanguageData>
