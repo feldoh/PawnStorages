@@ -136,4 +136,25 @@
     <PS_BillLimitReached>Bill limit reached (maximum 15 bills per factory).</PS_BillLimitReached>
     <PS_AddBill_NoResults>(no matching recipes)</PS_AddBill_NoResults>
     <PS_AddBill_BillCount>{0} bills queued</PS_AddBill_BillCount>
+
+    <PS_MakeRoomOnBirth>Auto-slaughter when full to fit newborns</PS_MakeRoomOnBirth>
+    <PS_MakeRoomOnBirth_Tip>When a baby is born to a full farm, automatically slaughter the lowest-priority same-kind animal that survives the protection guards. If no animal qualifies, the newborn drops to the floor (vanilla behaviour).</PS_MakeRoomOnBirth_Tip>
+    <PS_ProtectBreedingPair>Protect breeding pair</PS_ProtectBreedingPair>
+    <PS_ProtectBreedingPair_Tip>Auto-slaughter will never remove the last adult male or female of a kind. Prevents the farm from grinding to a halt when breeders age out.</PS_ProtectBreedingPair_Tip>
+    <PS_ProtectPregnant>Protect pregnant pawns</PS_ProtectPregnant>
+    <PS_ProtectPregnant_Tip>Auto-slaughter will skip pregnant pawns. If only pregnant pawns are eligible, no animal is culled.</PS_ProtectPregnant_Tip>
+    <PS_FarmStatus_DroppingNewborns>Newborns will drop on the floor when this farm is full.</PS_FarmStatus_DroppingNewborns>
+    <PS_FarmCulledForRoom>{0} was slaughtered to make room for newborn {1} in {2}.</PS_FarmCulledForRoom>
+
+    <PS_KindCullDetails_Title>{0} cull details</PS_KindCullDetails_Title>
+    <PS_KindCullDetails_KeepAtLeast>Keep at least:</PS_KindCullDetails_KeepAtLeast>
+    <PS_KindCullDetails_AdultMales>Adult males</PS_KindCullDetails_AdultMales>
+    <PS_KindCullDetails_AdultFemales>Adult females</PS_KindCullDetails_AdultFemales>
+    <PS_KindCullDetails_YoungMales>Young males</PS_KindCullDetails_YoungMales>
+    <PS_KindCullDetails_YoungFemales>Young females</PS_KindCullDetails_YoungFemales>
+    <PS_KindCullDetails_Footnote>Pawns held by minimums or protection guards won't be auto-culled, even when over max.</PS_KindCullDetails_Footnote>
+    <PS_KindCullDetails_GearTip>Open per-kind details</PS_KindCullDetails_GearTip>
+    <PS_KindCullDetails_MinExceedsMax>Warning: a minimum is greater than its corresponding max — auto-cull won't reduce that bracket.</PS_KindCullDetails_MinExceedsMax>
+    <PS_CountHeldByMinimum>Held at minimum ({0}); auto-cull won't reduce this further.</PS_CountHeldByMinimum>
+    <PS_CountHeldByGuard>Auto-cull paused: would break a protected breeding pair, target a pregnant pawn, or remove a bonded animal.</PS_CountHeldByGuard>
 </LanguageData>
