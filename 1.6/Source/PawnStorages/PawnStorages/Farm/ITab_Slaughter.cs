@@ -12,7 +12,7 @@ namespace PawnStorages.Farm;
 
 public class ITab_Slaughter : ITab
 {
-    private static readonly Vector2 WinSize = new(940f, 500f);
+    private static readonly Vector2 WinSize = new(1010f, 540f);
     public readonly ThingFilterUI.UIState ThingFilterState = new();
     private Vector2 scrollPos;
     private Rect viewRect;
@@ -25,12 +25,19 @@ public class ITab_Slaughter : ITab
     public const float MaxWidth = 84f;
     public const float LabelWidth = 124f;
     public const float GapWidth = 4f;
+    public const float GearWidth = 24f;
+    public const float HeaderTogglesY = 30f;
+    public const float HeaderTogglesHeight = 26f;
+    public const float HeaderStatusY = 60f;
+    public const float HeaderStatusHeight = 18f;
+    public const float HeaderEndY = 86f;
 
     public CompFarmStorage compFarmStorage => SelThing.TryGetComp<CompFarmStorage>();
     public CompFarmBreeder compFarmBreeder => SelThing.TryGetComp<CompFarmBreeder>();
 
     public Dictionary<PawnKindDef, AutoSlaughterConfig> AutoSlaughterSettings => compFarmBreeder.GetOrPopulateAutoSlaughterSettings();
     public Dictionary<PawnKindDef, AutoSlaughterCullOrder> CullOrder => compFarmBreeder.GetOrPopulateAutoSlaughterCullOrder();
+    public Dictionary<PawnKindDef, AutoSlaughterMinimums> Minimums => compFarmBreeder.GetOrPopulateAutoSlaughterMinimums();
 
     private List<PawnKindDef> _orderedSettingsCache;
 
@@ -100,6 +107,7 @@ public class ITab_Slaughter : ITab
         Color color = GUI.color;
         Dialog_AutoSlaughter.AnimalCountRecord animalCount = compFarmStorage.CountForType(config.animal);
         AutoSlaughterCullOrder order = CullOrder[kind];
+        AutoSlaughterMinimums mins = Minimums[kind];
 
         Widgets.BeginGroup(rowRect);
         WidgetRow row = new WidgetRow(0.0f, 0.0f);
@@ -112,41 +120,80 @@ public class ITab_Slaughter : ITab
         DoMaxColumn(row, ref config.maxTotal, ref config.uiMaxTotalBuffer, animalCount.total);
         DoAgeOrderColumn(row, ref order.AllAscending, config.maxTotal);
 
-        DrawCurrentCol(animalCount.male, config.maxMales);
+        DrawCurrentCol(animalCount.male, config.maxMales, bracketAdult: true, bracketGender: Gender.Male);
         DoMaxColumn(row, ref config.maxMales, ref config.uiMaxMalesBuffer, animalCount.male);
         DoAgeOrderColumn(row, ref order.AdultMaleAscending, config.maxMales);
 
-        DrawCurrentCol(animalCount.maleYoung, config.maxMalesYoung);
+        DrawCurrentCol(animalCount.maleYoung, config.maxMalesYoung, bracketAdult: false, bracketGender: Gender.Male);
         DoMaxColumn(row, ref config.maxMalesYoung, ref config.uiMaxMalesYoungBuffer, animalCount.maleYoung);
         DoAgeOrderColumn(row, ref order.ChildMaleAscending, config.maxMalesYoung);
 
-        DrawCurrentCol(animalCount.female, config.maxFemales);
+        DrawCurrentCol(animalCount.female, config.maxFemales, bracketAdult: true, bracketGender: Gender.Female);
         DoMaxColumn(row, ref config.maxFemales, ref config.uiMaxFemalesBuffer, animalCount.female);
         DoAgeOrderColumn(row, ref order.AdultFemaleAscending, config.maxFemales);
 
-        DrawCurrentCol(animalCount.femaleYoung, config.maxFemalesYoung);
+        DrawCurrentCol(animalCount.femaleYoung, config.maxFemalesYoung, bracketAdult: false, bracketGender: Gender.Female);
         DoMaxColumn(row, ref config.maxFemalesYoung, ref config.uiMaxFemalesYoungBuffer, animalCount.femaleYoung);
         DoAgeOrderColumn(row, ref order.ChildFemaleAscending, config.maxFemalesYoung);
+
+        row.Gap(GapWidth);
+        Color savedGearColor = GUI.color;
+        if (mins.AnySet)
+            GUI.color = Color.yellow;
+        if (row.ButtonIcon(TexButton.OpenStatsReport, "PS_KindCullDetails_GearTip".Translate()))
+        {
+            SoundDefOf.Click.PlayOneShotOnCamera();
+            Find.WindowStack.Add(new Dialog_KindCullDetails(compFarmBreeder, kind));
+        }
+        GUI.color = savedGearColor;
 
         Widgets.EndGroup();
         return;
 
-        void DrawCurrentCol(int val, int? limit)
+        void DrawCurrentCol(int val, int? limit, bool? bracketAdult = null, Gender? bracketGender = null)
         {
+            int min = 0;
+            bool isTotalCell = bracketAdult == null;
+            if (!isTotalCell && bracketGender.HasValue)
+                min = compFarmBreeder.EffectiveMin(kind, bracketAdult.Value, bracketGender.Value);
+
+            bool overLimit = limit.HasValue && limit.Value > 0 && val > limit.Value;
+            bool atOrBelowMin = !isTotalCell && val > 0 && val <= min;
+            bool heldByGuard = false;
+            if (overLimit && !isTotalCell && bracketGender.HasValue)
+                heldByGuard = IsBracketHeldByGuard(kind, bracketAdult.Value, bracketGender.Value, limit.Value);
+            else if (overLimit && isTotalCell)
+                heldByGuard = IsKindTotalHeldByGuard(kind);
+
             Color colColour = Color.white;
+            string tip = null;
 
             if (val == 0)
-                colColour = (Color.gray);
-            else if (val > limit)
+                colColour = Color.gray;
+            else if (heldByGuard)
             {
+                colColour = ColorLibrary.Green;
+                tip = "PS_CountHeldByGuard".Translate();
+            }
+            else if (overLimit)
                 colColour = ColorLibrary.RedReadable;
+            else if (atOrBelowMin)
+            {
+                colColour = Color.yellow;
+                tip = "PS_CountHeldByMinimum".Translate(min);
             }
 
             Color startColor = GUI.color;
             int anchor = (int)Text.Anchor;
             Text.Anchor = TextAnchor.MiddleCenter;
             GUI.color = colColour;
+            float colX = row.FinalX;
             row.Label(val.ToString(), 56f);
+            if (tip != null)
+            {
+                Rect cellRect = new(colX, 0f, 56f, LineHeight);
+                TooltipHandler.TipRegion(cellRect, tip);
+            }
             Text.Anchor = (TextAnchor)anchor;
             GUI.color = startColor;
         }
@@ -256,16 +303,91 @@ public class ITab_Slaughter : ITab
         }
     }
 
+    private void DrawHeaderToggles(Rect rect)
+    {
+        float colWidth = (rect.width - 16f) / 3f;
+        Rect t1 = new(rect.x, rect.y, colWidth, rect.height);
+        Rect t2 = new(rect.x + colWidth + 8f, rect.y, colWidth, rect.height);
+        Rect t3 = new(rect.x + 2f * (colWidth + 8f), rect.y, colWidth, rect.height);
+
+        bool makeRoom = compFarmBreeder.MakeRoomOnBirth;
+        Widgets.CheckboxLabeled(t1, "PS_MakeRoomOnBirth".Translate(), ref makeRoom);
+        TooltipHandler.TipRegion(t1, "PS_MakeRoomOnBirth_Tip".Translate());
+        compFarmBreeder.MakeRoomOnBirth = makeRoom;
+
+        bool protectPair = compFarmBreeder.ProtectBreedingPair;
+        Widgets.CheckboxLabeled(t2, "PS_ProtectBreedingPair".Translate(), ref protectPair);
+        TooltipHandler.TipRegion(t2, "PS_ProtectBreedingPair_Tip".Translate());
+        compFarmBreeder.ProtectBreedingPair = protectPair;
+
+        bool protectPreg = compFarmBreeder.ProtectPregnant;
+        Widgets.CheckboxLabeled(t3, "PS_ProtectPregnant".Translate(), ref protectPreg);
+        TooltipHandler.TipRegion(t3, "PS_ProtectPregnant_Tip".Translate());
+        compFarmBreeder.ProtectPregnant = protectPreg;
+    }
+
+    private void DrawHeaderStatus(Rect rect)
+    {
+        if (compFarmBreeder.MakeRoomOnBirth)
+            return;
+        Color savedColor = GUI.color;
+        GameFont savedFont = Text.Font;
+        GUI.color = Color.gray;
+        Text.Font = GameFont.Tiny;
+        Widgets.Label(rect, "PS_FarmStatus_DroppingNewborns".Translate());
+        Text.Font = savedFont;
+        GUI.color = savedColor;
+    }
+
+    private List<Pawn> GetAllStoredPawnsOfKind(PawnKindDef kind)
+    {
+        return compFarmBreeder.ParentAsBreederParent?.AllHealthyPawns?.Where(p => p.kindDef == kind).ToList() ?? [];
+    }
+
+    public bool IsBracketHeldByGuard(PawnKindDef kind, bool adult, Gender gender, int max)
+    {
+        if (max <= 0)
+            return false;
+        List<Pawn> members = GetAllStoredPawnsOfKind(kind);
+        int bucketCount = members.Count(p => p.ageTracker.Adult == adult && p.gender == gender);
+        if (bucketCount <= max)
+            return false;
+        int min = compFarmBreeder.EffectiveMin(kind, adult, gender);
+        if (bucketCount <= min)
+            return false;
+        int nonProtected = members.Count(p => p.ageTracker.Adult == adult && p.gender == gender && !compFarmBreeder.IsProtectedFromCull(p));
+        return nonProtected == 0;
+    }
+
+    public bool IsKindTotalHeldByGuard(PawnKindDef kind)
+    {
+        AutoSlaughterConfig config = AutoSlaughterSettings.TryGetValue(kind);
+        if (config == null || config.maxTotal <= 0)
+            return false;
+        List<Pawn> members = GetAllStoredPawnsOfKind(kind);
+        if (members.Count <= config.maxTotal)
+            return false;
+        IGrouping<PawnKindDef, Pawn> grouping = members.GroupBy(p => p.kindDef).FirstOrDefault();
+        if (grouping == null)
+            return false;
+        return compFarmBreeder.GetCullCandidatesOrdered(grouping).Count == 0;
+    }
+
     public override void FillTab()
     {
         if (compFarmBreeder == null)
             return;
 
-        Widgets.Label(new Rect(5.0f, 0.0f, WinSize.x, 30f), "PS_BreedingTab_TopLabel".Translate());
+        Widgets.Label(new Rect(5.0f, 0.0f, WinSize.x, 28f), "PS_BreedingTab_TopLabel".Translate());
 
-        Rect searchRect = new(0.0f, 30.0f, WinSize.x - 10, 25f);
+        DrawHeaderToggles(new Rect(5f, HeaderTogglesY, WinSize.x - 10f, HeaderTogglesHeight));
+        DrawHeaderStatus(new Rect(5f, HeaderStatusY, WinSize.x - 10f, HeaderStatusHeight));
+        Widgets.DrawLineHorizontal(0f, HeaderEndY - 4f, WinSize.x);
+
+        Rect searchRect = new(0.0f, HeaderEndY, WinSize.x - 10f, 25f);
         QuickSearchWidget.OnGUI(searchRect);
-        Rect tabRect = new Rect(0.0f, 55.0f, WinSize.x, WinSize.y - 55f).ContractedBy(10f);
+        float tableY = HeaderEndY + 25f;
+        Rect tabRect = new Rect(0.0f, tableY, WinSize.x, WinSize.y - tableY).ContractedBy(10f);
 
         List<PawnKindDef> filteredKinds = QuickSearchWidget.filter.Active
             ? _orderedSettingsCache.Where(kind => QuickSearchWidget.filter.Matches(kind.LabelCap.ToString().ToLower())).ToList()
