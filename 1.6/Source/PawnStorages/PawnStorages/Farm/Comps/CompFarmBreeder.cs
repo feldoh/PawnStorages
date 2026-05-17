@@ -96,16 +96,16 @@ namespace PawnStorages.Farm.Comps
 //experimental
 
         public bool CullFirstOverLimit(int max, List<Pawn> pawns)
-		{
-			if (max < 0 || max >= pawns.Count)
-			{
-				return false;
-			}
-			Pawn victim = pawns.First<Pawn>();
-			this.ExecutionInt(victim);
-			return true;
-		}
+        {
+            if (max < 0 || max >= pawns.Count)
+            {
+                return false;
+            }
 
+            Pawn pawn = pawns.First();
+            ExecutionInt(pawn);
+            return true;
+        }
         public void TryCull(List<IGrouping<PawnKindDef, Pawn>> types)
         {
             foreach (IGrouping<PawnKindDef, Pawn> type in types)
