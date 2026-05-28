@@ -71,7 +71,7 @@ namespace PawnStorages.Farm
 		}
 
 		// Token: 0x0600044D RID: 1101 RVA: 0x00014380 File Offset: 0x00012580
-		protected override void FillTab()
+		public override void FillTab()
 		{
 			if (this.compFarmStorage == null)
 			{
