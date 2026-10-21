@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+    <TraderKindDef>
+        <defName>PS_Caravan_Outlander_PSMerchant</defName>
+        <label>cold-storage slaver</label>
+        <requestable>false</requestable>
+        <category>Slaver</category>
+        <commonalityMultFromPopulationIntent>
+            <points>
+                <li>(0.2, 0)</li>
+                <li>(1,   1)</li>
+                <li>(2,   3)</li>
+            </points>
+        </commonalityMultFromPopulationIntent>
+        <stockGenerators>
+
+            <!-- Resources -->
+            <li Class="StockGenerator_SingleDef">
+                <thingDef>Silver</thingDef>
+                <countRange>1250~2000</countRange>
+            </li>
+            <li Class="StockGenerator_SingleDef">
+                <thingDef>MedicineIndustrial</thingDef>
+                <countRange>2~5</countRange>
+            </li>
+
+            <!-- Drugs -->
+            <li Class="StockGenerator_Category">
+                <categoryDef>Drugs</categoryDef>
+                <thingDefCountRange>2~4</thingDefCountRange>
+                <totalPriceRange>600~1000</totalPriceRange>
+            </li>
+
+            <!-- Techprints -->
+            <!-- none -->
+
+            <!-- Weapons -->
+            <!-- none -->
+
+            <!-- Apparel -->
+            <!-- none -->
+
+            <!-- Implants -->
+            <!-- none -->
+
+            <!-- Buildings -->
+            <li Class="StockGenerator_SingleDef">
+                <thingDef>PS_Crystallizer</thingDef>
+                <countRange>0~1</countRange>
+            </li>
+            <li Class="StockGenerator_SingleDef">
+                <thingDef>PS_DigitizerPlatform</thingDef>
+                <countRange>0~1</countRange>
+            </li>
+
+            <!-- Exotic -->
+            <li Class="StockGenerator_SingleDef">
+                <thingDef>PS_PawnDisc</thingDef>
+                <countRange>0~2</countRange>
+            </li>
+            <li Class="StockGenerator_SingleDef">
+                <thingDef>PS_PawnCrystal</thingDef>
+                <countRange>0~2</countRange>
+            </li>
+            <li Class="StockGenerator_SingleDef">
+                <thingDef>PS_PawnStatue</thingDef>
+                <countRange>0~2</countRange>
+            </li>
+            <li Class="StockGenerator_SingleDef">
+                <thingDef>PS_Plastinite</thingDef>
+                <countRange>0~2</countRange>
+            </li>
+
+            <!-- Genepacks -->
+            <li MayRequire="Ludeon.RimWorld.Biotech" Class="StockGenerator_SingleDef">
+                <thingDef>Genepack</thingDef>
+                <countRange>0~1</countRange>
+            </li>
+
+            <!-- Slaves -->
+            <li Class="StockGenerator_Slaves">
+                <countRange>0~1</countRange>
+            </li>
+            <li Class="PawnStorages.StockGenerator_StoredSlaves">
+                <countRange>0~2</countRange>
+                <storeInDef>PS_PawnDisc</storeInDef>
+            </li>
+            <li Class="PawnStorages.StockGenerator_StoredSlaves">
+                <countRange>0~2</countRange>
+                <storeInDef>PS_PawnCrystal</storeInDef>
+            </li>
+            <li Class="PawnStorages.StockGenerator_StoredSlaves">
+                <countRange>0~2</countRange>
+                <storeInDef>PS_PawnStatue</storeInDef>
+            </li>
+            <li Class="PawnStorages.StockGenerator_StoredSlaves">
+                <countRange>0~2</countRange>
+                <storeInDef>PS_Plastinite</storeInDef>
+            </li>
+
+            <!-- Animals -->
+            <li Class="StockGenerator_Animals">
+                <tradeTagsSell>
+                    <li>AnimalFighter</li>
+                </tradeTagsSell>
+                <tradeTagsBuy>
+                    <li>AnimalUncommon</li>
+                    <li>AnimalExotic</li>
+                </tradeTagsBuy>
+                <kindCountRange>1~2</kindCountRange>
+                <countRange>0~2</countRange>
+            </li>
+
+            <!-- Buying -->
+            <li Class="StockGenerator_BuyExpensiveSimple" />
+            <li Class="StockGenerator_BuyTradeTag">
+                <tag>Art</tag>
+            </li>
+            <li Class="StockGenerator_BuyTradeTag">
+                <tag>MusicalInstrument</tag>
+            </li>
+
+        </stockGenerators>
+    </TraderKindDef>
+
+</Defs>

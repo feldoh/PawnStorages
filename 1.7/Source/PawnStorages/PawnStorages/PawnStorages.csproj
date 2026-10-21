@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk" InitialTargets="">
+    <PropertyGroup>
+        <RootNamespace>PawnStorages</RootNamespace>
+        <AssemblyName>PawnStorages</AssemblyName>
+        <TargetFramework>net10.0</TargetFramework>
+        <RimWorldRoot Condition="'$(RimWorldRoot)' == ''">../../../../../../</RimWorldRoot>
+        <HarmonyModRoot Condition="'$(HarmonyModRoot)' == ''">$(RimWorldRoot)../../workshop/content/294100/2009463077/1.7/Assemblies/</HarmonyModRoot>
+        <LangVersion>preview</LangVersion>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <OutputPath>../../../Assemblies/</OutputPath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DefineConstants>TRACE</DefineConstants>
+        <WarningLevel>4</WarningLevel>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <!-- Unsafe is required for publicising! -->
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <Optimize>true</Optimize>
+        <DebugType>none</DebugType>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DefineConstants>TRACE;DEBUG</DefineConstants>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Optimize>false</Optimize>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>portable</DebugType>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="Assembly-CSharp" Condition="Exists('$(RimWorldRoot)Assembly-CSharp.dll')">
+            <HintPath>$(RimWorldRoot)Assembly-CSharp.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Waylith" Condition="Exists('$(RimWorldRoot)Waylith.dll')">
+            <HintPath>$(RimWorldRoot)Waylith.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityStubs" Condition="Exists('$(RimWorldRoot)UnityStubs.dll')">
+            <HintPath>$(RimWorldRoot)UnityStubs.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="0Harmony" Condition="Exists('$(HarmonyModRoot)0Harmony.dll')">
+            <HintPath>$(HarmonyModRoot)0Harmony.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup Condition="!Exists('$(RimWorldRoot)Assembly-CSharp.dll')">
+        <PackageReference Include="Krafs.Rimworld.Ref" Version="1.7.4982-unstable" />
+    </ItemGroup>
+    <ItemGroup Condition="!Exists('$(HarmonyModRoot)0Harmony.dll')">
+        <PackageReference Include="Lib.Harmony" Version="*" ExcludeAssets="runtime" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Krafs.Publicizer" Version="2.1.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Properties\Settings.Designer.cs">
+            <DesignTimeSharedInput>True</DesignTimeSharedInput>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Settings.settings</DependentUpon>
+        </Compile>
+    </ItemGroup>
+    <ItemGroup>
+        <None Update="Properties\Settings.settings">
+            <Generator>SettingsSingleFileGenerator</Generator>
+            <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+        <Publicize Include="Assembly-CSharp" />
+    </ItemGroup>
+    <Target Name="CleanAssemblies" AfterTargets="Clean">
+        <RemoveDir Directories="$(OutputPath)" Condition="Exists('$(OutputPath)')" />
+    </Target>
+    <Target Name="PreCleanAssemblies">
+        <RemoveDir Directories="$(OutputPath)" Condition="Exists('$(OutputPath)')" />
+    </Target>
+    <!-- Add A step to the build to run csharpier on build -->
+    <Target Name="CheckCsharpier" BeforeTargets="Build">
+        <Exec Command="csharpier --version" IgnoreExitCode="true">
+            <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
+        </Exec>
+    </Target>
+    <Target Name="FormatCode" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Release' And '$(ExitCode)' == '0' " DependsOnTargets="CheckCsharpier">
+        <Exec Command="csharpier format ." />
+    </Target>
+</Project>

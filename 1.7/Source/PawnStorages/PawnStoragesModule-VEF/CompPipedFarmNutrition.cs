@@ -1,0 +1,116 @@
+﻿using System;
+using System.Linq;
+using PipeSystem;
+using RimWorld;
+using UnityEngine;
+using Verse;
+
+namespace PawnStorages.VEF;
+
+public class CompPipedPawnStorageNutrition : CompPawnStorageNutrition
+{
+    private Lazy<CompResourceStorage> _resourceStorage;
+
+    public virtual CompResourceStorage ResourceStorage => _resourceStorage.Value;
+    public PipeNet PipeNet => ResourceStorage?.PipeNet;
+    public override bool IsPiped => PipeNet != null;
+    public override float StoredNutrition => PipeNet?.Stored ?? base.StoredNutrition;
+    public override float MaxNutrition => PipeNet?.AvailableCapacity ?? base.MaxNutrition;
+    public override float MaxTargetNutrition => ResourceStorage?.AmountCanAccept ?? base.MaxTargetNutrition;
+
+    public override void Initialize(CompProperties properties)
+    {
+        base.Initialize(properties);
+        _resourceStorage = new Lazy<CompResourceStorage>(() => parent?.GetComp<CompResourceStorage>());
+    }
+
+    public override float RequiredNutritionForTargetLevel(float targetLevel)
+    {
+        if (ResourceStorage == null)
+            return base.RequiredNutritionForTargetLevel(targetLevel);
+        float requiredNutrition = targetLevel - ResourceStorage.AmountStored;
+        return Mathf.Max(0f, requiredNutrition);
+    }
+
+    public override bool AbsorbToFeedIfNeeded(Need_Food foodNeeds, float desiredFeed, out float amountFed)
+    {
+        /*
+         * Priority:
+         * 1) pull from internal storage
+         * 2) pull from the network
+         * 3) pull from hoppers
+         */
+        amountFed = 0;
+        if (PipeNet == null || ResourceStorage == null)
+            return base.AbsorbToFeedIfNeeded(foodNeeds, desiredFeed, out amountFed);
+
+        // Pull from storage, and update needs accordingly
+        amountFed = Mathf.Min(ResourceStorage.AmountStored, desiredFeed);
+        foodNeeds.CurLevel += amountFed;
+        ResourceStorage.DrawResource(amountFed);
+
+        // Try to absorb from the network if needed
+        if (!Mathf.Approximately(amountFed, desiredFeed))
+        {
+            // Try to pull what we need to make up the desire
+            float toPull = Math.Min(desiredFeed - amountFed, PipeNet.Stored);
+            PipeNet.DrawAmongStorage(toPull, PipeNet.storages.ToList());
+            foodNeeds.CurLevel += toPull;
+            amountFed += toPull;
+        }
+
+        // If we've filled desire return else try to absorb from the hoppers.
+        if (Mathf.Approximately(amountFed, desiredFeed))
+            return true;
+
+        // Calculate remaining nutrition needed after initial feeding
+        float newDesire = desiredFeed - amountFed;
+
+        // Try to get more nutrition from hoppers if needed
+        if (!TryAbsorbNutritionFromSource(newDesire))
+            return amountFed > 0;
+
+        // Feed the pawn with additional nutrition pulled from hoppers
+        float nextAmountFed = Mathf.Min(ResourceStorage.AmountStored, newDesire);
+        foodNeeds.CurLevel += nextAmountFed;
+        ResourceStorage.DrawResource(nextAmountFed);
+
+        // If we have absorbed something return true so we process it
+        return nextAmountFed > 0;
+    }
+
+    public override bool AddNutritionToStorage(float amount)
+    {
+        /*
+         * Adds a specified amount of nutrition to the storage, utilizing the associated pipe network if necessary.
+         *  Returns true if any amount of nutrition was successfully added to the storage or distributed through the pipe network.
+         *  Returns false if the specified amount is <= zero
+         */
+
+        // If no storage or pipe network, use base method
+        if (ResourceStorage == null || PipeNet == null)
+            return base.AddNutritionToStorage(amount);
+
+        // Return false if amount is zero or negative
+        if (amount <= 0 || Mathf.Approximately(amount, 0))
+            return false;
+
+        // Calculate how much can actually be added based on storage capacity
+        float amountToAdd = Mathf.Min(ResourceStorage.AmountCanAccept, amount);
+
+        // Add the calculated amount to storage
+        ResourceStorage.AddResource(amountToAdd);
+
+        // If we couldn't add all of the requested amount
+        if (!Mathf.Approximately(amountToAdd, amount))
+        {
+            // Try to distribute remaining amount to other storage on the network
+            PipeNet.DistributeAmongStorage(amount - amountToAdd, out float stored);
+
+            // Return true if any amount was stored in network
+            return stored > 0;
+        }
+        // Return true if we added anything to storage
+        return amountToAdd > 0;
+    }
+}

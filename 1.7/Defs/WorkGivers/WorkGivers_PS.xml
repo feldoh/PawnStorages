@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <WorkGiverDef>
+        <defName>PS_DoBillsDigitalBench</defName>
+        <label>fabricate things</label>
+        <giverClass>WorkGiver_DoBill</giverClass>
+        <workType>Smithing</workType>
+        <priorityInType>50</priorityInType>
+        <fixedBillGiverDefs>
+            <li>PS_DigitizerFabricator</li>
+        </fixedBillGiverDefs>
+        <verb>fabricate</verb>
+        <gerund>fabricating things at</gerund>
+        <requiredCapacities>
+            <li>Manipulation</li>
+        </requiredCapacities>
+        <prioritizeSustains>true</prioritizeSustains>
+    </WorkGiverDef>
+
+    <WorkGiverDef>
+        <defName>PS_WorkGiverRefuelFarm</defName>
+        <label>hauling food to farm</label>
+        <giverClass>PawnStorages.WorkGiver_Warden_TakeToStorage</giverClass>
+        <workType>Hauling</workType>
+        <verb>refuel</verb>
+        <gerund>refueling</gerund>
+        <requiredCapacities>
+            <li>Manipulation</li>
+        </requiredCapacities>
+        <priorityInType>50</priorityInType>
+        <prioritizeSustains>true</prioritizeSustains>
+    </WorkGiverDef>
+
+    <WorkGiverDef Name="TakeToPen">
+        <defName>PS_RopeToFarm</defName>
+        <label>take animals to farm</label>
+        <giverClass>PawnStorages.Jobs.WorkGiver_RopeToFarm</giverClass>
+        <workType>Handling</workType>
+        <verb>rope</verb>
+        <gerund>roping</gerund>
+        <priorityInType>130</priorityInType>
+        <requiredCapacities>
+            <li>Manipulation</li>
+        </requiredCapacities>
+        <prioritizeSustains>true</prioritizeSustains>
+    </WorkGiverDef>
+</Defs>
