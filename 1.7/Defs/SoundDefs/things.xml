@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+    <SoundDef>
+        <defName>PS_CaptureSound</defName>  
+        <context>MapOnly</context> 
+        <maxSimultaneous>1</maxSimultaneous>  
+        <subSounds>
+            <li>
+                <grains>
+                    <li Class="AudioGrain_Clip">
+                        <clipPath>Things/PS_Capture</clipPath>
+                    </li>
+                </grains>      
+                <volumeRange>100~100</volumeRange>      
+                <pitchRange>1~1</pitchRange>
+            </li>
+        </subSounds>
+    </SoundDef>
+    <SoundDef>
+        <defName>PS_ReleaseSound</defName>  
+        <context>MapOnly</context> 
+        <maxSimultaneous>1</maxSimultaneous>  
+        <subSounds>
+            <li>
+                <grains>
+                    <li Class="AudioGrain_Clip">
+                        <clipPath>Things/PS_Release</clipPath>
+                    </li>
+                </grains>      
+                <volumeRange>100~100</volumeRange>      
+                <pitchRange>1~1</pitchRange>
+            </li>
+        </subSounds>
+    </SoundDef>
+</Defs>

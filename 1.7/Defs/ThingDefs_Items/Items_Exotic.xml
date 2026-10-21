@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <ThingDef Name="StorageDiscBase" ParentName="ResourceBase" Abstract="True">
+        <graphicData>
+            <texPath>Things/Item/Special/PawnDisc</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+        </graphicData>
+        <resourceReadoutPriority>Middle</resourceReadoutPriority>
+        <soundInteract>Metal_Drop</soundInteract>
+        <soundDrop>Metal_Drop</soundDrop>
+        <stackLimit>1</stackLimit>
+        <useHitPoints>true</useHitPoints>
+        <tickerType>Never</tickerType>
+        <statBases>
+            <MarketValue>200</MarketValue>
+            <MaxHitPoints>100</MaxHitPoints>
+            <Mass>2</Mass>
+            <Flammability>0.2</Flammability>
+        </statBases>
+        <thingCategories>
+            <li>Items</li>
+        </thingCategories>
+        <drawGUIOverlay>false</drawGUIOverlay>
+        <tradeability>All</tradeability>
+        <techLevel>Ultra</techLevel>
+        <tradeTags>
+            <li>ExoticMisc</li>
+        </tradeTags>
+    </ThingDef>
+
+    <ThingDef ParentName="StorageDiscBase">
+        <defName>PS_PawnDisc</defName>
+        <label>PawnStorage™ disc</label>
+        <!--ASK: Keep Feynman Digitizer desc instead?-->
+        <description>A storage medium for a pawn. Usable with a PawnStorage™ Digitizer to create a filled disc.</description>
+        <stackLimit>16</stackLimit>
+        <tickerType>Never</tickerType>
+        <drawGUIOverlay>true</drawGUIOverlay>
+        <descriptionHyperlinks>
+            <ThingDef>PS_DigitizerFabricator</ThingDef>
+            <ThingDef>PS_Crystallizer</ThingDef>
+        </descriptionHyperlinks>
+        <comps>
+            <li Class="PawnStorages.CompProperties_PawnStorage">
+                <compClass>PawnStorages.CompPawnStorage</compClass>
+                <needsDrop>false</needsDrop>
+                <maxStoredPawns>1</maxStoredPawns>
+                <releaseOption>true</releaseOption>
+                <convertOption>true</convertOption>
+                <appendOfName>true</appendOfName>
+                <lightEffect>true</lightEffect>
+                <storageStation>PS_DigitizerPlatform</storageStation>
+            </li>
+        </comps>
+    </ThingDef>
+
+    <ThingDef ParentName="StorageDiscBase">
+        <defName>PS_PawnCrystal</defName>
+        <label>mysterious gem</label>
+        <!--ASK: Keep Feynman Digitizer desc instead?-->
+        <description>A storage medium for a pawn. This magical crystal can be imbued with the physical essence of a colonist.</description>
+        <descriptionHyperlinks>
+            <ThingDef>PS_Crystallizer</ThingDef>
+        </descriptionHyperlinks>
+        <stackLimit>16</stackLimit>
+        <tickerType>Never</tickerType>
+        <drawGUIOverlay>true</drawGUIOverlay>
+        <graphicData>
+            <texPath>Things/Item/Special/PawnCrystal</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+        </graphicData>
+        <comps>
+            <li Class="PawnStorages.CompProperties_PawnStorage">
+                <compClass>PawnStorages.CompPawnStorage</compClass>
+                <needsDrop>false</needsDrop>
+                <maxStoredPawns>1</maxStoredPawns>
+                <releaseOption>true</releaseOption>
+                <convertOption>true</convertOption>
+                <appendOfName>true</appendOfName>
+                <lightEffect>true</lightEffect>
+                <storageStation>PS_Crystallizer</storageStation>
+            </li>
+        </comps>
+    </ThingDef>
+
+    <OrderedTakeGroupDef>
+        <defName>PS_CaptureItem</defName>
+        <label>capture item</label>
+    </OrderedTakeGroupDef>
+
+    <ThingDef ParentName="StorageDiscBase">
+        <defName>PS_CaptureCrystal</defName>
+        <label>mysterious capture gem</label>
+        <orderedTakeGroup>PS_CaptureItem</orderedTakeGroup>
+        <!--ASK: Keep Feynman Digitizer desc instead?-->
+        <description>A storage medium for a pawn. This magical crystal can ensnare any downed pawn.</description>
+        <stackLimit>16</stackLimit>
+        <tickerType>Never</tickerType>
+        <drawGUIOverlay>true</drawGUIOverlay>
+        <thingSetMakerTags>
+            <li>RewardStandardLowFreq</li>
+        </thingSetMakerTags>
+        <graphicData>
+            <texPath>Things/Item/Special/PawnCrystal</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+        </graphicData>
+        <comps>
+            <li Class="PawnStorages.CompProperties_PawnStorage">
+                <compClass>PawnStorages.CompPawnStorage</compClass>
+                <needsDrop>false</needsDrop>
+                <maxStoredPawns>1</maxStoredPawns>
+                <releaseOption>true</releaseOption>
+                <convertOption>true</convertOption>
+                <appendOfName>true</appendOfName>
+                <lightEffect>true</lightEffect>
+                <releaseEffect>Skip_Entry</releaseEffect>
+                <storeEffect>Skip_Entry</storeEffect>
+                <charges>1</charges>
+                <useCharges>true</useCharges>
+                <destroyOnZeroCharges>true</destroyOnZeroCharges>
+                <useFromInventory>true</useFromInventory>
+            </li>
+        </comps>
+        <costList>
+            <Jade>1</Jade>
+        </costList>
+        <recipeMaker>
+            <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+            <workSkill>Artistic</workSkill>
+            <skillRequirements>
+                <Crafting>6</Crafting>
+                <Artistic>5</Artistic>
+            </skillRequirements>
+            <unfinishedThingDef>UnfinishedSculpture</unfinishedThingDef>
+            <effectWorking>Sculpt</effectWorking>
+            <soundWorking>Recipe_Sculpt</soundWorking>
+            <recipeUsers>
+                <li>TableSculpting</li>
+            </recipeUsers>
+            <defaultIngredientFilter>
+                <categories>
+                    <li>Root</li>
+                </categories>
+                <thingDefs>
+                    <li>Jade</li>
+                    <li MayRequire="Ludeon.RimWorld.Anomaly">Bioferrite</li>
+                </thingDefs>
+            </defaultIngredientFilter>
+        </recipeMaker>
+        <statBases>
+            <MaxHitPoints>90</MaxHitPoints>
+            <Mass>1</Mass>
+            <Beauty>5</Beauty>
+            <WorkToMake>5000</WorkToMake>
+        </statBases>
+        <stuffCategories>
+            <li>Stony</li>
+        </stuffCategories>
+        <costStuffCount>10</costStuffCount>
+    </ThingDef>
+
+
+    <ThingDef ParentName="BaseMakeableGrenade">
+        <defName>PS_CaptureSphere</defName>
+        <label>capture sphere</label>
+        <description>A capture sphere capable of capturing and releasing pawns at range. It will only capture non-faction pawns if they're downed.</description>
+        <recipeMaker>
+            <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+            <workSkill>Crafting</workSkill>
+            <skillRequirements>
+                <Crafting>8</Crafting>
+            </skillRequirements>
+            <unfinishedThingDef>UnfinishedWeapon</unfinishedThingDef>
+            <effectWorking>Smith</effectWorking>
+            <soundWorking>Recipe_Machining</soundWorking>
+            <recipeUsers>
+                <li>TableMachining</li>
+            </recipeUsers>
+            <defaultIngredientFilter>
+                <categories>
+                    <li>Root</li>
+                </categories>
+                <thingDefs>
+                    <li>Jade</li>
+                </thingDefs>
+            </defaultIngredientFilter>
+        </recipeMaker>
+        <tickerType>Normal</tickerType>
+        <graphicData>
+            <texPath>Things/Item/Special/PS_CaptureBall</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+        </graphicData>
+        <uiIconScale>1.3</uiIconScale>
+        <soundInteract>Interact_Grenade</soundInteract>
+        <tradeability>All</tradeability>
+        <techLevel>Ultra</techLevel>
+        <tradeTags>
+            <li>ExoticMisc</li>
+        </tradeTags>
+        <statBases>
+            <Mass>1</Mass>
+            <RangedWeapon_Cooldown>2.66</RangedWeapon_Cooldown>
+            <WorkToMake>12000</WorkToMake>
+        </statBases>
+        <costList>
+            <Jade>1</Jade>
+            <Steel>20</Steel>
+        </costList>
+        <weaponTags Inherit="False">
+            <li>PS_Throwable_CaptureItem</li>
+        </weaponTags>
+        <thingCategories>
+            <li>Grenades</li>
+        </thingCategories>
+        <smeltable>true</smeltable>
+        <verbs>
+            <li>
+                <label>throw capture sphere</label>
+                <verbClass>PawnStorages.CaptureSphere.Verb_LaunchCaptureSphere</verbClass>
+                <commandIcon>UI/Buttons/PS_CaptureBallButton</commandIcon>
+                <hasStandardCommand>true</hasStandardCommand>
+                <range>20</range>
+                <warmupTime>1</warmupTime>
+                <noiseRadius>4</noiseRadius>
+                <ai_IsBuildingDestroyer>false</ai_IsBuildingDestroyer>
+                <soundCast>ThrowGrenade</soundCast>
+                <targetParams>
+                    <canTargetLocations>false</canTargetLocations>
+                    <canTargetSelf>false</canTargetSelf>
+                    <canTargetPawns>true</canTargetPawns>
+                </targetParams>
+                <defaultProjectile>PS_Proj_CaptureSphere</defaultProjectile>
+                <rangedFireRulepack>Combat_RangedFire_Thrown</rangedFireRulepack>
+            </li>
+        </verbs>
+        <comps>
+            <li Class="PawnStorages.CompProperties_PawnStorage">
+                <compClass>PawnStorages.CompPawnStorage</compClass>
+                <needsDrop>false</needsDrop>
+                <maxStoredPawns>1</maxStoredPawns>
+                <releaseOption>true</releaseOption>
+                <convertOption>true</convertOption>
+                <appendOfName>true</appendOfName>
+                <lightEffect>true</lightEffect>
+                <releaseEffect>Skip_Entry</releaseEffect>
+                <storeEffect>Skip_Entry</storeEffect>
+                <charges>1</charges>
+                <useCharges>true</useCharges>
+                <destroyOnZeroCharges>true</destroyOnZeroCharges>
+                <useFromInventory>true</useFromInventory>
+            </li>
+        </comps>
+    </ThingDef>
+
+
+    <ThingDef ParentName="BaseGrenadeProjectile">
+        <defName>PS_Proj_CaptureSphere</defName>
+        <label>capture sphere</label>
+        <thingClass>PawnStorages.CaptureSphere.Projectile_Capturing</thingClass>
+        <graphicData>
+            <texPath>Things/Item/Special/PS_CaptureBall</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+        </graphicData>
+        <projectile>
+            <!-- Use default damage from explosion def -->
+            <explosionDelay>100</explosionDelay>
+            <explosionEffect>PS_StarExplosion</explosionEffect>
+        </projectile>
+
+        <comps>
+            <li Class="PawnStorages.CompProperties_PawnStorage">
+                <compClass>PawnStorages.CompPawnStorage</compClass>
+                <needsDrop>false</needsDrop>
+                <maxStoredPawns>1</maxStoredPawns>
+                <releaseOption>true</releaseOption>
+                <convertOption>true</convertOption>
+                <appendOfName>true</appendOfName>
+                <lightEffect>true</lightEffect>
+                <storageStation>PS_DigitizerPlatform</storageStation>
+            </li>
+        </comps>
+    </ThingDef>
+
+    <!--
+	<ThingDef ParentName="StorageDiscBase">
+		<defName>PS_PawnDiscFilled</defName>
+		<label>PawnStorage™ disc (filled)</label>
+		<description>A pawn consciousness digitized at a PawnStorage™ Digitizer.</description>
+		<stackLimit>1</stackLimit>
+		<tickerType>Normal</tickerType>
+		<comps>
+			<li Class="PawnStorages.CompProperties_PawnStorage">
+				<compClass>PawnStorages.CompPawnStorageDisc</compClass>
+				<needsDrop>false</needsDrop>
+				<maxStoredPawns>1</maxStoredPawns>
+				<releaseOption>true</releaseOption>
+				<convertOption>true</convertOption>
+				<appendOfName>true</appendOfName>
+				<lightEffect>true</lightEffect>
+			</li>
+		</comps>
+	</ThingDef>
+	-->
+</Defs>
