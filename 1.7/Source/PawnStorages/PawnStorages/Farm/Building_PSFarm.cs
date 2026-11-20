@@ -164,6 +164,23 @@ public class Building_PSFarm : Building, IStoreSettingsParent, INutritionStorage
         {
             Thing storageParent = pawnStorage.parent;
 
+            // Make-room: cull a same-kind candidate so the newborn can be stored. Falls through to
+            // the drop path if no candidate survives the protection guards.
+            if (IsBreeder && FarmBreeder is { MakeRoomOnBirth: true })
+            {
+                Pawn evicted = FarmBreeder.TryEjectForRoom(newPawn);
+                if (evicted != null)
+                {
+                    Messages.Message(
+                        "PS_FarmCulledForRoom".Translate(evicted.LabelShortCap, newPawn.LabelCap, storageParent.LabelCap),
+                        storageParent,
+                        MessageTypeDefOf.NeutralEvent
+                    );
+                    pawnStorage.StorePawn(newPawn, false);
+                    return;
+                }
+            }
+
             Messages.Message("PS_StorageFull".Translate(storageParent.LabelCap, newPawn.LabelCap), (Thing)newPawn, MessageTypeDefOf.NeutralEvent);
 
             PawnComponentsUtility.AddComponentsForSpawn(newPawn);
