@@ -453,7 +453,7 @@
     <ThingDef ParentName="BuildingBase">
         <defName>PS_FactoryHopper</defName>
         <label>factory hopper</label>
-        <description>Holds resources for factories.</description>
+        <description>Holds resources for factories and comes with built-in cooler.</description>
         <thingClass>Building_Storage</thingClass>
         <graphicData>
             <texPath>Things/Building/Production/Hopper</texPath>

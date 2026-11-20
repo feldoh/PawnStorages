@@ -5,19 +5,7 @@ namespace PawnStorages;
 
 public class CompHopperCooler : ThingComp
 {
-    public bool IsPowered
-    {
-        get
-        {
-            CompPowerTrader power = parent.TryGetComp<CompPowerTrader>();
-            return power != null && power.PowerOn;
-        }
-    }
+    public bool IsPowered => parent.TryGetComp<CompPowerTrader>() is { PowerOn: true };
 
-    public override string CompInspectStringExtra()
-    {
-        if (IsPowered)
-            return "PS_HopperFrozen".Translate();
-        return "PS_HopperCoolerNoPower".Translate();
-    }
+    public override string CompInspectStringExtra() => IsPowered ? "PS_HopperFrozen".Translate() : "PS_HopperCoolerNoPower".Translate();
 }

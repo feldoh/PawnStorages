@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -18,14 +19,6 @@ public static class CompRottable_CompTickRare_Patch
         IntVec3 position = __instance.parent.Position;
 
         List<Thing> thingsAtCell = position.GetThingList(map);
-        for (int i = 0; i < thingsAtCell.Count; i++)
-        {
-            Thing thing = thingsAtCell[i];
-            CompHopperCooler cooler = thing.TryGetComp<CompHopperCooler>();
-            if (cooler != null && cooler.IsPowered)
-                return false;
-        }
-
-        return true;
+        return thingsAtCell.Select(thing => thing.TryGetComp<CompHopperCooler>()).All(cooler => cooler is not { IsPowered: true });
     }
 }
