@@ -3,6 +3,7 @@
     <PropertyGroup>
         <RootNamespace>PawnStorages</RootNamespace>
         <AssemblyName>PawnStorages</AssemblyName>
+        <Version>3.0.0</Version>
         <TargetFramework>net10.0</TargetFramework>
         <RimWorldRoot Condition="'$(RimWorldRoot)' == ''">../../../../../../</RimWorldRoot>
         <HarmonyModRoot Condition="'$(HarmonyModRoot)' == ''">$(RimWorldRoot)../../workshop/content/294100/2009463077/1.7/Assemblies/</HarmonyModRoot>
@@ -16,13 +17,13 @@
         <WarningLevel>4</WarningLevel>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <!-- Unsafe is required for publicising! -->
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
         <Optimize>true</Optimize>
         <DebugType>none</DebugType>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <DefineConstants>TRACE;DEBUG</DefineConstants>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Optimize>false</Optimize>
         <DebugSymbols>true</DebugSymbols>
@@ -88,5 +89,12 @@
     </Target>
     <Target Name="FormatCode" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Release' And '$(ExitCode)' == '0' " DependsOnTargets="CheckCsharpier">
         <Exec Command="csharpier format ." />
+    </Target>
+    <!-- Keep the README "Mod Version" badge in sync with the csproj Version on every build -->
+    <Target Name="UpdateReadmeVersion" AfterTargets="Build" Condition="Exists('..\..\..\..\README.md')">
+        <Exec
+            Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;$c = [IO.File]::ReadAllText('..\..\..\..\README.md'); [IO.File]::WriteAllText('..\..\..\..\README.md', ($c -replace 'Mod_Version-[0-9.]+', 'Mod_Version-$(Version)'))&quot;"
+            ContinueOnError="true"
+        />
     </Target>
 </Project>

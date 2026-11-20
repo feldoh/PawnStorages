@@ -6,7 +6,7 @@
 
 # Homebound - A Rimsential Mod
 
-![Mod Version](https://img.shields.io/badge/Mod_Version-1.11.1-blue.svg)
+![Mod Version](https://img.shields.io/badge/Mod_Version-3.0.0-blue.svg)
 ![RimWorld Version](https://img.shields.io/badge/Built_for_RimWorld-1.7-blue.svg)
 ![Harmony Version](https://img.shields.io/badge/Powered_by_Harmony-3.0.4-blue.svg)
 ![GitHub Downloads](https://img.shields.io/github/downloads/feldoh/PawnStorages/total?colorB=blue&label=GitHub+Downloads)
