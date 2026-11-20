@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -114,7 +114,7 @@ public class Projectile_Capturing : Projectile
             CompPawnStorage storageComp = Equipment.GetComp<CompPawnStorage>();
             if (storageComp == null)
             {
-                storageComp = (CompPawnStorage)Activator.CreateInstance(typeof(CompPawnStorage));
+                storageComp = Activator.CreateInstance<CompPawnStorage>();
                 storageComp.parent = Equipment;
                 Equipment.comps.Add(storageComp);
             }
@@ -238,25 +238,9 @@ public class Projectile_Capturing : Projectile
         return true;
     }
 
-    public bool Capture()
-    {
-        if (HitThing is not Pawn pawn)
-            return false;
-        return TryAddToNewBall(pawn, out NewlySpawnedBall, ProjectileStorage);
-    }
-    private float GetCaptureChance()
-    {
-        CompProperties_PawnStorage props = equipmentDef?.GetCompProperties<CompProperties_PawnStorage>();
-        if (props != null)
-            return props.captureChance;
-        return 1.0f;
-    }
+    public bool Capture() => HitThing is Pawn pawn && TryAddToNewBall(pawn, out NewlySpawnedBall, ProjectileStorage);
 
+    private float GetCaptureChance() => equipmentDef?.GetCompProperties<CompProperties_PawnStorage>()?.captureChance ?? 1.0f;
 
-public void Release()
-    {
-        IntVec3 position = HitThing?.Position ?? Position;
-
-        EquipmentStorageComp?.ReleaseContentsAt(ThingMap, position);
-    }
+    public void Release() => EquipmentStorageComp?.ReleaseContentsAt(ThingMap, HitThing?.Position ?? Position);
 }
