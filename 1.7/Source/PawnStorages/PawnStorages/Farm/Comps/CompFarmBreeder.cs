@@ -92,10 +92,12 @@ namespace PawnStorages.Farm.Comps
                 victim.Kill(dinfo, null);
             SoundDefOf.Execute_Cut.PlayOneShot((SoundInfo)(Thing)victim);
         }
+//Changed if max to accomodate value 0 to slaugther all animals
+//experimental
 
         public bool CullFirstOverLimit(int max, List<Pawn> pawns)
         {
-            if (max <= 0 || max >= pawns.Count)
+            if (max < 0 || max >= pawns.Count)
             {
                 return false;
             }
@@ -104,7 +106,6 @@ namespace PawnStorages.Farm.Comps
             ExecutionInt(pawn);
             return true;
         }
-
         public void TryCull(List<IGrouping<PawnKindDef, Pawn>> types)
         {
             foreach (IGrouping<PawnKindDef, Pawn> type in types)
