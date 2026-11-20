@@ -14,6 +14,18 @@ public static class DrawTimeAssignmentSelectorGrid_Patch
 {
     private static int? _cachedColumnOffset;
 
+    public static HashSet<string> conflictingMods = new HashSet<string>() { "aoba.exosuit.framework" };
+
+    public static bool HasActiveModWithPackageIdCaseInsensitive(string name)
+    {
+        foreach (ModMetaData mod in ModLister.mods)
+        {
+            if (mod.Active && string.Equals(mod.PackageId, name, StringComparison.CurrentCultureIgnoreCase))
+                return true;
+        }
+        return false;
+    }
+
     private static int ColumnOffset()
     {
         if (_cachedColumnOffset.HasValue)
@@ -40,7 +52,10 @@ public static class DrawTimeAssignmentSelectorGrid_Patch
         if (myIndex < 0)
             myIndex = 0;
 
-        return (_cachedColumnOffset = vanillaBase + myIndex).Value;
+        // Shift the PS_Home button past any conflicting mods that are active.
+        int conflictingModCount = conflictingMods.Count(HasActiveModWithPackageIdCaseInsensitive);
+
+        return (_cachedColumnOffset = vanillaBase + myIndex + conflictingModCount).Value;
     }
 
     public static void Postfix(Rect rect)
@@ -50,10 +65,10 @@ public static class DrawTimeAssignmentSelectorGrid_Patch
         rect2.xMax = rect2.center.x;
         rect2.yMax = rect2.center.y;
         rect2.x += ColumnOffset() * rect2.width;
-        DrawTimeAssignmentSelectorFor(rect2, PS_DefOf.PS_Home);
+        DrawTimeAssignmentSelectorFor(rect2, PS_DefOf.PS_Home, "PS_Home_Tooltip".Translate());
     }
 
-    public static void DrawTimeAssignmentSelectorFor(Rect rect, TimeAssignmentDef ta)
+    public static void DrawTimeAssignmentSelectorFor(Rect rect, TimeAssignmentDef ta, string tooltip)
     {
         rect = rect.ContractedBy(2f);
         GUI.DrawTexture(rect, ta.ColorTexture);
@@ -62,6 +77,8 @@ public static class DrawTimeAssignmentSelectorGrid_Patch
             TimeAssignmentSelector.selectedAssignment = ta;
             SoundDefOf.Tick_High.PlayOneShotOnCamera();
         }
+
+        TooltipHandler.TipRegion(rect, (TipSignal) tooltip);
 
         GUI.color = Color.white;
         if (Mouse.IsOver(rect))
