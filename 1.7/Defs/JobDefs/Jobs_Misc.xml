@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <JobDef>
+        <defName>PS_Enter</defName>
+        <driverClass>PawnStorages.JobDriver_Enter</driverClass>
+        <reportString>Entering TargetA</reportString>
+        <allowOpportunisticPrefix>true</allowOpportunisticPrefix>
+    </JobDef>
+
+    <JobDef>
+        <defName>PS_Release</defName>
+        <driverClass>PawnStorages.JobDriver_Release</driverClass>
+        <reportString>releasing from TargetA</reportString>
+        <allowOpportunisticPrefix>true</allowOpportunisticPrefix>
+    </JobDef>
+
+    <JobDef>
+        <defName>PS_CaptureInPawnStorage</defName>
+        <driverClass>PawnStorages.JobDriver_TakeToStorage</driverClass>
+        <reportString>storing TargetA.</reportString>
+        <alwaysShowWeapon>true</alwaysShowWeapon>
+        <makeTargetPrisoner>true</makeTargetPrisoner>
+        <casualInterruptible>false</casualInterruptible>
+        <carryThingAfterJob>true</carryThingAfterJob>
+    </JobDef>
+
+    <JobDef>
+        <defName>PS_CaptureInPawnStorageItem</defName>
+        <driverClass>PawnStorages.JobDriver_CaptureInStorageItem</driverClass>
+        <reportString>storing TargetA.</reportString>
+        <alwaysShowWeapon>false</alwaysShowWeapon>
+        <makeTargetPrisoner>true</makeTargetPrisoner>
+        <casualInterruptible>false</casualInterruptible>
+        <carryThingAfterJob>true</carryThingAfterJob>
+    </JobDef>
+
+    <JobDef>
+        <defName>PS_CaptureEntityInPawnStorage</defName>
+        <driverClass>PawnStorages.JobDriver_TakeToStorage</driverClass>
+        <reportString>storing TargetA.</reportString>
+        <alwaysShowWeapon>true</alwaysShowWeapon>
+        <makeTargetPrisoner>false</makeTargetPrisoner>
+        <casualInterruptible>false</casualInterruptible>
+        <carryThingAfterJob>true</carryThingAfterJob>
+    </JobDef>
+
+    <JobDef>
+        <defName>PS_CaptureAnimalInPawnStorage</defName>
+        <driverClass>PawnStorages.JobDriver_TakeToStorage</driverClass>
+        <reportString>storing TargetA.</reportString>
+        <alwaysShowWeapon>true</alwaysShowWeapon>
+        <makeTargetPrisoner>false</makeTargetPrisoner>
+        <casualInterruptible>false</casualInterruptible>
+        <carryThingAfterJob>true</carryThingAfterJob>
+    </JobDef>
+
+    <JobDef>
+        <defName>PS_TakeToPawnStorage</defName>
+        <driverClass>PawnStorages.JobDriver_TakeToStorage</driverClass>
+        <reportString>storing TargetA.</reportString>
+        <alwaysShowWeapon>true</alwaysShowWeapon>
+        <makeTargetPrisoner>false</makeTargetPrisoner>
+        <casualInterruptible>false</casualInterruptible>
+        <carryThingAfterJob>true</carryThingAfterJob>
+        <dropThingBeforeJob>false</dropThingBeforeJob>
+    </JobDef>
+
+    <JobDef>
+        <defName>PS_CaptureCarriedToPawnStorage</defName>
+        <driverClass>PawnStorages.JobDriver_TakeToStorage</driverClass>
+        <reportString>storing TargetA.</reportString>
+        <alwaysShowWeapon>true</alwaysShowWeapon>
+        <makeTargetPrisoner>true</makeTargetPrisoner>
+        <casualInterruptible>false</casualInterruptible>
+        <carryThingAfterJob>true</carryThingAfterJob>
+        <dropThingBeforeJob>false</dropThingBeforeJob>
+    </JobDef>
+
+    <WorkGiverDef>
+        <defName>PS_TakePrisonerToPawnStorage</defName>
+        <label>take prisoners to storage</label>
+        <giverClass>PawnStorages.WorkGiver_Warden_TakeToStorage</giverClass>
+        <workType>Warden</workType>
+        <verb>take to storage</verb>
+        <gerund>taking to storage</gerund>
+        <priorityInType>90</priorityInType>
+        <requiredCapacities>
+            <li>Manipulation</li>
+        </requiredCapacities>
+    </WorkGiverDef>
+
+    <JobDef>
+        <defName>PS_CaptureAnimalToFarm</defName>
+        <driverClass>PawnStorages.Farm.JobDriver_TakeToFarm</driverClass>
+        <reportString>storing TargetA.</reportString>
+        <alwaysShowWeapon>true</alwaysShowWeapon>
+        <makeTargetPrisoner>false</makeTargetPrisoner>
+        <casualInterruptible>false</casualInterruptible>
+        <carryThingAfterJob>true</carryThingAfterJob>
+    </JobDef>
+
+    <JobDef>
+        <defName>PS_RopeToFarm</defName>
+        <driverClass>PawnStorages.Jobs.JobDriver_RopeToFarm</driverClass>
+        <reportString>leading TargetA to farm.</reportString>
+        <casualInterruptible>false</casualInterruptible>
+        <allowOpportunisticPrefix>true</allowOpportunisticPrefix>
+    </JobDef>
+</Defs>

@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <!-- Digitizer Fabricator -->
+    <ThingDef ParentName="BenchBase">
+        <defName>PS_DigitizerFabricator</defName>
+        <label>digitizer fabricator</label>
+        <description>An advanced station to create PawnStorage™ discs.</description>
+        <thingClass>Building_WorkTable</thingClass>
+        <altitudeLayer>Building</altitudeLayer>
+        <passability>PassThroughOnly</passability>
+        <pathCost>50</pathCost>
+        <size>(3,2)</size>
+        <graphicData>
+            <texPath>Things/Building/Production/Digitizer_Fabricator</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <shaderType>CutoutComplex</shaderType>
+            <drawSize>(4,4)</drawSize>
+        </graphicData>
+        <statBases>
+            <MaxHitPoints>300</MaxHitPoints>
+            <WorkToBuild>5000</WorkToBuild>
+            <Flammability>1.0</Flammability>
+        </statBases>
+        <constructionSkillPrerequisite>6</constructionSkillPrerequisite>
+        <costList>
+            <Steel>200</Steel>
+            <ComponentIndustrial>12</ComponentIndustrial>
+            <ComponentSpacer>2</ComponentSpacer>
+        </costList>
+        <inspectorTabs>
+            <li>ITab_Bills</li>
+        </inspectorTabs>
+        <recipes>
+            <li>PS_MakePawnStorageDisc</li>
+        </recipes>
+        <comps>
+            <li Class="CompProperties_AffectedByFacilities">
+                <linkableFacilities>
+                    <li>ToolCabinet</li>
+                </linkableFacilities>
+            </li>
+            <li Class="CompProperties_Power">
+                <compClass>CompPowerTrader</compClass>
+                <basePowerConsumption>250</basePowerConsumption>
+                <shortCircuitInRain>true</shortCircuitInRain>
+            </li>
+            <li Class="CompProperties_Flickable" />
+            <li Class="CompProperties_Breakdownable" />
+        </comps>
+        <fillPercent>0.5</fillPercent>
+        <interactionCellOffset>(0,0,-1)</interactionCellOffset>
+        <hasInteractionCell>true</hasInteractionCell>
+        <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+        <designationCategory>Production</designationCategory>
+        <surfaceType>Item</surfaceType>
+        <placeWorkers>
+            <li>PlaceWorker_ShowFacilitiesConnections</li>
+            <li>PlaceWorker_PreventInteractionSpotOverlap</li>
+        </placeWorkers>
+        <researchPrerequisites>
+            <li>Fabrication</li>
+        </researchPrerequisites>
+    </ThingDef>
+
+    <!-- Digitizer Platform -->
+    <ThingDef ParentName="BenchBase">
+        <defName>PS_DigitizerPlatform</defName>
+        <label>PawnStorage™ platform</label>
+        <description>This platform uses PawnStorage™ discs to store pawns.</description>
+        <thingClass>Building</thingClass>
+        <altitudeLayer>Building</altitudeLayer>
+        <passability>Standable</passability>
+        <pathCost>25</pathCost>
+        <size>(3,3)</size>
+        <rotatable>false</rotatable>
+        <graphicData>
+            <texPath>Things/Building/Production/Digitizer_Platform</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <shaderType>CutoutComplex</shaderType>
+            <drawSize>(4,4)</drawSize>
+        </graphicData>
+        <statBases>
+            <MaxHitPoints>300</MaxHitPoints>
+            <WorkToBuild>5000</WorkToBuild>
+            <Flammability>1.0</Flammability>
+        </statBases>
+        <constructionSkillPrerequisite>6</constructionSkillPrerequisite>
+        <costList>
+            <Steel>200</Steel>
+            <ComponentIndustrial>12</ComponentIndustrial>
+            <ComponentSpacer>2</ComponentSpacer>
+        </costList>
+        <comps>
+            <li Class="CompProperties_Power">
+                <compClass>CompPowerTrader</compClass>
+                <basePowerConsumption>300</basePowerConsumption>
+                <shortCircuitInRain>false</shortCircuitInRain>
+            </li>
+            <li Class="CompProperties_Flickable" />
+            <li Class="CompProperties_Breakdownable" />
+        </comps>
+        <fillPercent>0.5</fillPercent>
+        <interactionCellOffset>(0,0,0)</interactionCellOffset>
+        <interactionCellIcon>PS_PawnDisc</interactionCellIcon>
+        <hasInteractionCell>true</hasInteractionCell>
+        <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+        <designationCategory>Misc</designationCategory>
+        <surfaceType>Item</surfaceType>
+        <researchPrerequisites>
+            <li>Fabrication</li>
+        </researchPrerequisites>
+    </ThingDef>
+
+    <!-- Crystalizer Platform -->
+    <ThingDef ParentName="BenchBase">
+        <defName>PS_Crystallizer</defName>
+        <label>crystallizer</label>
+        <description>N/A</description>
+        <thingClass>Building</thingClass>
+        <altitudeLayer>Building</altitudeLayer>
+        <passability>Standable</passability>
+        <pathCost>25</pathCost>
+        <size>(3,3)</size>
+        <rotatable>false</rotatable>
+        <graphicData>
+            <texPath>Things/Building/Production/Crystallizer</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <shaderType>CutoutComplex</shaderType>
+            <drawSize>(4,4)</drawSize>
+        </graphicData>
+        <statBases>
+            <MaxHitPoints>300</MaxHitPoints>
+            <WorkToBuild>5000</WorkToBuild>
+            <Flammability>1.0</Flammability>
+        </statBases>
+        <constructionSkillPrerequisite>6</constructionSkillPrerequisite>
+        <costList>
+            <Steel>200</Steel>
+            <ComponentIndustrial>12</ComponentIndustrial>
+            <ComponentSpacer>2</ComponentSpacer>
+        </costList>
+        <comps />
+        <fillPercent>0.5</fillPercent>
+        <interactionCellOffset>(0,0,0)</interactionCellOffset>
+        <interactionCellIcon>PS_PawnCrystal</interactionCellIcon>
+        <hasInteractionCell>true</hasInteractionCell>
+        <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+        <designationCategory>Misc</designationCategory>
+        <surfaceType>Item</surfaceType>
+    </ThingDef>
+
+</Defs>
