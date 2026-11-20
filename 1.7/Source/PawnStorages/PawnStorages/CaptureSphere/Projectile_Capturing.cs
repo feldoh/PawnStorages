@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -233,12 +233,53 @@ public class Projectile_Capturing : Projectile
 
             Hediff hediff = pawn.health.GetOrAddHediff(PS_DefOf.PS_CapturedPawn);
             hediff.visible = false;
+
+            ApplyPostCaptureEffects(pawn);
         }
 
         return true;
     }
 
-    public bool Capture() => HitThing is Pawn pawn && TryAddToNewBall(pawn, out NewlySpawnedBall, ProjectileStorage);
+    private void ApplyPostCaptureEffects(Pawn pawn)
+    {
+        Faction playerFaction = LauncherPawn?.Faction ?? Faction.OfPlayer;
+
+        // Skip if pawn was already in the player's faction
+        if (pawn.Faction == playerFaction)
+            return;
+
+        if (pawn.RaceProps.Animal)
+        {
+            // SetFaction automatically handles tameness training for animals
+            pawn.SetFaction(playerFaction, LauncherPawn);
+            Messages.Message(
+                "PS_AnimalCapturedTamed".Translate(pawn.LabelShortCap),
+                pawn,
+                MessageTypeDefOf.PositiveEvent,
+                false
+            );
+        }
+        else if (pawn.RaceProps.Humanlike)
+        {
+            if (pawn.guest != null && ModsConfig.IdeologyActive)
+            {
+                pawn.guest.SetGuestStatus(playerFaction, GuestStatus.Slave);
+                Messages.Message(
+                    "PS_PawnCapturedEnslaved".Translate(pawn.LabelShortCap),
+                    pawn,
+                    MessageTypeDefOf.NeutralEvent,
+                    false
+                );
+            }
+        }
+    }
+
+    public bool Capture()
+    {
+        if (HitThing is not Pawn pawn)
+            return false;
+        return TryAddToNewBall(pawn, out NewlySpawnedBall, ProjectileStorage);
+    }
 
     private float GetCaptureChance() => equipmentDef?.GetCompProperties<CompProperties_PawnStorage>()?.captureChance ?? 1.0f;
 
