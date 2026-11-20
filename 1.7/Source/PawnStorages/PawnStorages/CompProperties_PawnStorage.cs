@@ -30,6 +30,7 @@ public class CompProperties_PawnStorage : CompProperties
     public bool transformEffect;
     public bool canBeRotated = true;
     public bool selfReleaseOption;
+    public float captureChance = 1.0f;
 
     public virtual int MaxStoredPawns => maxStoredPawns;
 
