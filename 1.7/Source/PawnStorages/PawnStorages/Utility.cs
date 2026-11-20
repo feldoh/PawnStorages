@@ -186,4 +186,42 @@ public static class Utility
 
         return animals ??= AllAnimalKinds.Value.Select(k => k.race).ToList();
     }
+
+    public static HashSet<SlotGroup> FindConnectedSlotGroups(Thing parent)
+    {
+        HashSet<SlotGroup> slotGroups = new HashSet<SlotGroup>();
+        if (!parent.Spawned || parent.Map == null)
+            return slotGroups;
+
+        foreach (IntVec3 cell in GenAdj.CellsAdjacentCardinal(parent))
+        {
+            if (!cell.InBounds(parent.Map))
+                continue;
+
+            SlotGroup slotGroup = parent.Map.haulDestinationManager.SlotGroupAt(cell);
+            if (slotGroup != null)
+            {
+                slotGroups.Add(slotGroup);
+            }
+        }
+        return slotGroups;
+    }
+
+    public static List<Thing> FindThingsInConnectedStorage(Thing parent, System.Predicate<Thing> validator)
+    {
+        List<Thing> result = new List<Thing>();
+        HashSet<SlotGroup> slotGroups = FindConnectedSlotGroups(parent);
+
+        foreach (SlotGroup slotGroup in slotGroups)
+        {
+            foreach (Thing thing in slotGroup.HeldThings)
+            {
+                if (validator(thing))
+                {
+                    result.Add(thing);
+                }
+            }
+        }
+        return result;
+    }
 }
