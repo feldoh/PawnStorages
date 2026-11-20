@@ -8,6 +8,7 @@
         <HarmonyModRoot Condition="'$(HarmonyModRoot)' == ''">$(RimWorldRoot)../../workshop/content/294100/2009463077/1.7/Assemblies/</HarmonyModRoot>
         <LangVersion>latest</LangVersion>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <GenerateDependencyFile>false</GenerateDependencyFile>
         <OutputPath>../../../../Compatibility/oskarpotocki.vanillafactionsexpanded.core/1.7/Assemblies/</OutputPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -74,7 +75,7 @@
         <PackageReference Include="Krafs.Rimworld.Ref" Version="1.7.*-*" />
     </ItemGroup>
     <ItemGroup Condition="!Exists('$(HarmonyModRoot)0Harmony.dll')">
-        <PackageReference Include="Lib.Harmony" Version="*" ExcludeAssets="runtime" />
+        <PackageReference Include="Lib.Harmony" Version="*-*" ExcludeAssets="runtime" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="CSharpier.MsBuild" Version="1.2.6">

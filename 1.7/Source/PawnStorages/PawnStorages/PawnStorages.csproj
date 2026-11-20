@@ -9,6 +9,7 @@
         <LangVersion>preview</LangVersion>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <OutputPath>../../../Assemblies/</OutputPath>
+        <GenerateDependencyFile>false</GenerateDependencyFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
         <DefineConstants>TRACE</DefineConstants>
@@ -49,7 +50,7 @@
         <PackageReference Include="Krafs.Rimworld.Ref" Version="1.7.*-*" />
     </ItemGroup>
     <ItemGroup Condition="!Exists('$(HarmonyModRoot)0Harmony.dll')">
-        <PackageReference Include="Lib.Harmony" Version="*" ExcludeAssets="runtime" />
+        <PackageReference Include="Lib.Harmony" Version="*-*" ExcludeAssets="runtime" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Krafs.Publicizer" Version="2.1.0">

@@ -8,6 +8,7 @@
         <OutputType>Library</OutputType>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <IncludeCopyLocalFilesOutputGroup>false</IncludeCopyLocalFilesOutputGroup>
+        <GenerateDependencyFile>false</GenerateDependencyFile>
         <OutputPath>.vs/unused/</OutputPath>
         <ModName>Homebound</ModName>
         <SteamModsPath>$(RIMWORLD_STEAM_MODS_PATH)</SteamModsPath>
