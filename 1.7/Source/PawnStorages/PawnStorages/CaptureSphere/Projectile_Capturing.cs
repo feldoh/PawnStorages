@@ -22,8 +22,8 @@ public class Projectile_Capturing : Projectile
 
     public CompPawnStorage ProjectileStorage => GetComp<CompPawnStorage>();
 
-    protected Vector3 wiggleAngleFrom = new Vector3(0.0F, 45.0F, 0.0F);
-    protected Vector3 wiggleAngleTo = new Vector3(0.0F, -45.0F, 0.0F);
+    protected Vector3 wiggleAngleFrom = new(0.0F, 45.0F, 0.0F);
+    protected Vector3 wiggleAngleTo = new(0.0F, -45.0F, 0.0F);
     protected float WiggleFrequency = 4F;
 
     public override void ExposeData()
@@ -252,34 +252,19 @@ public class Projectile_Capturing : Projectile
         {
             // SetFaction automatically handles tameness training for animals
             pawn.SetFaction(playerFaction, LauncherPawn);
-            Messages.Message(
-                "PS_AnimalCapturedTamed".Translate(pawn.LabelShortCap),
-                pawn,
-                MessageTypeDefOf.PositiveEvent,
-                false
-            );
+            Messages.Message("PS_AnimalCapturedTamed".Translate(pawn.LabelShortCap), pawn, MessageTypeDefOf.PositiveEvent, false);
         }
         else if (pawn.RaceProps.Humanlike)
         {
             if (pawn.guest != null && ModsConfig.IdeologyActive)
             {
                 pawn.guest.SetGuestStatus(playerFaction, GuestStatus.Slave);
-                Messages.Message(
-                    "PS_PawnCapturedEnslaved".Translate(pawn.LabelShortCap),
-                    pawn,
-                    MessageTypeDefOf.NeutralEvent,
-                    false
-                );
+                Messages.Message("PS_PawnCapturedEnslaved".Translate(pawn.LabelShortCap), pawn, MessageTypeDefOf.NeutralEvent, false);
             }
         }
     }
 
-    public bool Capture()
-    {
-        if (HitThing is not Pawn pawn)
-            return false;
-        return TryAddToNewBall(pawn, out NewlySpawnedBall, ProjectileStorage);
-    }
+    public bool Capture() => HitThing is Pawn pawn && TryAddToNewBall(pawn, out NewlySpawnedBall, ProjectileStorage);
 
     private float GetCaptureChance() => equipmentDef?.GetCompProperties<CompProperties_PawnStorage>()?.captureChance ?? 1.0f;
 
