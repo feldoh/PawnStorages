@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using RimWorld;
 using UnityEngine;
 using Verse;
 using Verse.Sound;
@@ -172,7 +173,17 @@ public class Projectile_Capturing : Projectile
         if (pawn.Faction != LauncherPawn?.Faction && pawn.SlaveFaction != LauncherPawn?.Faction && !pawn.IsPrisonerOfColony)
         {
             if (!pawn.Downed)
-                return false;
+            {
+                float baseCaptureChance = GetCaptureChance();
+                float combatPower = Mathf.Max(0f, pawn.kindDef.combatPower);
+                float combatPowerFactor = 100f / (100f + combatPower);
+                float finalChance = baseCaptureChance * combatPowerFactor;
+                if (!Rand.Chance(finalChance))
+                {
+                    Messages.Message("PS_CaptureFailed".Translate(pawn.LabelShortCap), pawn, MessageTypeDefOf.RejectInput, false);
+                    return false;
+                }
+            }
             pawn.guest?.CapturedBy(LauncherPawn?.Faction, LauncherPawn);
         }
         else
@@ -233,8 +244,16 @@ public class Projectile_Capturing : Projectile
             return false;
         return TryAddToNewBall(pawn, out NewlySpawnedBall, ProjectileStorage);
     }
+    private float GetCaptureChance()
+    {
+        CompProperties_PawnStorage props = equipmentDef?.GetCompProperties<CompProperties_PawnStorage>();
+        if (props != null)
+            return props.captureChance;
+        return 1.0f;
+    }
 
-    public void Release()
+
+public void Release()
     {
         IntVec3 position = HitThing?.Position ?? Position;
 

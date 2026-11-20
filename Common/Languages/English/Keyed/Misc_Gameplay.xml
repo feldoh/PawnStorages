@@ -140,4 +140,5 @@
     <PS_AddBill_BillCount>{0} bills queued</PS_AddBill_BillCount>
     <PS_HopperFrozen>Frozen (preserving contents)</PS_HopperFrozen>
     <PS_HopperCoolerNoPower>Cooler: no power (contents may spoil)</PS_HopperCoolerNoPower>
+    <PS_CaptureFailed>{0} broke free!</PS_CaptureFailed>
 </LanguageData>
