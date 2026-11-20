@@ -512,6 +512,14 @@
         <costList>
             <Steel>15</Steel>
         </costList>
+        <comps>
+            <li Class="CompProperties_Power">
+                <compClass>CompPowerTrader</compClass>
+                <basePowerConsumption>10</basePowerConsumption>
+                <shortCircuitInRain>false</shortCircuitInRain>
+            </li>
+            <li Class="PawnStorages.CompProperties_HopperCooler" />
+        </comps>
         <tickerType>Never</tickerType>
         <rotatable>true</rotatable>
         <neverMultiSelect>true</neverMultiSelect>
