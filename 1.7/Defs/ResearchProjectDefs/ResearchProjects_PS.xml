@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <ResearchProjectDef>
+        <defName>PS_Crystallization</defName>
+        <label>crystallization</label>
+        <description>Learn how to crystallize living beings into a suspended state within specially grown crystals.</description>
+        <baseCost>300</baseCost>
+        <techLevel>Industrial</techLevel>
+        <tab>Main</tab>
+        <researchViewX>7</researchViewX>
+        <researchViewY>4</researchViewY>
+    </ResearchProjectDef>
+</Defs>
