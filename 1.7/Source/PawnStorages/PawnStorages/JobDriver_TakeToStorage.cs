@@ -106,7 +106,7 @@ public class JobDriver_TakeToStorage : JobDriver
                     }
                 }
 
-                if (job.def == JobDefOf.Arrest && !victim.CheckAcceptArrest(base.pawn))
+                if (job.def == JobDefOf.Arrest && !victim.CheckAcceptArrest(pawn))
                 {
                     pawn.jobs.EndCurrentJob(JobCondition.Incompletable);
                 }

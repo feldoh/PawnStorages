@@ -24,7 +24,7 @@ public class CompRenamable : ThingComp
 
     public override void PostExposeData()
     {
-        Scribe_Values.Look<string>(ref NewLabel, "NewLabel");
+        Scribe_Values.Look(ref NewLabel, "NewLabel");
     }
 
     public override IEnumerable<Gizmo> CompGetGizmosExtra()
@@ -37,7 +37,7 @@ public class CompRenamable : ThingComp
         Command_Action rename = new Command_Action();
         rename.defaultLabel = "Rename";
         rename.icon = Rename;
-        rename.action = delegate()
+        rename.action = delegate
         {
             Find.WindowStack.Add(new RenameDialog(this, NewLabel));
         };
