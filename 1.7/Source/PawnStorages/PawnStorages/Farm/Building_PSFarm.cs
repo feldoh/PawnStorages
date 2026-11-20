@@ -6,6 +6,7 @@ using PawnStorages.Farm.Interfaces;
 using PawnStorages.Interfaces;
 using PawnStorages.TickedStorage;
 using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace PawnStorages.Farm;
@@ -76,6 +77,16 @@ public class Building_PSFarm : Building, IStoreSettingsParent, INutritionStorage
         foreach (ThingDef thingDef in AllowableThing.Where(t => !AllowedThingDefs.Contains(t)))
         {
             AllowedThings[thingDef] = true;
+        }
+    }
+
+    public override void DrawExtraSelectionOverlays()
+    {
+        base.DrawExtraSelectionOverlays();
+        CompFarmProducer producer = GetComp<CompFarmProducer>();
+        if (producer != null && producer.OutputCells.Count > 0)
+        {
+            GenDraw.DrawFieldEdges(producer.OutputCells, Color.cyan);
         }
     }
 
