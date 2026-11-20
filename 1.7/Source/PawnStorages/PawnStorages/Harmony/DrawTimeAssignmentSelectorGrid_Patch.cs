@@ -14,17 +14,10 @@ public static class DrawTimeAssignmentSelectorGrid_Patch
 {
     private static int? _cachedColumnOffset;
 
-    public static HashSet<string> conflictingMods = new HashSet<string>() { "aoba.exosuit.framework" };
+    public static HashSet<string> conflictingMods = ["aoba.exosuit.framework"];
 
-    public static bool HasActiveModWithPackageIdCaseInsensitive(string name)
-    {
-        foreach (ModMetaData mod in ModLister.mods)
-        {
-            if (mod.Active && string.Equals(mod.PackageId, name, StringComparison.CurrentCultureIgnoreCase))
-                return true;
-        }
-        return false;
-    }
+    public static bool HasActiveModWithPackageIdCaseInsensitive(string name) =>
+        Enumerable.Any(ModLister.mods, mod => mod.Active && string.Equals(mod.PackageId, name, StringComparison.CurrentCultureIgnoreCase));
 
     private static int ColumnOffset()
     {
@@ -44,7 +37,7 @@ public static class DrawTimeAssignmentSelectorGrid_Patch
         // Grab the non-core TimeAssignment buttons and order by mod-order
         List<TimeAssignmentDef> customDefs = DefDatabase<TimeAssignmentDef>
             .AllDefs.Where(d => d.modContentPack is { IsCoreMod: false, IsOfficialMod: false })
-            .OrderBy(d => modLoadIndex.TryGetValue(d.modContentPack, out int idx) ? idx : int.MaxValue)
+            .OrderBy(d => modLoadIndex.GetValueOrDefault(d.modContentPack, int.MaxValue))
             .ThenBy(d => d.defName, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
@@ -78,7 +71,7 @@ public static class DrawTimeAssignmentSelectorGrid_Patch
             SoundDefOf.Tick_High.PlayOneShotOnCamera();
         }
 
-        TooltipHandler.TipRegion(rect, (TipSignal) tooltip);
+        TooltipHandler.TipRegion(rect, (TipSignal)tooltip);
 
         GUI.color = Color.white;
         if (Mouse.IsOver(rect))
