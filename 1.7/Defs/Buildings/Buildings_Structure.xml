@@ -258,6 +258,7 @@
             <li>PawnStorages.Farm.ITab_Breeding</li>
             <li>PawnStorages.Farm.ITab_Slaughter</li>
             <li>PawnStorages.Farm.ITab_Assignments</li>
+            <li>PawnStorages.TickedStorage.ITab_PawnList</li>
         </inspectorTabs>
         <designationCategory>Production</designationCategory>
         <comps>

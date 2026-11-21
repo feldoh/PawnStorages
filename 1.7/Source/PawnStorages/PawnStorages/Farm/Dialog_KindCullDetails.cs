@@ -111,9 +111,9 @@ public class Dialog_KindCullDetails : Window
 
     private static bool AnyMinExceedsMax(AutoSlaughterMinimums mins, AutoSlaughterConfig cfg)
     {
-        return (cfg.maxMales > 0 && mins.MinMales > cfg.maxMales)
-            || (cfg.maxFemales > 0 && mins.MinFemales > cfg.maxFemales)
-            || (cfg.maxMalesYoung > 0 && mins.MinMalesYoung > cfg.maxMalesYoung)
-            || (cfg.maxFemalesYoung > 0 && mins.MinFemalesYoung > cfg.maxFemalesYoung);
+        return (cfg.maxMales >= 0 && mins.MinMales > cfg.maxMales)
+            || (cfg.maxFemales >= 0 && mins.MinFemales > cfg.maxFemales)
+            || (cfg.maxMalesYoung >= 0 && mins.MinMalesYoung > cfg.maxMalesYoung)
+            || (cfg.maxFemalesYoung >= 0 && mins.MinFemalesYoung > cfg.maxFemalesYoung);
     }
 }

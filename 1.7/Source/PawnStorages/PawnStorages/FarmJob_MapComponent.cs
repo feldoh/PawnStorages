@@ -8,7 +8,7 @@ namespace PawnStorages;
 
 public class FarmJob_MapComponent(Map map) : MapComponent(map)
 {
-    public Dictionary<Pawn, Building> farmAssignments = new Dictionary<Pawn, Building>();
+    public Dictionary<Pawn, Building> farmAssignments = new();
 
     public override void ExposeData()
     {

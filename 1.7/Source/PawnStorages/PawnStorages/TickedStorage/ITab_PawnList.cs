@@ -83,9 +83,11 @@ public class ITab_PawnList : ITab
             num += LineHeight;
         }
 
+        FarmJob_MapComponent farmComp = SelThing.Map.GetComponent<FarmJob_MapComponent>();
         foreach (Pawn pawn in removed)
         {
             ParentAsPawnListParent.ReleasePawn(pawn);
+            farmComp?.farmAssignments.Remove(pawn);
         }
 
         Widgets.EndScrollView();

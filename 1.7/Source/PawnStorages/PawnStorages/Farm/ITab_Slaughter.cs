@@ -157,7 +157,7 @@ public class ITab_Slaughter : ITab
             if (!isTotalCell && bracketGender.HasValue)
                 min = compFarmBreeder.EffectiveMin(kind, bracketAdult.Value, bracketGender.Value);
 
-            bool overLimit = limit.HasValue && limit.Value > 0 && val > limit.Value;
+            bool overLimit = limit.HasValue && limit.Value >= 0 && val > limit.Value;
             bool atOrBelowMin = !isTotalCell && val > 0 && val <= min;
             bool heldByGuard = false;
             if (overLimit && !isTotalCell && bracketGender.HasValue)
@@ -346,7 +346,7 @@ public class ITab_Slaughter : ITab
 
     public bool IsBracketHeldByGuard(PawnKindDef kind, bool adult, Gender gender, int max)
     {
-        if (max <= 0)
+        if (max < 0)
             return false;
         List<Pawn> members = GetAllStoredPawnsOfKind(kind);
         int bucketCount = members.Count(p => p.ageTracker.Adult == adult && p.gender == gender);
@@ -362,7 +362,7 @@ public class ITab_Slaughter : ITab
     public bool IsKindTotalHeldByGuard(PawnKindDef kind)
     {
         AutoSlaughterConfig config = AutoSlaughterSettings.TryGetValue(kind);
-        if (config == null || config.maxTotal <= 0)
+        if (config == null || config.maxTotal < 0)
             return false;
         List<Pawn> members = GetAllStoredPawnsOfKind(kind);
         if (members.Count <= config.maxTotal)

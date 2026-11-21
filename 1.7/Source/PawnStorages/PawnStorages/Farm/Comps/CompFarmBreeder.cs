@@ -230,7 +230,7 @@ namespace PawnStorages.Farm.Comps
                     ];
                     foreach ((bool adult, Gender gender, int max) in orderArr)
                     {
-                        if (max <= 0)
+                        if (max < 0)
                             continue;
                         int bucketCount = type.Count(p => p.ageTracker.Adult == adult && p.gender == gender);
                         if (bucketCount <= max)
@@ -247,7 +247,7 @@ namespace PawnStorages.Farm.Comps
                     continue;
 
                 int totalCount = type.Count();
-                if (config.maxTotal > 0 && totalCount > config.maxTotal)
+                if (config.maxTotal >= 0 && totalCount > config.maxTotal)
                 {
                     CullFirstCandidate(GetCullCandidatesOrdered(type));
                 }
