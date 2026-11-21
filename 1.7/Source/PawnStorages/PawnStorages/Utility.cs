@@ -189,7 +189,7 @@ public static class Utility
 
     public static HashSet<SlotGroup> FindConnectedSlotGroups(Thing parent)
     {
-        HashSet<SlotGroup> slotGroups = new HashSet<SlotGroup>();
+        HashSet<SlotGroup> slotGroups = [];
         if (!parent.Spawned || parent.Map == null)
             return slotGroups;
 
@@ -207,21 +207,11 @@ public static class Utility
         return slotGroups;
     }
 
-    public static List<Thing> FindThingsInConnectedStorage(Thing parent, System.Predicate<Thing> validator)
+    public static List<Thing> FindThingsInConnectedStorage(Thing parent, Predicate<Thing> validator)
     {
-        List<Thing> result = new List<Thing>();
+        List<Thing> result = [];
         HashSet<SlotGroup> slotGroups = FindConnectedSlotGroups(parent);
-
-        foreach (SlotGroup slotGroup in slotGroups)
-        {
-            foreach (Thing thing in slotGroup.HeldThings)
-            {
-                if (validator(thing))
-                {
-                    result.Add(thing);
-                }
-            }
-        }
+        result.AddRange(from slotGroup in slotGroups from thing in slotGroup.HeldThings where validator(thing) select thing);
         return result;
     }
 }
