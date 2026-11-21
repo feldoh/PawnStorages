@@ -44,18 +44,20 @@ public class CompPawnStorageProducer : ThingComp, IActive
 
     private bool TryPlaceThingInOutputCells(Thing thing)
     {
-        if (outputCells.Count == 0)
+        Map map = parent.Map;
+        // Output cells are only validated on load, so a wall (or anything else) built on one later
+        // must be skipped here. If none is usable at all, fall back to normal placement rather than
+        // holding products back forever.
+        List<IntVec3> usableCells = outputCells.Where(cell => cell.InBounds(map) && cell.Standable(map)).ToList();
+        if (usableCells.Count == 0)
         {
-            return GenPlace.TryPlaceThing(thing, parent.Position, parent.Map, ThingPlaceMode.Near);
+            return GenPlace.TryPlaceThing(thing, parent.Position, map, ThingPlaceMode.Near);
         }
 
         // First pass: try to merge with existing stacks
-        foreach (IntVec3 cell in outputCells)
+        foreach (IntVec3 cell in usableCells)
         {
-            if (!cell.InBounds(parent.Map))
-                continue;
-
-            List<Thing> thingsAtCell = cell.GetThingList(parent.Map);
+            List<Thing> thingsAtCell = cell.GetThingList(map);
             foreach (Thing existingThing in thingsAtCell)
             {
                 if (existingThing.CanStackWith(thing))
@@ -67,8 +69,8 @@ public class CompPawnStorageProducer : ThingComp, IActive
             }
         }
 
-        // Second pass: try to place on any output cell with room
-        return outputCells.Where(cell => cell.InBounds(parent.Map)).Any(cell => GenPlace.TryPlaceThing(thing, cell, parent.Map, ThingPlaceMode.Direct));
+        // Second pass: place on an empty output cell, so unstackable products don't pile up on one cell
+        return usableCells.Where(cell => cell.GetFirstItem(map) == null).Any(cell => GenPlace.TryPlaceThing(thing, cell, map, ThingPlaceMode.Direct));
 
         // All output cells full so keep for next cycle
     }
