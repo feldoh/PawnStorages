@@ -106,8 +106,8 @@ public class ITab_Slaughter : ITab
             Widgets.DrawLightHighlight(rowRect);
         Color color = GUI.color;
         Dialog_AutoSlaughter.AnimalCountRecord animalCount = compFarmStorage.CountForType(config.animal);
-        AutoSlaughterCullOrder order = CullOrder[kind];
-        AutoSlaughterMinimums mins = Minimums[kind];
+        AutoSlaughterCullOrder order = compFarmBreeder.GetCullOrder(kind);
+        AutoSlaughterMinimums mins = compFarmBreeder.GetMinimums(kind);
 
         Widgets.BeginGroup(rowRect);
         WidgetRow row = new WidgetRow(0.0f, 0.0f);
