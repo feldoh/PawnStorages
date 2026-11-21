@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using PawnStorages.Interfaces;
 using RimWorld;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class CompPawnStorageProducer : ThingComp, IActive
 
     protected List<Thing> DaysProduce = [];
     public bool ProduceNow = false;
-    protected List<IntVec3> outputCells = new List<IntVec3>();
+    protected List<IntVec3> outputCells = [];
 
     public List<IntVec3> OutputCells => outputCells;
 
@@ -21,8 +22,7 @@ public class CompPawnStorageProducer : ThingComp, IActive
         base.PostExposeData();
         Scribe_Collections.Look(ref DaysProduce, "daysProduce", LookMode.Deep);
         Scribe_Collections.Look(ref outputCells, "outputCells", LookMode.Value);
-        if (outputCells == null)
-            outputCells = new List<IntVec3>();
+        outputCells ??= [];
     }
 
     public override void PostSpawnSetup(bool respawningAfterLoad)
@@ -37,14 +37,8 @@ public class CompPawnStorageProducer : ThingComp, IActive
 
     protected List<Thing> TryPlaceProducts()
     {
-        List<Thing> failedToPlace = new List<Thing>();
-        foreach (Thing thing in DaysProduce)
-        {
-            if (!TryPlaceThingInOutputCells(thing))
-            {
-                failedToPlace.Add(thing);
-            }
-        }
+        List<Thing> failedToPlace = [];
+        failedToPlace.AddRange(DaysProduce.Where(thing => !TryPlaceThingInOutputCells(thing)));
         return failedToPlace;
     }
 
@@ -56,16 +50,14 @@ public class CompPawnStorageProducer : ThingComp, IActive
         }
 
         // First pass: try to merge with existing stacks
-        for (int i = 0; i < outputCells.Count; i++)
+        foreach (IntVec3 cell in outputCells)
         {
-            IntVec3 cell = outputCells[i];
             if (!cell.InBounds(parent.Map))
                 continue;
 
             List<Thing> thingsAtCell = cell.GetThingList(parent.Map);
-            for (int j = 0; j < thingsAtCell.Count; j++)
+            foreach (Thing existingThing in thingsAtCell)
             {
-                Thing existingThing = thingsAtCell[j];
                 if (existingThing.CanStackWith(thing))
                 {
                     existingThing.TryAbsorbStack(thing, true);
@@ -76,23 +68,14 @@ public class CompPawnStorageProducer : ThingComp, IActive
         }
 
         // Second pass: try to place on any output cell with room
-        for (int i = 0; i < outputCells.Count; i++)
-        {
-            IntVec3 cell = outputCells[i];
-            if (!cell.InBounds(parent.Map))
-                continue;
-
-            if (GenPlace.TryPlaceThing(thing, cell, parent.Map, ThingPlaceMode.Direct))
-                return true;
-        }
+        return outputCells.Where(cell => cell.InBounds(parent.Map)).Any(cell => GenPlace.TryPlaceThing(thing, cell, parent.Map, ThingPlaceMode.Direct));
 
         // All output cells full ÔÇö keep for next cycle
-        return false;
     }
 
     public List<IntVec3> ValidOutputCellCandidates()
     {
-        List<IntVec3> candidates = new List<IntVec3>();
+        List<IntVec3> candidates = [];
         foreach (IntVec3 cell in GenAdj.CellsAdjacent8Way(parent))
         {
             if (cell.InBounds(parent.Map) && cell.Standable(parent.Map))
@@ -134,7 +117,7 @@ public class CompPawnStorageProducer : ThingComp, IActive
                         validator = delegate(TargetInfo target)
                         {
                             return candidates.Contains(target.Cell);
-                        }
+                        },
                     },
                     delegate(LocalTargetInfo target)
                     {
@@ -144,7 +127,7 @@ public class CompPawnStorageProducer : ThingComp, IActive
                         }
                     }
                 );
-            }
+            },
         };
 
         if (outputCells.Count > 0)
@@ -157,7 +140,7 @@ public class CompPawnStorageProducer : ThingComp, IActive
                 action = delegate
                 {
                     outputCells.Clear();
-                }
+                },
             };
         }
     }
