@@ -153,6 +153,12 @@ public class CompMechStorage : CompPawnStorage
                 float healAmount = Mathf.Min(injury.Severity, maxHP);
 
                 injury.Heal(healAmount);
+                // Stored pawns don't tick, so vanilla never removes a fully healed injury; remove it here
+                // or GetHediffToHeal keeps returning it at severity 0 and the loop never progresses
+                if (injury.Severity <= 0f)
+                    pawn.health.RemoveHediff(injury);
+                else if (healAmount <= 0f)
+                    break;
                 ticksRemaining -= healAmount / repairRate;
             }
             else if (hediff is Hediff_MissingPart)
