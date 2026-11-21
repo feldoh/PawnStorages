@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using PawnStorages.Farm.Comps;
 using RimWorld;
 using UnityEngine;
@@ -52,6 +53,8 @@ namespace PawnStorages.Farm
             alternate = !alternate;
 
             Widgets.DefIcon(new Rect(5f, position + 7.5f, 45f, 45f), pawn.def, drawPlaceholder: true, color: Listing_TreeThingFilter.NoMatchColor);
+
+            StringBuilder label = new(pawn.LabelShort);
 
             if (NeedsDrop)
             {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using Verse;
@@ -33,13 +34,13 @@ public class FloatMenuOptionProvider_Arrest : FloatMenuOptionProvider
             || context.FirstSelectedPawn.InSameExtraFaction(clickedPawn, ExtraFactionType.MiniFaction)
         )
         {
-            yield return new FloatMenuOption("CannotArrest".Translate() + ": " + "SameFaction".Translate((NamedArgument)(Thing)clickedPawn), null);
+            yield return new FloatMenuOption("CannotArrest".Translate() + ": " + "SameFaction".Translate((NamedArgument)(Thing)clickedPawn), (Action)null);
             yield break;
         }
 
         if (!context.FirstSelectedPawn.CanReach((LocalTargetInfo)(Thing)context.FirstSelectedPawn, PathEndMode.OnCell, Danger.Deadly))
         {
-            yield return new FloatMenuOption("CannotArrest".Translate() + ": " + "NoPath".Translate().CapitalizeFirst(), null);
+            yield return new FloatMenuOption("CannotArrest".Translate() + ": " + "NoPath".Translate().CapitalizeFirst(), (Action)null);
             yield break;
         }
 

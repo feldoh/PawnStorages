@@ -75,7 +75,7 @@ namespace PawnStorages.Farm
             Widgets.Label(new Rect(5.0f, 0.0f, WinSize.x, 30f), "PS_AssignmentTab_TopLabel".Translate());
 
             Rect tabRect = new Rect(0.0f, 30.0f, WinSize.x, WinSize.y - 30f).ContractedBy(10f);
-            Rect scrollViewRect = new(tabRect);
+            Rect scrollViewRect = new Rect(tabRect);
 
             List<Pawn> animals = Find.CurrentMap.mapPawns.PawnsInFaction(Faction.OfPlayer).Where(p => p.IsAnimal).ToList();
 
@@ -88,9 +88,11 @@ namespace PawnStorages.Farm
 
             bool alternate = false;
             float num = 0.0f;
+            List<Pawn> removed = [];
             foreach (Pawn thing in animals)
             {
-                DrawLine(num, scrollViewRect.width, thing, ref alternate);
+                Pawn animal = (Pawn)thing;
+                DrawLine(num, scrollViewRect.width, animal, ref alternate);
                 num += LineHeight;
             }
 

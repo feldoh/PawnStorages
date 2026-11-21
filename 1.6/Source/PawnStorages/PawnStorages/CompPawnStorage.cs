@@ -41,7 +41,7 @@ public class CompPawnStorage : ThingComp, IThingHolder
     public bool IsFull => (GetDirectlyHeldThings()?.Count ?? 0) >= MaxStoredPawns();
     public bool CanStore => innerContainer.Count < MaxStoredPawns();
 
-    public virtual bool CanAssign(Pawn pawn, bool couldMakePrisoner) =>
+    public bool CanAssign(Pawn pawn, bool couldMakePrisoner) =>
         compAssignable?.OwnerType switch
         {
             BedOwnerType.Colonist => pawn.IsColonist,
@@ -338,7 +338,7 @@ public class CompPawnStorage : ThingComp, IThingHolder
         otherStore.Notify_AddedToStorage(pawn);
     }
 
-    public virtual void StorePawn(Pawn pawn, bool effects = true)
+    public void StorePawn(Pawn pawn, bool effects = true)
     {
         Map pawnMap = pawn.Map;
         if (effects && Props.lightEffect)

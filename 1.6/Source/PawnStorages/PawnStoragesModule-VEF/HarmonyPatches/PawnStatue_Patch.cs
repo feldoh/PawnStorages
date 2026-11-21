@@ -40,7 +40,8 @@ public static class GenerateBuildingAt_Patch
             return true;
 
         CompPawnStorage storageComp = storageItem.GetInnerIfMinified()?.TryGetComp<CompPawnStorage>();
-        Pawn pawn;
+        Faction chosenFaction = symbol.spawnPartOfFaction ? map.ParentFaction : null;
+        Pawn pawn = null;
         if (
             !PawnStoragesMod.settings.ForcedPawn.NullOrEmpty()
             && PawnsFinder.AllMapsAndWorld_Alive.Where(p => p.ThingID == PawnStoragesMod.settings.ForcedPawn).FirstOrFallback() is { } forcedPawn
