@@ -259,6 +259,7 @@
                 <useFromInventory>true</useFromInventory>
                 <captureChance>0.3</captureChance>
             </li>
+            <li Class="PawnStorages.CompProperties_CaptureSphereMode"/>
         </comps>
     </ThingDef>
 
@@ -293,6 +294,7 @@
                 <useFromInventory>true</useFromInventory>
                 <captureChance>0.6</captureChance>
             </li>
+            <li Class="PawnStorages.CompProperties_CaptureSphereMode"/>
         </comps>
     </ThingDef>
 
@@ -327,6 +329,7 @@
                 <useFromInventory>true</useFromInventory>
                 <captureChance>1.0</captureChance>
             </li>
+            <li Class="PawnStorages.CompProperties_CaptureSphereMode"/>
         </comps>
     </ThingDef>
 

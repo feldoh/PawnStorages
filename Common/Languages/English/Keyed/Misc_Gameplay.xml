@@ -144,4 +144,8 @@
     <PS_HopperFrozen>Frozen (preserving contents)</PS_HopperFrozen>
     <PS_HopperCoolerNoPower>Cooler: no power (contents may spoil)</PS_HopperCoolerNoPower>
     <PS_CaptureFailed>{0} broke free!</PS_CaptureFailed>
+
+    <PS_SphereMode>Capture mode</PS_SphereMode>
+    <PS_SphereImprisoned>{0} has been imprisoned!</PS_SphereImprisoned>
+    <PS_SphereConverted>{0} has been converted!</PS_SphereConverted>
 </LanguageData>

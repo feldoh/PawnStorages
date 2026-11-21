@@ -1,4 +1,5 @@
 using System;
+using PawnStorages.CaptureMode;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -218,7 +219,7 @@ public class Projectile_Capturing : Projectile
     {
         RunEffector();
         ball = (ThingWithComps)GenSpawn.Spawn(equipmentDef, HitThing.Position, ThingMap, WipeMode.VanishOrMoveAside);
-        if (!ball.TryGetComp<CompPawnStorage>(out CompPawnStorage comp))
+        if (!ball.TryGetComp(out CompPawnStorage comp))
             return false;
         if (comp?.CanAssign(pawn, true) ?? false)
         {
@@ -248,20 +249,12 @@ public class Projectile_Capturing : Projectile
         if (pawn.Faction == playerFaction)
             return;
 
-        if (pawn.RaceProps.Animal)
-        {
-            // SetFaction automatically handles tameness training for animals
-            pawn.SetFaction(playerFaction, LauncherPawn);
-            Messages.Message("PS_AnimalCapturedTamed".Translate(pawn.LabelShortCap), pawn, MessageTypeDefOf.PositiveEvent, false);
-        }
-        else if (pawn.RaceProps.Humanlike)
-        {
-            if (pawn.guest != null && ModsConfig.IdeologyActive)
-            {
-                pawn.guest.SetGuestStatus(playerFaction, GuestStatus.Slave);
-                Messages.Message("PS_PawnCapturedEnslaved".Translate(pawn.LabelShortCap), pawn, MessageTypeDefOf.NeutralEvent, false);
-            }
-        }
+        CompCaptureSphereMode modeComp = null;
+        if (Equipment != null && Equipment.TryGetComp(out CompCaptureSphereMode comp))
+            modeComp = comp;
+
+        CaptureModeDef mode = modeComp?.EffectiveMode ?? CaptureModeUtility.DefaultMode;
+        mode?.Mode?.ApplyPostCaptureEffects(pawn, playerFaction, LauncherPawn, Equipment);
     }
 
     public bool Capture() => HitThing is Pawn pawn && TryAddToNewBall(pawn, out NewlySpawnedBall, ProjectileStorage);
