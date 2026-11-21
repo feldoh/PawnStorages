@@ -19,7 +19,7 @@ public class FloatMenuOptionProvider_Breed : FloatMenuOptionProvider
 
     public override bool TargetPawnValid(Pawn pawn, FloatMenuContext context)
     {
-        return base.TargetPawnValid(pawn, context) && WorkGiver_Warden_TakeToStorage.GetStorageForFarmAnimal(pawn, assign: false, breeding: true) != null;
+        return base.TargetPawnValid(pawn, context) && pawn.Faction == Faction.OfPlayer && WorkGiver_Warden_TakeToStorage.GetStorageForFarmAnimal(pawn, assign: false, breeding: true) != null;
     }
 
     public override IEnumerable<FloatMenuOption> GetOptionsFor(Pawn clickedPawn, FloatMenuContext context)
