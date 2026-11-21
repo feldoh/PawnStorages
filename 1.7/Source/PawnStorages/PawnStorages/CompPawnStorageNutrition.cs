@@ -374,6 +374,12 @@ public class CompPawnStorageNutrition : ThingComp
                 return feedInAnyHopper;
         }
 
+        // Fallback: check connected storage buildings (shelves, stockpiles, fridges)
+        List<Thing> connectedFeed = Utility.FindThingsInConnectedStorage(parent,
+            thing => ValidFeedstock(thing.def));
+        if (connectedFeed.Count > 0)
+            return connectedFeed[0];
+
         return null;
     }
 
@@ -408,7 +414,15 @@ public class CompPawnStorageNutrition : ThingComp
                 return true;
         }
 
-        return false;
+        // Also check connected storage
+        List<Thing> connectedFeed = Utility.FindThingsInConnectedStorage(parent,
+            thing => IsAcceptableFeedstock(thing.def));
+        for (int i = 0; i < connectedFeed.Count; i++)
+        {
+            num += connectedFeed[i].GetStatValue(StatDefOf.Nutrition) * (float)connectedFeed[i].stackCount;
+        }
+
+        return num > 0;
     }
 
     public override IEnumerable<Gizmo> CompGetGizmosExtra()
