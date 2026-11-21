@@ -325,17 +325,17 @@ public class CompPawnStorage : ThingComp, IThingHolder
     public void TransferPawn(CompPawnStorage otherStore, Pawn pawn)
     {
         innerContainer.Remove(pawn);
-        otherStore.innerContainer.TryAddOrTransfer(pawn);
-        if (otherStore.compAssignable != null && !otherStore.compAssignable.AssignedPawns.Contains(pawn))
-            otherStore.compAssignable.TryAssignPawn(pawn);
         labelDirty = true;
-        otherStore.labelDirty = true;
 
-        otherStore.pawnStoringTick.SetOrAdd(pawn.thingIDNumber, Find.TickManager.TicksGame);
-
+        // Settle the time spent in this store before handing the pawn over.
         ApplyNeedsForStoredPeriodFor(pawn);
         Notify_ReleasedFromStorage(pawn);
-        otherStore.Notify_AddedToStorage(pawn);
+
+        // Route through the destination's StorePawn (with effects suppressed) instead of poking
+        // its container and bookkeeping directly. Subclasses - CompMechStorage in particular -
+        // keep their own charge/repair/cycle state in StorePawn and would otherwise miss it.
+        // TryAddOrTransfer is equivalent to TryAdd here: Remove already cleared holdingOwner.
+        otherStore.StorePawn(pawn, effects: false);
     }
 
     public virtual void StorePawn(Pawn pawn, bool effects = true)
