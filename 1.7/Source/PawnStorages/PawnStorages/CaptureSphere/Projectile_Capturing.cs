@@ -3,6 +3,7 @@ using PawnStorages.CaptureMode;
 using RimWorld;
 using UnityEngine;
 using Verse;
+using Verse.AI.Group;
 using Verse.Sound;
 
 namespace PawnStorages.CaptureSphere;
@@ -175,17 +176,30 @@ public class Projectile_Capturing : Projectile
         {
             if (!pawn.Downed)
             {
+                // A sphere rated at 100% or more is a guaranteed capture; weaker spheres scale down with combat power
                 float baseCaptureChance = GetCaptureChance();
                 float combatPower = Mathf.Max(0f, pawn.kindDef.combatPower);
                 float combatPowerFactor = 100f / (100f + combatPower);
-                float finalChance = baseCaptureChance * combatPowerFactor;
+                float finalChance = baseCaptureChance >= 1f ? 1f : baseCaptureChance * combatPowerFactor;
                 if (!Rand.Chance(finalChance))
                 {
                     Messages.Message("PS_CaptureFailed".Translate(pawn.LabelShortCap), pawn, MessageTypeDefOf.RejectInput, false);
                     return false;
                 }
             }
-            pawn.guest?.CapturedBy(LauncherPawn?.Faction, LauncherPawn);
+
+            if (ResolveCaptureMode()?.Mode?.MarksCaptured ?? true)
+            {
+                pawn.guest?.CapturedBy(LauncherPawn?.Faction, LauncherPawn);
+            }
+            else
+            {
+                // No prisoner status, but keep the side effects CapturedBy would have had: the home faction
+                // reacts to a captured member, and the pawn leaves its raid/caravan lord (despawning alone doesn't)
+                Faction captor = LauncherPawn?.Faction ?? Faction.OfPlayer;
+                pawn.HomeFaction?.Notify_MemberCaptured(pawn, captor);
+                pawn.GetLord()?.Notify_PawnLost(pawn, PawnLostCondition.Vanished);
+            }
         }
         else
         {
@@ -249,12 +263,15 @@ public class Projectile_Capturing : Projectile
         if (pawn.Faction == playerFaction)
             return;
 
+        ResolveCaptureMode()?.Mode?.ApplyPostCaptureEffects(pawn, playerFaction, LauncherPawn, Equipment);
+    }
+
+    private CaptureModeDef ResolveCaptureMode()
+    {
         CompCaptureSphereMode modeComp = null;
         if (Equipment != null && Equipment.TryGetComp(out CompCaptureSphereMode comp))
             modeComp = comp;
-
-        CaptureModeDef mode = modeComp?.EffectiveMode ?? CaptureModeUtility.DefaultMode;
-        mode?.Mode?.ApplyPostCaptureEffects(pawn, playerFaction, LauncherPawn, Equipment);
+        return modeComp?.EffectiveMode ?? CaptureModeUtility.DefaultMode;
     }
 
     public bool Capture() => HitThing is Pawn pawn && TryAddToNewBall(pawn, out NewlySpawnedBall, ProjectileStorage);
