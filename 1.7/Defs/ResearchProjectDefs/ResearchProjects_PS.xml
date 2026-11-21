@@ -10,4 +10,18 @@
         <researchViewX>8</researchViewX>
         <researchViewY>3.4</researchViewY>
     </ResearchProjectDef>
+
+    <ResearchProjectDef MayRequire="Ludeon.RimWorld.Biotech">
+        <defName>PS_MechStorage</defName>
+        <label>mech storage</label>
+        <description>Design powered docks and bays that house, charge and slowly repair mechanoids while they are stored.</description>
+        <baseCost>500</baseCost>
+        <techLevel>Industrial</techLevel>
+        <tab>Main</tab>
+        <prerequisites>
+            <li>BasicMechtech</li>
+        </prerequisites>
+        <researchViewX>13</researchViewX>
+        <researchViewY>6.6</researchViewY>
+    </ResearchProjectDef>
 </Defs>
