@@ -187,31 +187,42 @@ public static class Utility
         return animals ??= AllAnimalKinds.Value.Select(k => k.race).ToList();
     }
 
-    public static HashSet<SlotGroup> FindConnectedSlotGroups(Thing parent)
-    {
-        HashSet<SlotGroup> slotGroups = [];
-        if (!parent.Spawned || parent.Map == null)
-            return slotGroups;
-
-        foreach (IntVec3 cell in GenAdj.CellsAdjacentCardinal(parent))
-        {
-            if (!cell.InBounds(parent.Map))
-                continue;
-
-            SlotGroup slotGroup = parent.Map.haulDestinationManager.SlotGroupAt(cell);
-            if (slotGroup != null)
-            {
-                slotGroups.Add(slotGroup);
-            }
-        }
-        return slotGroups;
-    }
-
+    /// <summary>
+    /// Items in storage touching <paramref name="parent"/> on a cardinal side. A storage building
+    /// (shelf, fridge, hopper) that touches counts in full; a stockpile zone only contributes the
+    /// items on the touching cells, so a large zone does not feed from far away. Forbidden items
+    /// and corpses are never returned.
+    /// </summary>
     public static List<Thing> FindThingsInConnectedStorage(Thing parent, Predicate<Thing> validator)
     {
         List<Thing> result = [];
-        HashSet<SlotGroup> slotGroups = FindConnectedSlotGroups(parent);
-        result.AddRange(from slotGroup in slotGroups from thing in slotGroup.HeldThings where validator(thing) select thing);
+        if (!parent.Spawned || parent.Map == null)
+            return result;
+
+        Map map = parent.Map;
+        HashSet<SlotGroup> buildingGroups = [];
+        foreach (IntVec3 cell in GenAdj.CellsAdjacentCardinal(parent))
+        {
+            if (!cell.InBounds(map))
+                continue;
+
+            SlotGroup slotGroup = map.haulDestinationManager.SlotGroupAt(cell);
+            if (slotGroup == null)
+                continue;
+
+            if (slotGroup.parent is Building_Storage)
+            {
+                if (buildingGroups.Add(slotGroup))
+                    result.AddRange(slotGroup.HeldThings.Where(thing => IsUsableConnectedThing(thing, validator)));
+            }
+            else
+            {
+                result.AddRange(cell.GetThingList(map).Where(thing => thing.def.EverStorable(false) && IsUsableConnectedThing(thing, validator)));
+            }
+        }
         return result;
     }
+
+    private static bool IsUsableConnectedThing(Thing thing, Predicate<Thing> validator) =>
+        thing is not Corpse && !thing.IsForbidden(Faction.OfPlayer) && validator(thing);
 }
