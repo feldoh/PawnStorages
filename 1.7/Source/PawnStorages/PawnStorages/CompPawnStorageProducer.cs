@@ -70,7 +70,7 @@ public class CompPawnStorageProducer : ThingComp, IActive
         // Second pass: try to place on any output cell with room
         return outputCells.Where(cell => cell.InBounds(parent.Map)).Any(cell => GenPlace.TryPlaceThing(thing, cell, parent.Map, ThingPlaceMode.Direct));
 
-        // All output cells full ÔÇö keep for next cycle
+        // All output cells full so keep for next cycle
     }
 
     public List<IntVec3> ValidOutputCellCandidates()
@@ -114,10 +114,7 @@ public class CompPawnStorageProducer : ThingComp, IActive
                         canTargetLocations = true,
                         canTargetBuildings = false,
                         canTargetPawns = false,
-                        validator = delegate(TargetInfo target)
-                        {
-                            return candidates.Contains(target.Cell);
-                        },
+                        validator = target => candidates.Contains(target.Cell),
                     },
                     delegate(LocalTargetInfo target)
                     {

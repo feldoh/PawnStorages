@@ -21,7 +21,7 @@ public class Building_PSFactory : Building, IStoreSettingsParent, INutritionStor
     public BillStack billStack;
     public StorageSettings allowedNutritionSettings;
 
-    protected Dictionary<ThingDef, bool> allowedThings = new Dictionary<ThingDef, bool>();
+    protected Dictionary<ThingDef, bool> allowedThings = new();
 
     public Dictionary<ThingDef, bool> AllowedThings => allowedThings;
     public HashSet<ThingDef> AllowedThingDefs => [.. allowedThings.Keys];
