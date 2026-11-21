@@ -90,7 +90,7 @@ public class CompMechStorage : CompPawnStorage
                 int ticksCharged = now - storedAtTick;
                 if (ticksCharged > 0)
                 {
-                    // Apply charge first (repair costs energy)
+                    // Apply charge first
                     Need_MechEnergy energy = pawn.needs?.TryGetNeed<Need_MechEnergy>();
                     if (energy != null)
                         energy.CurLevel = Mathf.Min(energy.MaxLevel, energy.CurLevel + PawnStoragesMod.settings.MechChargeRate * ticksCharged);
@@ -106,11 +106,8 @@ public class CompMechStorage : CompPawnStorage
     }
 
     /// <summary>
-    /// Mirrors the vanilla MechRepairUtility.GetHediffToHeal logic. It's a private helper
-    /// in RimWorld (publicizer would expose it, but we only need this one selection rule).
-    /// Keeping it local also makes the heal order stable: injuries by ascending severity,
-    /// then missing parts, then the weapon — independent of what other mods patch into
-    /// the vanilla repair utility.
+    /// Return injuries by ascending severity, as if slow repairs were happening
+    /// Basic damage > missing parts > weapon
     /// </summary>
     private static Hediff GetHediffToHeal(Pawn mech)
     {
@@ -124,23 +121,14 @@ public class CompMechStorage : CompPawnStorage
                 result = hediff;
             }
         }
-        if (result != null)
-            return result;
-
-        foreach (Hediff hediff in mech.health.hediffSet.hediffs)
-        {
-            if (hediff is Hediff_MissingPart)
-                return hediff;
-        }
-        return null;
+        return result ?? mech.health.hediffSet.hediffs.OfType<Hediff_MissingPart>().FirstOrDefault();
     }
 
     /// <summary>
-    /// Apply repairs for the given number of powered ticks using a single time budget.
-    /// Injuries heal at MechRepairRate HP/tick, consuming ticks proportionally.
+    /// Apply repairs for the given number of powered ticks
+    /// Injuries heal at MechRepairRate HP/tick.
     /// Missing parts and weapons each take MechRepairPartTicks to restore.
-    /// Stored mechs are charging, so repairs never consume their stored energy —
-    /// the dock's own power draw is the only cost.
+    /// Stored mechs are considered charging, so repairs don't consume their stored energy
     /// </summary>
     private void ApplyRepair(Pawn pawn, int ticksStored)
     {
@@ -197,9 +185,8 @@ public class CompMechStorage : CompPawnStorage
 
         if (!ModsConfig.BiotechActive || !pawn.IsColonyMech)
             return;
-        if (!mechStoringTick.TryGetValue(pawn.thingIDNumber, out int storedAtTick))
+        if (!mechStoringTick.Remove(pawn.thingIDNumber, out int storedAtTick))
             return;
-        mechStoringTick.Remove(pawn.thingIDNumber);
 
         CompPowerTrader powerTrader = parent.TryGetComp<CompPowerTrader>();
         if (powerTrader?.PowerOn != true)
@@ -209,12 +196,10 @@ public class CompMechStorage : CompPawnStorage
         if (ticksStored <= 0)
             return;
 
-        // Apply charge first (repair costs energy, so charge must come first)
         Need_MechEnergy energy = pawn.needs?.TryGetNeed<Need_MechEnergy>();
         if (energy != null)
             energy.CurLevel = Mathf.Min(energy.MaxLevel, energy.CurLevel + PawnStoragesMod.settings.MechChargeRate * ticksStored);
 
-        // Apply deferred repair
         ApplyRepair(pawn, ticksStored);
     }
 
@@ -366,14 +351,11 @@ public class CompMechStorage : CompPawnStorage
 
             if (MechRepairUtility.CanRepair(pawn))
             {
-                if (powered)
-                    sb.AppendLine("PS_MechRepairing".Translate(pawn.LabelShort));
-                else
-                    sb.AppendLine("PS_MechDamaged".Translate(pawn.LabelShort));
+                sb.AppendLine(powered ? "PS_MechRepairing".Translate(pawn.LabelShort) : "PS_MechDamaged".Translate(pawn.LabelShort));
             }
         }
 
-        if (!powered && innerContainer.Any<Pawn>())
+        if (!powered && innerContainer.Count != 0)
             sb.AppendLine("PS_MechNoPower".Translate());
 
         return sb.ToString().TrimStart().TrimEnd();

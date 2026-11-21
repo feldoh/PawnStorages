@@ -4,15 +4,9 @@ using Verse;
 
 namespace PawnStorages.Mech;
 
-public class Gizmo_MechExitThreshold : Gizmo_Slider
+public class Gizmo_MechExitThreshold(CompMechStorage comp) : Gizmo_Slider
 {
-    private readonly CompMechStorage comp;
     private static bool dragging;
-
-    public Gizmo_MechExitThreshold(CompMechStorage comp)
-    {
-        this.comp = comp;
-    }
 
     public override float Target
     {

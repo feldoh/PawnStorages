@@ -9,10 +9,9 @@ namespace PawnStorages.Mech;
 /// Uses the game's own WorkGiver system so modded mechs with custom work types
 /// are handled automatically.
 ///
-/// For each of the mech's race-level WorkTypeDefs (RaceProps.mechEnabledWorkTypes — these are
-/// fixed per mech kind, not configurable per individual), iterates the associated
-/// WorkGiver_Scanners and calls ShouldSkip(pawn) — the same cheap gate the
-/// game uses internally. If any WorkGiver says "don't skip", work is available.
+/// For each of the mech's race-level WorkTypeDefs (RaceProps.mechEnabledWorkTypes,
+/// fixed per mech kind), iterates the associated WorkGiver_Scanners and calls ShouldSkip(pawn)
+/// the same cheap gate the game uses internally. If any WorkGiver says "don't skip", work is available.
 ///
 /// Because stored pawns are despawned (pawn.Map == null), we temporarily inject
 /// the storage building's map index before calling ShouldSkip, then restore it.
@@ -24,27 +23,17 @@ namespace PawnStorages.Mech;
 /// The static mapping from WorkTypeDef → WorkGiver_Scanner list is built once
 /// from DefDatabase and cached for the session.
 /// </summary>
-public class MechWorkTracker : MapComponent
+public class MechWorkTracker(Map map) : MapComponent(map)
 {
     // Static cache: WorkTypeDef → list of (scanner, thingRequest) pairs
     private static Dictionary<WorkTypeDef, List<WorkGiverEntry>> workersByWorkType;
 
-    private readonly struct WorkGiverEntry
+    private readonly struct WorkGiverEntry(WorkGiver_Scanner scanner, ThingRequest request, string defName)
     {
-        public readonly WorkGiver_Scanner Scanner;
-        public readonly ThingRequest Request; // may be Undefined
-        public readonly string DefName; // for debug logging
-
-        public WorkGiverEntry(WorkGiver_Scanner scanner, ThingRequest request, string defName)
-        {
-            Scanner = scanner;
-            Request = request;
-            DefName = defName;
-        }
+        public readonly WorkGiver_Scanner Scanner = scanner;
+        public readonly ThingRequest Request = request; // may be Undefined
+        public readonly string DefName = defName; // for debug logging
     }
-
-    public MechWorkTracker(Map map)
-        : base(map) { }
 
     private static void BuildStaticCaches()
     {
@@ -62,7 +51,7 @@ public class MechWorkTracker : MapComponent
 
             if (!workersByWorkType.TryGetValue(def.workType, out List<WorkGiverEntry> list))
             {
-                list = new List<WorkGiverEntry>();
+                list = [];
                 workersByWorkType[def.workType] = list;
             }
 
@@ -96,23 +85,19 @@ public class MechWorkTracker : MapComponent
 
         try
         {
-            for (int i = 0; i < mechWorkTypes.Count; i++)
+            foreach (WorkTypeDef wt in mechWorkTypes)
             {
-                WorkTypeDef wt = mechWorkTypes[i];
-
                 if (!workersByWorkType.TryGetValue(wt, out List<WorkGiverEntry> entries))
                     continue;
 
-                for (int j = 0; j < entries.Count; j++)
+                foreach (WorkGiverEntry entry in entries)
                 {
-                    WorkGiverEntry entry = entries[j];
-
                     // Fast pre-filter: if this WorkGiver has a concrete ThingRequest and
                     // zero matching things exist on the map, skip it entirely
                     if (entry.Request.group != ThingRequestGroup.Undefined && map.listerThings.ThingsMatching(entry.Request).Count == 0)
                         continue;
 
-                    // Authoritative check: ShouldSkip is what the game uses to gate work
+                    // Viable work exists so check if the mech can actually do it
                     if (!entry.Scanner.ShouldSkip(mech))
                     {
                         if (debug)
