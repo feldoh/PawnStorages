@@ -14,9 +14,13 @@ namespace PawnStorages;
 public static class JobGiver_GetEnergy_Charger_Patch
 {
     [HarmonyPrefix]
-    public static bool Prefix(ref Job __result, Pawn pawn)
+    public static bool Prefix(ref Job __result, Pawn pawn, JobGiver_GetEnergy_Charger __instance)
     {
         if (!ModsConfig.BiotechActive || !pawn.IsColonyMech)
+            return true;
+
+        // Respect vanilla's recharge threshold (or forced recharge); otherwise full mechs get sent into storage
+        if (!__instance.ShouldAutoRecharge(pawn))
             return true;
 
         // Don't redirect combat mechs to storage during active combat

@@ -12,6 +12,20 @@ public class CompMechStorage : CompPawnStorage
 {
     private Dictionary<int, int> mechStoringTick = new();
 
+    private Dictionary<int, MechCycleState> mechCycle = new();
+
+    private static int CheckInterval => Mathf.Max(100, PawnStoragesMod.settings.MechCheckWorkInterval);
+
+    private MechCycleState CycleFor(Pawn pawn)
+    {
+        if (!mechCycle.TryGetValue(pawn.thingIDNumber, out MechCycleState state))
+        {
+            state = new MechCycleState();
+            mechCycle[pawn.thingIDNumber] = state;
+        }
+        return state;
+    }
+
     /// <summary>Per-building minimum energy percentage before a mech will exit for work.</summary>
     public float mechMinExitThreshold = 0.5f;
 
@@ -25,8 +39,23 @@ public class CompMechStorage : CompPawnStorage
         base.PostExposeData();
         Scribe_Collections.Look(ref mechStoringTick, "mechStoringTick", LookMode.Value, LookMode.Value);
         Scribe_Values.Look(ref mechMinExitThreshold, "mechMinExitThreshold", 0.5f);
+        Scribe_Collections.Look(ref mechCycle, "mechCycle", LookMode.Value, LookMode.Deep);
         if (Scribe.mode == LoadSaveMode.PostLoadInit)
+        {
             mechStoringTick ??= new Dictionary<int, int>();
+            mechCycle ??= new Dictionary<int, MechCycleState>();
+        }
+    }
+
+    public override void PostSpawnSetup(bool respawningAfterLoad)
+    {
+        base.PostSpawnSetup(respawningAfterLoad);
+        // Drop bookkeeping for mechs no longer assigned here (destroyed, reassigned, etc.)
+        if (compAssignable != null)
+        {
+            HashSet<int> assigned = compAssignable.AssignedPawns.Select(p => p.thingIDNumber).ToHashSet();
+            mechCycle.RemoveAll(kv => !assigned.Contains(kv.Key));
+        }
     }
 
     /// <summary>True if there is an active hostile threat on the map (same check as the speed widget).</summary>
@@ -39,7 +68,11 @@ public class CompMechStorage : CompPawnStorage
     {
         base.StorePawn(pawn, effects);
         if (ModsConfig.BiotechActive && pawn.IsColonyMech)
-            mechStoringTick.SetOrAdd(pawn.thingIDNumber, Find.TickManager.TicksGame);
+        {
+            int now = Find.TickManager.TicksGame;
+            mechStoringTick.SetOrAdd(pawn.thingIDNumber, now);
+            CycleFor(pawn).Notify_Stored(now, CheckInterval);
+        }
     }
 
     /// <summary>
@@ -191,6 +224,7 @@ public class CompMechStorage : CompPawnStorage
 
         if (!ModsConfig.BiotechActive || !pawn.IsColonyMech)
             return;
+        CycleFor(pawn).Notify_Released(Find.TickManager.TicksGame);
         if (!mechStoringTick.Remove(pawn.thingIDNumber, out int storedAtTick))
             return;
 
@@ -293,7 +327,7 @@ public class CompMechStorage : CompPawnStorage
             return;
         if (!schedulingEnabled || compAssignable == null)
             return;
-        if (!parent.IsHashIntervalTick(Mathf.Max(100, PawnStoragesMod.settings.MechCheckWorkInterval)))
+        if (!parent.IsHashIntervalTick(CheckInterval))
             return;
 
         Map map = parent.Map;
@@ -317,6 +351,9 @@ public class CompMechStorage : CompPawnStorage
                 continue;
             }
 
+            if (!CycleFor(pawn).CanAutoRelease(Find.TickManager.TicksGame))
+                continue;
+
             Need_MechEnergy energy = pawn.needs?.TryGetNeed<Need_MechEnergy>();
             if (energy == null)
                 continue;
@@ -325,12 +362,30 @@ public class CompMechStorage : CompPawnStorage
             if (projectedPct < mechMinExitThreshold)
                 continue;
 
-            bool hasWork = tracker.HasWorkForMech(pawn);
+            bool release = ShouldAutoRelease(pawn, map, tracker);
             if (PawnStoragesMod.settings.DebugLogging)
-                Log.Message($"[CompMechStorage] {pawn.LabelShort}: projectedPct={projectedPct:P1}, hasWork={hasWork}, releasing={hasWork}");
-            if (hasWork)
+                Log.Message($"[CompMechStorage] {pawn.LabelShort}: projectedPct={projectedPct:P1}, mode={pawn.GetMechControlGroup()?.WorkMode?.defName}, releasing={release}");
+            if (release)
                 ReleasePawn(pawn, parent.Position, map);
         }
+    }
+
+    /// <summary>
+    /// Non-combat auto-release follows the mech's control group work mode: Work mechs leave when there
+    /// is work for them, Escort mechs leave to rejoin an overseer on this map, and Recharge/SelfShutdown
+    /// (or uncontrolled) mechs stay stored until released by hand.
+    /// </summary>
+    private static bool ShouldAutoRelease(Pawn pawn, Map map, MechWorkTracker tracker)
+    {
+        Pawn overseer = pawn.GetOverseer();
+        if (overseer == null)
+            return false;
+        MechWorkModeDef mode = pawn.GetMechControlGroup()?.WorkMode;
+        if (mode == MechWorkModeDefOf.Work)
+            return tracker.HasWorkForMech(pawn);
+        if (mode == MechWorkModeDefOf.Escort)
+            return overseer.Spawned && overseer.Map == map;
+        return false;
     }
 
     public override string PawnTypeLabel => "PS_StoredMechs".Translate();
