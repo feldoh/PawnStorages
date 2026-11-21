@@ -223,6 +223,5 @@ public static class Utility
         return result;
     }
 
-    private static bool IsUsableConnectedThing(Thing thing, Predicate<Thing> validator) =>
-        thing is not Corpse && !thing.IsForbidden(Faction.OfPlayer) && validator(thing);
+    private static bool IsUsableConnectedThing(Thing thing, Predicate<Thing> validator) => thing is not Corpse && !thing.IsForbidden(Faction.OfPlayer) && validator(thing);
 }
