@@ -13,8 +13,11 @@ public class MechCycleState : IExposable
     /// <summary>A mech stored again within this many ticks of release counts as a bounce.</summary>
     public const int BounceWindowTicks = 1000;
 
-    /// <summary>Longest delay between auto-releases (one in-game day).</summary>
-    public const int MaxBackoffTicks = GenDate.TicksPerDay;
+    /// <summary>
+    /// Longest delay between auto-releases (two in-game hours). Kept short so a mech that has backed
+    /// off while idle still picks up new work promptly; still 10x fewer releases than the 500-tick check.
+    /// </summary>
+    public const int MaxBackoffTicks = GenDate.TicksPerHour * 2;
 
     public int lastReleaseTick = -1;
     public int backoffTicks;

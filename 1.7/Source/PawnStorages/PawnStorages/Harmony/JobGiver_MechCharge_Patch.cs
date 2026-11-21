@@ -19,8 +19,11 @@ public static class JobGiver_GetEnergy_Charger_Patch
         if (!ModsConfig.BiotechActive || !pawn.IsColonyMech)
             return true;
 
-        // Respect vanilla's recharge threshold (or forced recharge); otherwise full mechs get sent into storage
-        if (!__instance.ShouldAutoRecharge(pawn))
+        // Working mechs only go in when vanilla wants them to recharge; otherwise full mechs cycle in and out.
+        // Mechs in Recharge mode go in even when full (storing a reserve), since storage never auto-releases
+        // them outside combat. (SelfShutdown mode never reaches this job giver; those mechs power down in place.)
+        bool parked = pawn.GetMechControlGroup()?.WorkMode == MechWorkModeDefOf.Recharge;
+        if (!parked && !__instance.ShouldAutoRecharge(pawn))
             return true;
 
         // Don't redirect combat mechs to storage during active combat
