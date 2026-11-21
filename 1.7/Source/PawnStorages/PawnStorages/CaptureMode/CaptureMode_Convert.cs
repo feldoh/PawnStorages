@@ -7,7 +7,7 @@ public class CaptureMode_Convert : CaptureMode
 {
     public override void ApplyPostCaptureEffects(Pawn pawn, Faction playerFaction, Pawn launcher, ThingWithComps equipment)
     {
-        if (!pawn.RaceProps.Humanlike && !pawn.RaceProps.Animal)
+        if (!pawn.RaceProps.Humanlike && !pawn.RaceProps.Animal && !pawn.RaceProps.IsMechanoid)
             return;
 
         RecruitUtility.Recruit(pawn, playerFaction, launcher);

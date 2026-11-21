@@ -33,6 +33,7 @@
 	<PS_MechExitThresholdTooltip>Mechs will not leave for work until their projected charge reaches this level. Combat mechs will always exit during raids regardless of charge.</PS_MechExitThresholdTooltip>
 	<PS_MechRepairing>{0}: repairing</PS_MechRepairing>
 	<PS_MechDamaged>{0}: damaged (needs power to repair)</PS_MechDamaged>
+	<PS_MechCaptured>{0} has been brought under your control.</PS_MechCaptured>
 
 	<PS_ReleaseReportA>Releasing {0} from {1} at {2}</PS_ReleaseReportA>
 	<PS_ReleaseReportB>Releasing all colonists from {0} at {1}</PS_ReleaseReportB>
