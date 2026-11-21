@@ -7,7 +7,7 @@
         <baseCost>300</baseCost>
         <techLevel>Industrial</techLevel>
         <tab>Main</tab>
-        <researchViewX>7</researchViewX>
-        <researchViewY>4</researchViewY>
+        <researchViewX>8</researchViewX>
+        <researchViewY>3.4</researchViewY>
     </ResearchProjectDef>
 </Defs>
