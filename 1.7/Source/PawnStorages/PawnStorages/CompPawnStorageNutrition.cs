@@ -375,8 +375,7 @@ public class CompPawnStorageNutrition : ThingComp
         }
 
         // Fallback: check connected storage buildings (shelves, stockpiles, fridges)
-        List<Thing> connectedFeed = Utility.FindThingsInConnectedStorage(parent,
-            thing => ValidFeedstock(thing.def));
+        List<Thing> connectedFeed = Utility.FindThingsInConnectedStorage(parent, thing => ValidFeedstock(thing.def));
         return connectedFeed.Count > 0 ? connectedFeed[0] : null;
     }
 
@@ -412,8 +411,7 @@ public class CompPawnStorageNutrition : ThingComp
         }
 
         // Also check connected storage
-        List<Thing> connectedFeed = Utility.FindThingsInConnectedStorage(parent,
-            thing => IsAcceptableFeedstock(thing.def));
+        List<Thing> connectedFeed = Utility.FindThingsInConnectedStorage(parent, thing => IsAcceptableFeedstock(thing.def));
         num += connectedFeed.Sum(t => t.GetStatValue(StatDefOf.Nutrition) * t.stackCount);
 
         return num > 0;

@@ -179,7 +179,7 @@ public class Building_PSFarm : Building, IStoreSettingsParent, INutritionStorage
             // the drop path if no candidate survives the protection guards.
             if (IsBreeder && FarmBreeder is { MakeRoomOnBirth: true })
             {
-                Pawn evicted = FarmBreeder.TryEjectForRoom(newPawn);
+                Pawn evicted = FarmBreeder.TryCullForRoom(newPawn);
                 if (evicted != null)
                 {
                     Messages.Message(

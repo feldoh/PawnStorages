@@ -45,6 +45,19 @@ namespace PawnStorages.Farm.Comps
             return AutoSlaughterCullOrder;
         }
 
+        // The cache of AutoSlaughter orders can miss some kinds of animal (e.g. a modded animal added after load)
+        // This provides a safe way to get a cull order for a kind which will always return a valid order even if the cache is missing that kind.
+        public AutoSlaughterCullOrder GetCullOrder(PawnKindDef kind)
+        {
+            Dictionary<PawnKindDef, AutoSlaughterCullOrder> orders = GetOrPopulateAutoSlaughterCullOrder();
+            if (!orders.TryGetValue(kind, out AutoSlaughterCullOrder order))
+            {
+                order = new AutoSlaughterCullOrder();
+                orders[kind] = order;
+            }
+            return order;
+        }
+
         public Dictionary<PawnKindDef, AutoSlaughterMinimums> AutoSlaughterMinimums = new();
 
         public Dictionary<PawnKindDef, AutoSlaughterMinimums> GetOrPopulateAutoSlaughterMinimums()
@@ -118,25 +131,23 @@ namespace PawnStorages.Farm.Comps
             SoundDefOf.Execute_Cut.PlayOneShot((SoundInfo)(Thing)victim);
         }
 
-        public bool CullFirstOverLimit(int max, List<Pawn> pawns)
+        // Executes the first (highest-priority) candidate from an already-filtered,
+        // already-capped candidate list. Returns the culled pawn, or null when there was
+        // no eligible candidate so callers can take their no-cull fallback path.
+        public Pawn CullFirstCandidate(List<Pawn> candidates)
         {
-            if (max <= 0 || max >= pawns.Count)
-            {
-                return false;
-            }
-
-            Pawn pawn = pawns.First();
-            ExecutionInt(pawn);
-            return true;
+            if (candidates.NullOrEmpty())
+                return null;
+            Pawn victim = candidates[0];
+            ExecutionInt(victim);
+            return victim;
         }
 
         public bool IsProtectedFromCull(Pawn p)
         {
             if (ProtectPregnant && p.health?.hediffSet?.GetFirstHediffOfDef(HediffDefOf.Pregnant) != null)
                 return true;
-            if (ProtectBonded && p.relations != null && p.relations.GetDirectRelationsCount(PawnRelationDefOf.Bond) > 0)
-                return true;
-            return false;
+            return ProtectBonded && p.relations != null && p.relations.GetDirectRelationsCount(PawnRelationDefOf.Bond) > 0;
         }
 
         public int EffectiveMin(PawnKindDef kind, bool adult, Gender gender)
@@ -156,9 +167,9 @@ namespace PawnStorages.Farm.Comps
             int min = EffectiveMin(type.Key, adult, gender);
             int allowedCullCount = Math.Max(0, bucket.Count + extraInBracket - min);
             if (allowedCullCount == 0)
-                return new List<Pawn>();
+                return [];
             List<Pawn> nonProtected = bucket.Where(p => !IsProtectedFromCull(p)).ToList();
-            AutoSlaughterCullOrder order = GetOrPopulateAutoSlaughterCullOrder()[type.Key];
+            AutoSlaughterCullOrder order = GetCullOrder(type.Key);
             bool ascending = order.IsAscending(adult, gender);
             nonProtected = ascending
                 ? nonProtected.OrderBy(p => p.ageTracker.ageBiologicalTicksInt).ToList()
@@ -168,30 +179,22 @@ namespace PawnStorages.Farm.Comps
 
         // Cross-bucket ordered cull candidates for a kind. If newbornInBracket is supplied,
         // its bracket gets +1 to the effective count (so cull from that bracket is allowed
-        // when bucket count == min ÔÇö the newborn refills the slot post-cull).
+        // when bucket count == min - the newborn refills the slot post-cull).
         public List<Pawn> GetCullCandidatesOrdered(IGrouping<PawnKindDef, Pawn> type, Pawn newbornInBracket = null)
         {
             PawnKindDef kind = type.Key;
             bool genderless = !(kind?.RaceProps?.hasGenders ?? true);
-            AutoSlaughterCullOrder order = GetOrPopulateAutoSlaughterCullOrder()[kind];
+            AutoSlaughterCullOrder order = GetCullOrder(kind);
 
             if (genderless)
             {
                 List<Pawn> all = type.Where(p => !IsProtectedFromCull(p)).ToList();
-                return order.AllAscending
-                    ? all.OrderBy(p => p.ageTracker.ageBiologicalTicksInt).ToList()
-                    : all.OrderByDescending(p => p.ageTracker.ageBiologicalTicksInt).ToList();
+                return order.AllAscending ? all.OrderBy(p => p.ageTracker.ageBiologicalTicksInt).ToList() : all.OrderByDescending(p => p.ageTracker.ageBiologicalTicksInt).ToList();
             }
 
             List<Pawn> ordered = new();
             // Iterate buckets in FarmAnimalCharacteristics priority order: adults before young, males before females.
-            (bool adult, Gender gender)[] buckets =
-            [
-                (true, Gender.Male),
-                (true, Gender.Female),
-                (false, Gender.Male),
-                (false, Gender.Female),
-            ];
+            (bool adult, Gender gender)[] buckets = [(true, Gender.Male), (true, Gender.Female), (false, Gender.Male), (false, Gender.Female)];
             foreach ((bool adult, Gender gender) in buckets)
             {
                 int extra = (newbornInBracket != null && newbornInBracket.ageTracker.Adult == adult && newbornInBracket.gender == gender) ? 1 : 0;
@@ -232,12 +235,11 @@ namespace PawnStorages.Farm.Comps
                         int bucketCount = type.Count(p => p.ageTracker.Adult == adult && p.gender == gender);
                         if (bucketCount <= max)
                             continue;
-                        List<Pawn> candidates = BucketCullCandidates(type, adult, gender);
-                        if (candidates.Count == 0)
-                            continue;
-                        ExecutionInt(candidates[0]);
-                        culled = true;
-                        break;
+                        if (CullFirstCandidate(BucketCullCandidates(type, adult, gender)) != null)
+                        {
+                            culled = true;
+                            break;
+                        }
                     }
                 }
 
@@ -247,17 +249,15 @@ namespace PawnStorages.Farm.Comps
                 int totalCount = type.Count();
                 if (config.maxTotal > 0 && totalCount > config.maxTotal)
                 {
-                    List<Pawn> ordered = GetCullCandidatesOrdered(type);
-                    if (ordered.Count > 0)
-                        ExecutionInt(ordered[0]);
+                    CullFirstCandidate(GetCullCandidatesOrdered(type));
                 }
             }
         }
 
         // Cull a same-kind candidate to make room for an inbound newborn. Returns the culled
-        // pawn (so the caller can log it), or null if no candidate survived the guards ÔÇö in
+        // pawn (so the caller can log it), or null if no candidate survived the guards - in
         // which case the caller should fall back to the drop-on-floor path.
-        public Pawn TryEjectForRoom(Pawn newborn)
+        public Pawn TryCullForRoom(Pawn newborn)
         {
             if (newborn?.kindDef == null)
                 return null;
@@ -265,14 +265,7 @@ namespace PawnStorages.Farm.Comps
             if (kindMembers.Count == 0)
                 return null;
             IGrouping<PawnKindDef, Pawn> grouping = kindMembers.GroupBy(p => p.kindDef).FirstOrDefault();
-            if (grouping == null)
-                return null;
-            List<Pawn> candidates = GetCullCandidatesOrdered(grouping, newborn);
-            if (candidates.Count == 0)
-                return null;
-            Pawn victim = candidates[0];
-            ExecutionInt(victim);
-            return victim;
+            return grouping == null ? null : CullFirstCandidate(GetCullCandidatesOrdered(grouping, newborn));
         }
 
         public void TryBreed(List<IGrouping<PawnKindDef, Pawn>> types)
@@ -300,8 +293,7 @@ namespace PawnStorages.Farm.Comps
 
                 float progressPerInterval = ParentAsBreederParent.BuildingTickInterval / gestationTicks;
 
-                if (!BreedingProgress.ContainsKey(type.Key))
-                    BreedingProgress[type.Key] = 0f;
+                BreedingProgress.TryAdd(type.Key, 0f);
                 BreedingProgress[type.Key] = Mathf.Clamp01(BreedingProgress[type.Key] + progressPerInterval * nonMales.Count);
 
                 if (BreedingProgress[type.Key] < 1f)
