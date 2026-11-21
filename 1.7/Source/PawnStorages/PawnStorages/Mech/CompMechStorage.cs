@@ -106,8 +106,11 @@ public class CompMechStorage : CompPawnStorage
     }
 
     /// <summary>
-    /// Mirrors the vanilla MechRepairUtility selection logic. Kept local because the
-    /// game's GetHediffToHeal helper is private (and publicizer access would be brittle).
+    /// Mirrors the vanilla MechRepairUtility.GetHediffToHeal logic. It's a private helper
+    /// in RimWorld (publicizer would expose it, but we only need this one selection rule).
+    /// Keeping it local also makes the heal order stable: injuries by ascending severity,
+    /// then missing parts, then the weapon — independent of what other mods patch into
+    /// the vanilla repair utility.
     /// </summary>
     private static Hediff GetHediffToHeal(Pawn mech)
     {
@@ -136,7 +139,8 @@ public class CompMechStorage : CompPawnStorage
     /// Apply repairs for the given number of powered ticks using a single time budget.
     /// Injuries heal at MechRepairRate HP/tick, consuming ticks proportionally.
     /// Missing parts and weapons each take MechRepairPartTicks to restore.
-    /// Deducts MechEnergyLossPerHP from energy per HP healed (vanilla balance).
+    /// Stored mechs are charging, so repairs never consume their stored energy —
+    /// the dock's own power draw is the only cost.
     /// </summary>
     private void ApplyRepair(Pawn pawn, int ticksStored)
     {
@@ -148,8 +152,6 @@ public class CompMechStorage : CompPawnStorage
         if (pawn.TryGetComp<CompMechRepairable>() == null)
             return;
 
-        Need_MechEnergy energy = pawn.needs?.TryGetNeed<Need_MechEnergy>();
-        float energyCostPerHP = pawn.GetStatValue(StatDefOf.MechEnergyLossPerHP);
         float ticksRemaining = ticksStored;
         int partTicks = Mathf.Max(1, PawnStoragesMod.settings.MechRepairPartTicks);
 
@@ -161,14 +163,9 @@ public class CompMechStorage : CompPawnStorage
                 // Max HP we can heal with remaining time
                 float maxHP = ticksRemaining * repairRate;
                 float healAmount = Mathf.Min(injury.Severity, maxHP);
-                float energyCost = healAmount * energyCostPerHP;
-                if (energy != null && energy.CurLevel < energyCost)
-                    break;
 
                 injury.Heal(healAmount);
                 ticksRemaining -= healAmount / repairRate;
-                if (energy != null)
-                    energy.CurLevel -= energyCost;
             }
             else if (hediff is Hediff_MissingPart)
             {

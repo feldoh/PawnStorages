@@ -26,7 +26,7 @@
 	<PS_MechCharging>{0}: {1}</PS_MechCharging>
 	<PS_Settings_MechCheckWorkInterval>Mech work check interval (ticks): {0}</PS_Settings_MechCheckWorkInterval>
 	<PS_Settings_MechChargeRate>Mech charge rate (energy/day): {0}</PS_Settings_MechChargeRate>
-	<PS_Settings_MechRepairRate>Mech repair rate (HP/day): {0}</PS_Settings_MechRepairRate>
+	<PS_Settings_MechRepairRate>Mech repair rate (HP/day, no energy cost): {0}</PS_Settings_MechRepairRate>
 	<PS_Settings_MechRepairPartTicks>Time to restore missing part (days): {0}</PS_Settings_MechRepairPartTicks>
 	<PS_MechNoPower>No power - mechs will not charge.</PS_MechNoPower>
 	<PS_MechExitThreshold>Min exit charge</PS_MechExitThreshold>
