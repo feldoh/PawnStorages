@@ -24,7 +24,7 @@ public class AutoSlaughterGizmo(CompFarmBreeder breeder) : Gizmo
 
     public override GizmoResult GizmoOnGUI(Vector2 topLeft, float maxWidth, GizmoRenderParms parms)
     {
-        Rect outerRect = new Rect(topLeft.x, topLeft.y, GetWidth(maxWidth), 75f);
+        Rect outerRect = new(topLeft.x, topLeft.y, GetWidth(maxWidth), 75f);
         Rect insetRect = outerRect.ContractedBy(6f);
 
         Widgets.DrawWindowBackground(outerRect);
