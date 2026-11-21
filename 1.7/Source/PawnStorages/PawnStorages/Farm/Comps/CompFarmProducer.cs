@@ -40,8 +40,7 @@ namespace PawnStorages.Farm.Comps
                 && (!parent.IsHashIntervalTick(60000 / Math.Max(PawnStoragesMod.settings.ProductionsPerDay, 1)) || DaysProduce.Count <= 0 || !ParentAsProductionParent.IsActive)
             )
                 return;
-            List<Thing> failedToPlace = [];
-            failedToPlace.AddRange(DaysProduce.Where(thing => !GenPlace.TryPlaceThing(thing, parent.Position, parent.Map, ThingPlaceMode.Near)));
+            List<Thing> failedToPlace = TryPlaceProducts();
             DaysProduce.Clear();
             DaysProduce.AddRange(failedToPlace);
         }
