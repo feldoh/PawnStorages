@@ -259,7 +259,7 @@
                 <useFromInventory>true</useFromInventory>
                 <captureChance>0.3</captureChance>
             </li>
-            <li Class="PawnStorages.CompProperties_CaptureSphereMode"/>
+            <li Class="PawnStorages.CaptureSphere.CompProperties_CaptureSphereMode"/>
         </comps>
     </ThingDef>
 
@@ -294,24 +294,29 @@
                 <useFromInventory>true</useFromInventory>
                 <captureChance>0.6</captureChance>
             </li>
-            <li Class="PawnStorages.CompProperties_CaptureSphereMode"/>
+            <li Class="PawnStorages.CaptureSphere.CompProperties_CaptureSphereMode"/>
         </comps>
     </ThingDef>
 
     <ThingDef ParentName="PS_CaptureSphereBase">
         <defName>PS_CaptureSphere</defName>
         <label>master capture sphere</label>
-        <description>A masterwork capture sphere capable of capturing and releasing pawns at range. Guarantees capture of any target, downed or standing.</description>
+        <description>A masterwork capture sphere capable of capturing and releasing pawns at range. Guarantees capture of any target, downed or standing. Each one consumes an AI persona core, making them exceedingly rare.</description>
         <statBases>
             <Mass>1</Mass>
             <RangedWeapon_Cooldown>2.66</RangedWeapon_Cooldown>
             <WorkToMake>15000</WorkToMake>
+            <MarketValue>1200</MarketValue>
         </statBases>
         <costList>
             <Steel>20</Steel>
             <Jade>1</Jade>
             <ComponentIndustrial>1</ComponentIndustrial>
+            <AIPersonaCore>1</AIPersonaCore>
         </costList>
+        <recipeMaker>
+            <researchPrerequisite>AdvancedFabrication</researchPrerequisite>
+        </recipeMaker>
         <comps>
             <li Class="PawnStorages.CompProperties_PawnStorage">
                 <compClass>PawnStorages.CompPawnStorage</compClass>
@@ -329,7 +334,7 @@
                 <useFromInventory>true</useFromInventory>
                 <captureChance>1.0</captureChance>
             </li>
-            <li Class="PawnStorages.CompProperties_CaptureSphereMode"/>
+            <li Class="PawnStorages.CaptureSphere.CompProperties_CaptureSphereMode"/>
         </comps>
     </ThingDef>
 

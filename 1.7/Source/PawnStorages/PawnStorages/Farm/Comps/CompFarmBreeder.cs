@@ -21,12 +21,30 @@ namespace PawnStorages.Farm.Comps
 
         public Dictionary<PawnKindDef, AutoSlaughterConfig> AutoSlaughterSettings = new();
 
+        // Kinds can appear after a save was made (an animal mod added later), so every GetOrPopulate* fills in
+        // missing kinds rather than only populating an empty dictionary. Each runs once per session per comp;
+        // later calls are a cheap flag check (the tab calls these every frame).
+        private bool settingsPopulated;
+        private bool cullOrderPopulated;
+        private bool minimumsPopulated;
+
+        private static void AddMissingKinds<T>(Dictionary<PawnKindDef, T> dict, System.Func<PawnKindDef, T> make)
+        {
+            foreach (PawnKindDef kind in Utility.AllAnimalKinds.Value)
+            {
+                if (!dict.ContainsKey(kind))
+                    dict.Add(kind, make(kind));
+            }
+        }
+
         public Dictionary<PawnKindDef, AutoSlaughterConfig> GetOrPopulateAutoSlaughterSettings()
         {
-            if (!AutoSlaughterSettings.NullOrEmpty())
-                return AutoSlaughterSettings;
-            AutoSlaughterSettings = new Dictionary<PawnKindDef, AutoSlaughterConfig>();
-            TryPopulateMissingAnimals();
+            AutoSlaughterSettings ??= new Dictionary<PawnKindDef, AutoSlaughterConfig>();
+            if (!settingsPopulated)
+            {
+                AddMissingKinds(AutoSlaughterSettings, kind => new AutoSlaughterConfig { animal = kind.race });
+                settingsPopulated = true;
+            }
             return AutoSlaughterSettings;
         }
 
@@ -34,14 +52,12 @@ namespace PawnStorages.Farm.Comps
 
         public Dictionary<PawnKindDef, AutoSlaughterCullOrder> GetOrPopulateAutoSlaughterCullOrder()
         {
-            if (!AutoSlaughterCullOrder.NullOrEmpty())
-                return AutoSlaughterCullOrder;
-            AutoSlaughterCullOrder = new Dictionary<PawnKindDef, AutoSlaughterCullOrder>();
-            foreach (PawnKindDef allDef in Utility.AllAnimalKinds.Value.Where(d => !AutoSlaughterCullOrder.ContainsKey(d)))
+            AutoSlaughterCullOrder ??= new Dictionary<PawnKindDef, AutoSlaughterCullOrder>();
+            if (!cullOrderPopulated)
             {
-                AutoSlaughterCullOrder.Add(allDef, new AutoSlaughterCullOrder());
+                AddMissingKinds(AutoSlaughterCullOrder, _ => new AutoSlaughterCullOrder());
+                cullOrderPopulated = true;
             }
-
             return AutoSlaughterCullOrder;
         }
 
@@ -63,20 +79,24 @@ namespace PawnStorages.Farm.Comps
         public Dictionary<PawnKindDef, AutoSlaughterMinimums> GetOrPopulateAutoSlaughterMinimums()
         {
             AutoSlaughterMinimums ??= new Dictionary<PawnKindDef, AutoSlaughterMinimums>();
-            foreach (PawnKindDef allDef in Utility.AllAnimalKinds.Value.Where(d => !AutoSlaughterMinimums.ContainsKey(d)))
+            if (!minimumsPopulated)
             {
-                AutoSlaughterMinimums.Add(allDef, new AutoSlaughterMinimums());
+                AddMissingKinds(AutoSlaughterMinimums, _ => new AutoSlaughterMinimums());
+                minimumsPopulated = true;
             }
             return AutoSlaughterMinimums;
         }
 
-        private void TryPopulateMissingAnimals()
+        // Safe lookup for UI: always returns a valid entry even for a kind the dictionary has never seen.
+        public AutoSlaughterMinimums GetMinimums(PawnKindDef kind)
         {
-            foreach (PawnKindDef allDef in Utility.AllAnimalKinds.Value.Where(d => !AutoSlaughterSettings.ContainsKey(d)))
+            Dictionary<PawnKindDef, AutoSlaughterMinimums> mins = GetOrPopulateAutoSlaughterMinimums();
+            if (!mins.TryGetValue(kind, out AutoSlaughterMinimums result))
             {
-                AutoSlaughterConfig config = new() { animal = allDef.race };
-                AutoSlaughterSettings.Add(allDef, config);
+                result = new AutoSlaughterMinimums();
+                mins[kind] = result;
             }
+            return result;
         }
 
         private Dictionary<PawnKindDef, float> breedingProgress = new();
@@ -106,7 +126,8 @@ namespace PawnStorages.Farm.Comps
             AutoSlaughterMinimums ??= new Dictionary<PawnKindDef, AutoSlaughterMinimums>();
             if (AutoSlaughterSettings.RemoveAll(x => x.Value.animal == null || x.Value.animal.IsCorpse) != 0)
                 Log.Warning("Some auto-slaughter configs had null animals after loading.");
-            TryPopulateMissingAnimals();
+            settingsPopulated = cullOrderPopulated = minimumsPopulated = false;
+            GetOrPopulateAutoSlaughterSettings();
             GetOrPopulateAutoSlaughterCullOrder();
             GetOrPopulateAutoSlaughterMinimums();
         }

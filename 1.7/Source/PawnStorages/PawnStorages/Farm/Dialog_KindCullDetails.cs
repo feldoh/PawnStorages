@@ -32,7 +32,7 @@ public class Dialog_KindCullDetails : Window
             return;
         }
 
-        AutoSlaughterMinimums mins = breeder.GetOrPopulateAutoSlaughterMinimums()[kind];
+        AutoSlaughterMinimums mins = breeder.GetMinimums(kind);
         AutoSlaughterConfig config = breeder.GetOrPopulateAutoSlaughterSettings().TryGetValue(kind);
 
         Rect contentRect = inRect;

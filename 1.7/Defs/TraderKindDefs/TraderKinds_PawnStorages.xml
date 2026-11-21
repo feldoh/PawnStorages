@@ -56,6 +56,10 @@
 
             <!-- Exotic -->
             <li Class="StockGenerator_SingleDef">
+                <thingDef>PS_CaptureSphere</thingDef>
+                <countRange>0~1</countRange>
+            </li>
+            <li Class="StockGenerator_SingleDef">
                 <thingDef>PS_PawnDisc</thingDef>
                 <countRange>0~2</countRange>
             </li>

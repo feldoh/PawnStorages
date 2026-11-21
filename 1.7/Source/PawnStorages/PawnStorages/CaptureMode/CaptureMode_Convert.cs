@@ -7,7 +7,14 @@ public class CaptureMode_Convert : CaptureMode
 {
     public override void ApplyPostCaptureEffects(Pawn pawn, Faction playerFaction, Pawn launcher, ThingWithComps equipment)
     {
-        if (!pawn.RaceProps.Humanlike && !pawn.RaceProps.Animal && !pawn.RaceProps.IsMechanoid)
+        if (pawn.RaceProps.IsMechanoid)
+        {
+            if (CaptureModeUtility.TryTakeMech(pawn, playerFaction, launcher))
+                Messages.Message("PS_SphereConverted".Translate(pawn.LabelShortCap), pawn, MessageTypeDefOf.PositiveEvent, false);
+            return;
+        }
+
+        if (!pawn.RaceProps.Humanlike && !pawn.RaceProps.Animal)
             return;
 
         RecruitUtility.Recruit(pawn, playerFaction, launcher);

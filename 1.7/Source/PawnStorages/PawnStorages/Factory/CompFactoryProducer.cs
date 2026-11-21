@@ -107,61 +107,37 @@ public class CompFactoryProducer : CompPawnStorageProducer
         if (!billHasIngredients)
             return reserved;
 
-        foreach (IntVec3 cellsCardinalInBound in AdjCellsCardinalInBounds)
+        void TryReserve(Thing thing)
         {
-            Map map = parent.Map;
-            List<Thing> potentialInputItemThings = cellsCardinalInBound.GetThingList(map);
-            foreach (Thing potentialInputItemThing in potentialInputItemThings)
+            foreach (IngredientCount ingredientCount in ingredientList)
             {
-                foreach (IngredientCount ingredientCount in ingredientList)
-                {
-                    if (done[ingredientCount] || !ingredientCount.filter.Allows(potentialInputItemThing))
-                        continue;
-                    int countSoFarForIngredient = countSoFar.GetWithFallback(ingredientCount, 0);
-                    int required = ingredientCount.CountRequiredOfFor(potentialInputItemThing.def, bill.recipe);
-                    required -= countSoFarForIngredient;
-                    if (required > 0)
-                    {
-                        int reservedSoFar = reserved.GetWithFallback(potentialInputItemThing, 0);
-                        int reservable = potentialInputItemThing.stackCount - reservedSoFar;
-                        int toReserve = Math.Min(required, reservable);
-                        if (toReserve >= required)
-                            done[ingredientCount] = true;
-                        reserved.SetOrAdd(potentialInputItemThing, toReserve + reservedSoFar);
-                        countSoFar.SetOrAdd(ingredientCount, countSoFarForIngredient + toReserve);
-                    }
-                }
+                if (done[ingredientCount] || !ingredientCount.filter.Allows(thing))
+                    continue;
+                int countSoFarForIngredient = countSoFar.GetWithFallback(ingredientCount, 0);
+                int required = ingredientCount.CountRequiredOfFor(thing.def, bill.recipe) - countSoFarForIngredient;
+                if (required <= 0)
+                    continue;
+                int reservedSoFar = reserved.GetWithFallback(thing, 0);
+                int toReserve = Math.Min(required, thing.stackCount - reservedSoFar);
+                if (toReserve >= required)
+                    done[ingredientCount] = true;
+                reserved.SetOrAdd(thing, toReserve + reservedSoFar);
+                countSoFar.SetOrAdd(ingredientCount, countSoFarForIngredient + toReserve);
             }
         }
 
-        // Fallback: check connected storage if not all ingredients found
+        foreach (IntVec3 cellsCardinalInBound in AdjCellsCardinalInBounds)
+        {
+            foreach (Thing potentialInputItemThing in cellsCardinalInBound.GetThingList(parent.Map))
+                TryReserve(potentialInputItemThing);
+        }
+
+        // Fallback: connected storage (whole touching storage buildings, touching zone cells only),
+        // respecting the bill's own ingredient filter
         if (done.Any(pair => !pair.Value))
         {
-            HashSet<SlotGroup> slotGroups = Utility.FindConnectedSlotGroups(parent);
-            foreach (SlotGroup slotGroup in slotGroups)
-            {
-                foreach (Thing thing in slotGroup.HeldThings)
-                {
-                    foreach (IngredientCount ingredientCount in ingredientList)
-                    {
-                        if (done[ingredientCount] || !ingredientCount.filter.Allows(thing))
-                            continue;
-                        int countSoFarForIngredient = countSoFar.GetWithFallback(ingredientCount, 0);
-                        int required = ingredientCount.CountRequiredOfFor(thing.def, bill.recipe);
-                        required -= countSoFarForIngredient;
-                        if (required > 0)
-                        {
-                            int reservedSoFar = reserved.GetWithFallback(thing, 0);
-                            int reservable = thing.stackCount - reservedSoFar;
-                            int toReserve = Math.Min(required, reservable);
-                            if (toReserve >= required)
-                                done[ingredientCount] = true;
-                            reserved.SetOrAdd(thing, toReserve + reservedSoFar);
-                            countSoFar.SetOrAdd(ingredientCount, countSoFarForIngredient + toReserve);
-                        }
-                    }
-                }
-            }
+            foreach (Thing thing in Utility.FindThingsInConnectedStorage(parent, bill.IsFixedOrAllowedIngredient))
+                TryReserve(thing);
         }
 
         return done.Any(pair => !pair.Value) ? [] : reserved;

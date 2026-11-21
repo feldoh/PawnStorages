@@ -8,6 +8,9 @@
         <label>mech dock</label>
         <description>A powered wall dock designed to house, charge, and repair a single mechanoid. The mech will automatically enter to recharge when it has no work, and exit when work is available and its charge is sufficient. Damaged mechs are slowly repaired while stored.</description>
         <thingClass>PawnStorages.Building_PawnDoor</thingClass>
+        <researchPrerequisites>
+            <li>PS_MechStorage</li>
+        </researchPrerequisites>
         <altitudeLayer>BuildingOnTop</altitudeLayer>
         <passability>Standable</passability>
         <pathCost>0</pathCost>
@@ -81,6 +84,9 @@
         <label>mech charger</label>
         <description>A compact powered station that houses, charges, and repairs a single mechanoid. The mech will automatically enter to recharge when it has no work, and exit when work is available and its charge is sufficient. Damaged mechs are slowly repaired while stored.</description>
         <thingClass>PawnStorages.Building_PawnStorage</thingClass>
+        <researchPrerequisites>
+            <li>PS_MechStorage</li>
+        </researchPrerequisites>
         <graphicData>
             <texPath>Things/Building/PawnHatch/PawnHatch_Open</texPath>
             <graphicClass>Graphic_Single</graphicClass>
@@ -142,6 +148,9 @@
         <label>mech bay</label>
         <description>A large powered bay that can house, charge, and repair up to eight mechanoids simultaneously. The mechs will automatically enter to recharge when they have no work, and exit when work is available and their charge is sufficient. Damaged mechs are slowly repaired while stored.</description>
         <thingClass>PawnStorages.Building_PawnStorage</thingClass>
+        <researchPrerequisites>
+            <li>PS_MechStorage</li>
+        </researchPrerequisites>
         <graphicData>
             <texPath>Things/Building/PawnHatch/PawnHatch_Open</texPath>
             <graphicClass>Graphic_Single</graphicClass>

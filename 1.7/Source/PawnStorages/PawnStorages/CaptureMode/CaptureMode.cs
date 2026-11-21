@@ -11,5 +11,8 @@ public abstract class CaptureMode
 {
     public CaptureModeDef Def { get; internal set; }
 
+    /// <summary>Whether a standing/downed non-colony pawn is taken prisoner (vanilla CapturedBy) on capture.</summary>
+    public virtual bool MarksCaptured => true;
+
     public abstract void ApplyPostCaptureEffects(Pawn pawn, Faction playerFaction, Pawn launcher, ThingWithComps equipment);
 }
