@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  
+  	<RecipeDef>
+		<defName>PS_MakePawnStorageDisc</defName>
+		<label>craft PawnStorage™ disc</label>
+		<description>Makes one PawnStorage™ disc.</description>
+		<jobString>crafting PawnStorage™ disc.</jobString>
+		<workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+		<effectWorking>Cook</effectWorking>
+		<soundWorking>Recipe_Machining</soundWorking>
+		<workAmount>500</workAmount>
+		<researchPrerequisite>AdvancedFabrication</researchPrerequisite>
+		<ingredients>
+			<li>
+				<filter>
+					<thingDefs>
+						<li>ComponentSpacer</li>
+					</thingDefs>
+				</filter>
+				<count>1</count>
+			</li>
+		</ingredients>
+		<fixedIngredientFilter>
+			<thingDefs>
+				<li>ComponentSpacer</li>
+			</thingDefs>
+		</fixedIngredientFilter>
+		<products>
+			<PS_PawnDisc>1</PS_PawnDisc>
+		</products>
+		<workSkill>Crafting</workSkill>	
+		<skillRequirements>
+			<Intellectual>6</Intellectual>
+			<Crafting>8</Crafting>
+		</skillRequirements>
+	</RecipeDef>
+  
+</Defs>

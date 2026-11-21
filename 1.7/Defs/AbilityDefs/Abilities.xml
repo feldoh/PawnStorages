@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+    <AbilityDef>
+        <defName>PS_ReturnToSphere</defName>
+        <label>return to sphere</label>
+        <description>This pawn has previously been captured by a sphere. Return to it.</description>
+
+        <iconPath>UI/Buttons/PS_CaptureBallReturnButton</iconPath>
+
+        <cooldownTicksRange>60</cooldownTicksRange>
+
+        <casterMustBeCapableOfViolence>false</casterMustBeCapableOfViolence>
+
+        <displayGizmoWhileUndrafted>true</displayGizmoWhileUndrafted>
+        <disableGizmoWhileUndrafted>false</disableGizmoWhileUndrafted>
+        <targetRequired>false</targetRequired>
+        <hostile>false</hostile>
+
+        <verbProperties>
+            <verbClass>Verb_CastAbility</verbClass>
+            <warmupTime>0</warmupTime>
+            <hasStandardCommand>true</hasStandardCommand>
+            <nonInterruptingSelfCast>true</nonInterruptingSelfCast>
+            <onlyManualCast>True</onlyManualCast>
+            <targetable>false</targetable>
+            <requireLineOfSight>false</requireLineOfSight>
+            <drawAimPie>false</drawAimPie>
+        </verbProperties>
+
+        <comps>
+            <li Class="PawnStorages.CaptureSphere.CompProperties_AbilityReturnToSphere">
+                <Effector>PS_StarExplosion</Effector>
+                <SphereDef>PS_CaptureSphere</SphereDef>
+            </li>
+        </comps>
+    </AbilityDef>
+</Defs>

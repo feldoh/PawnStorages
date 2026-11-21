@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+    <Def Class="PawnStorages.CaptureMode.CaptureModeDef">
+        <defName>PS_Capture_Mode_JustCapture</defName>
+        <label>Just capture in the ball</label>
+        <description>Capture the pawn into the sphere without changing its status.</description>
+        <modeClass>PawnStorages.CaptureMode.CaptureMode_JustCapture</modeClass>
+    </Def>
+
+    <Def Class="PawnStorages.CaptureMode.CaptureModeDef">
+        <defName>PS_Capture_Mode_Imprison</defName>
+        <label>Imprison (humanlikes; animals get tamed)</label>
+        <description>Capture the pawn and make it a prisoner (animals are tamed instead).</description>
+        <modeClass>PawnStorages.CaptureMode.CaptureMode_Imprison</modeClass>
+    </Def>
+
+    <Def Class="PawnStorages.CaptureMode.CaptureModeDef">
+        <defName>PS_Capture_Mode_Enslave</defName>
+        <label>Capture and enslaved/tamed (recruit fallback)</label>
+        <description>Capture and tame animals or enslave humanlikes. Without Ideology, humanlikes are recruited instead.</description>
+        <modeClass>PawnStorages.CaptureMode.CaptureMode_Enslave</modeClass>
+    </Def>
+
+    <Def Class="PawnStorages.CaptureMode.CaptureModeDef">
+        <defName>PS_Capture_Mode_Convert</defName>
+        <label>Convert to player faction</label>
+        <description>Capture the pawn and convert it to the capturing faction.</description>
+        <modeClass>PawnStorages.CaptureMode.CaptureMode_Convert</modeClass>
+    </Def>
+</Defs>
