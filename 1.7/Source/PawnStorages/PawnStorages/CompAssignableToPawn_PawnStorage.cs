@@ -16,6 +16,8 @@ public class CompAssignableToPawn_PawnStorage : CompAssignableToPawn
         {
             if (Props.colonyAnimalsOnly)
                 return !parent.Spawned ? [] : parent.Map.mapPawns.SpawnedColonyAnimals.OrderByDescending(p => CanAssignTo(p).Accepted);
+            if (Props.colonyMechsOnly)
+                return !parent.Spawned || !ModsConfig.BiotechActive ? [] : parent.Map.mapPawns.SpawnedColonyMechs.OrderByDescending(p => CanAssignTo(p).Accepted);
             return !parent.Spawned
                 ? []
                 : OwnerType switch
